@@ -1,0 +1,2 @@
+com.enjoyiot.framework.quartz.config.EnjoyQuartzAutoConfiguration
+com.enjoyiot.framework.quartz.config.EnjoyAsyncAutoConfiguration

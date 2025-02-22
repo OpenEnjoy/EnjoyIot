@@ -1,0 +1,4 @@
+com.enjoyiot.framework.idempotent.config.EnjoyIdempotentConfiguration
+com.enjoyiot.framework.lock4j.config.EnjoyLock4jConfiguration
+com.enjoyiot.framework.ratelimiter.config.EnjoyRateLimiterConfiguration
+com.enjoyiot.framework.signature.config.EnjoyApiSignatureAutoConfiguration

@@ -1,0 +1,2 @@
+com.enjoyiot.framework.tracer.config.EnjoyTracerAutoConfiguration
+com.enjoyiot.framework.tracer.config.EnjoyMetricsAutoConfiguration

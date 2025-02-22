@@ -1,0 +1,157 @@
+/*
+ *
+ *  * | Licensed 未经许可不能去掉「Enjoy-iot」相关版权
+ *  * +----------------------------------------------------------------------
+ *  * | Author: xw2sy@163.com
+ *  * +----------------------------------------------------------------------
+ *
+ *  Copyright [2025] [Enjoy-iot]
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * /
+ */
+package com.enjoyiot.eiot.ruleengine.handler.sys;
+
+
+import com.enjoyiot.eiot.IDevicePropertyData;
+import com.enjoyiot.eiot.common.thing.ThingModelMessage;
+import com.enjoyiot.eiot.ruleengine.handler.DeviceMessageHandler;
+import com.enjoyiot.framework.common.util.json.JsonUtils;
+import com.enjoyiot.module.eiot.api.device.DeviceApi;
+import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
+import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
+import com.enjoyiot.module.eiot.api.thingmodel.ThingModelApi;
+import com.enjoyiot.module.eiot.api.thingmodel.dto.ThingModel;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * 设备属性消息消费入库
+ */
+@Slf4j
+@Component
+public class DevicePropertyHandler implements DeviceMessageHandler {
+
+    @Resource
+    private IDevicePropertyData devicePropertyData;
+
+    @Resource
+    private ThingModelApi thingModelApi;
+
+    @Resource
+    private DeviceApi deviceApi;
+
+    @Override
+    public void handle(ThingModelMessage msg) {
+        if (!ThingModelMessage.TYPE_PROPERTY.equals(msg.getType())) {
+            return;
+        }
+        if (!ThingModelMessage.ID_PROPERTY_REPORT.equals(msg.getIdentifier())) {
+            return;
+        }
+
+        if (!(msg.getData() instanceof Map)) {
+            return;
+        }
+
+        Map<String, Object> properties = (Map<String, Object>) msg.getData();
+        Long deviceId = msg.getDeviceId();
+        DeviceInfo deviceInfo = deviceApi.getDeviceInfoFromCache(deviceId);
+        if (deviceInfo == null) {
+            return;
+        }
+
+        //物模型校验，过滤非物模型属性
+        ThingModel thingModel = thingModelApi.getThingModelByProductKeyFromCache(deviceInfo.getProductKey());
+        if (thingModel == null) {
+            return;
+        }
+
+        //物模型属性
+        Map<String, ThingModel.DataType> thingModelProperties = thingModel.getModel().
+                getProperties().stream().collect(Collectors.toMap(
+                        ThingModel.Property::getIdentifier, ThingModel.Property::getDataType));
+
+        Map<String, DevicePropertyCache> addProperties = new HashMap<>();
+        Long occurred = msg.getOccurred();
+        if (occurred == null) {
+            occurred = System.currentTimeMillis();
+        }
+
+        //删除非属性字段
+        Long finalOccurred = occurred;
+        properties.forEach((key, val) -> {
+            if (thingModelProperties.containsKey(key)) {
+                DevicePropertyCache propertyCache = new DevicePropertyCache();
+                propertyCache.setValue(val);
+                propertyCache.setOccurred(finalOccurred);
+                addProperties.put(key, propertyCache);
+//                handleLocate(deviceInfo, val, thingModelProperties.get(key));
+            }
+        });
+
+        //更新设备当前属性
+        updateDeviceCurrentProperties(deviceId, addProperties);
+
+        //保存属性记录
+        devicePropertyData.addProperties(deviceId, addProperties, occurred);
+    }
+
+
+//    private void handleLocate(DeviceInfo deviceInfo, Object data, ThingModel.DataType dataType) {
+//        if (!"position".equals(dataType.getType())) {
+//            return;
+//        }
+//        //如果是定位属性需要做一些处理
+//        Object specs = dataType.getSpecs();
+//        String locateType = "";
+//        if (specs instanceof Map) {
+//            Object objlocateType = ((Map<?, ?>) specs).get("locateType");
+//            //定位方式
+//            if (objlocateType != null) {
+//                locateType = objlocateType.toString();
+//            }
+//            if (StringUtils.isBlank(locateType)) {
+//                return;
+//            }
+//            if ("lonLat".equals(locateType)) {
+//                //经纬度定位格式：经度,纬度
+//                String[] lonLats = data.toString().split(",");
+//                deviceInfo.getLocate().setLongitude(lonLats[0]);
+//                deviceInfo.getLocate().setLatitude(lonLats[1]);
+//                deviceInfoData.save(deviceInfo);
+//            } else if ("basestation".equals(locateType)) {
+//                //基站定位
+//            } else if ("ipinfo".equals(locateType)) {
+//                //ip定位
+//            }
+//        }
+//    }
+
+    /**
+     * 更新设备当前属性
+     */
+    private void updateDeviceCurrentProperties(Long deviceId, Map<String, DevicePropertyCache> properties) {
+        try {
+            log.info("save device property,deviceId:{},property:{}", deviceId, JsonUtils.toJsonString(properties));
+            deviceApi.savePropertiesCache(deviceId, properties);
+        } catch (Throwable e) {
+            log.error("save device current properties error", e);
+        }
+    }
+}

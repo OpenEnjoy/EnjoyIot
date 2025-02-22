@@ -1,0 +1,212 @@
+/*
+ *
+ *  * | Licensed 未经许可不能去掉「Enjoy-iot」相关版权
+ *  * +----------------------------------------------------------------------
+ *  * | Author: xw2sy@163.com
+ *  * +----------------------------------------------------------------------
+ *
+ *  Copyright [2025] [Enjoy-iot]
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * /
+ */
+package com.enjoyiot.eiot.temporal.td.service;
+
+
+import com.enjoyiot.eiot.IDbStructureData;
+import com.enjoyiot.framework.common.util.json.JsonUtils;
+import com.enjoyiot.eiot.temporal.td.config.Constants;
+import com.enjoyiot.eiot.temporal.td.dm.*;
+import com.enjoyiot.module.eiot.api.thingmodel.dto.ThingModel;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.enjoyiot.eiot.common.enums.ErrorCodeConstants.*;
+import static com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil.exception;
+
+@Slf4j
+@Service
+public class DbStructureDataImpl implements IDbStructureData {
+
+    @Autowired
+    private TdRestApi tdRestApi;
+
+    @Value("${spring.td-datasource.db:eiot}")
+    private String dbName;
+
+    /**
+     * 根据物模型创建超级表
+     */
+    @Override
+    public void defineThingModel(ThingModel thingModel) {
+        //获取物模型中的属性定义
+        List<TdField> fields = FieldParser.parse(thingModel);
+        String tbName = Constants.getProductPropertySTableName(thingModel.getProductKey());
+        //生成sql
+        String sql = TableManager.getCreateSTableSql(tbName,
+                fields,
+                new TdField("device_id", "NCHAR", 50));
+        if (sql == null) {
+            return;
+        }
+        log.info("executing sql:{}", sql);
+
+        //执行sql
+        TdResponse response = tdRestApi.execSql(sql);
+        if (TdResponse.CODE_SUCCESS != response.getCode()) {
+            throw exception(TABLE_DEFINE, String.format(
+                    "create td stable failed,code:%s,desc:%s"
+                    , response.getCode(), response.getDesc()));
+        }
+    }
+
+    /**
+     * 根据物模型更新超级表结构
+     */
+    @Override
+    public void updateThingModel(ThingModel thingModel) {
+        try {
+            //获取旧字段信息
+            String tbName = Constants.getProductPropertySTableName(thingModel.getProductKey());
+            String sql = TableManager.getDescTableSql(tbName);
+            TdResponse response = tdRestApi.execSql(sql);
+            int code = response.getCode();
+            if (code != TdResponse.CODE_SUCCESS) {
+                if (TdResponse.CODE_TB_NOT_EXIST == code) {
+                    defineThingModel(thingModel);
+                    return;
+                }
+
+                throw exception(TABLE_GET,"get des table error:" + JsonUtils.toJsonString(response));
+            }
+
+            List<TdField> oldFields = FieldParser.parse(response.getData());
+            List<TdField> newFields = FieldParser.parse(thingModel);
+            //对比差异
+
+            //找出新增的字段
+            List<TdField> addFields = newFields.stream().filter((f) -> oldFields.stream()
+                            .noneMatch(old -> old.getName().equals(f.getName())))
+                    .collect(Collectors.toList());
+            if (!addFields.isEmpty()) {
+                sql = TableManager.getAddSTableColumnSql(tbName, addFields);
+                response = tdRestApi.execSql(sql);
+                if (response.getCode() != TdResponse.CODE_SUCCESS) {
+                    throw exception(COLUMN_ADD,"add table column error:" + JsonUtils.toJsonString(response));
+                }
+            }
+
+            //找出修改的字段
+            List<TdField> modifyFields = newFields.stream().filter((f) -> oldFields.stream()
+                            .anyMatch(old ->
+                                    old.getName().equals(f.getName()) //字段名相同
+                                            //字段类型或长度不同
+                                            && (!old.getType().equals(f.getType()) || old.getLength() != f.getLength())
+                            ))
+                    .collect(Collectors.toList());
+
+            if (!modifyFields.isEmpty()) {
+                sql = TableManager.getModifySTableColumnSql(tbName, modifyFields);
+                response = tdRestApi.execSql(sql);
+                if (response.getCode() != TdResponse.CODE_SUCCESS) {
+                    throw exception(COLUMN_UPDATE,"modify table column error:" + JsonUtils.toJsonString(response));
+                }
+            }
+
+            //找出删除的字段
+            List<TdField> dropFields = oldFields.stream().filter((f) ->
+                            !"time".equals(f.getName()) &&
+                                    !"device_id".equals(f.getName()) && newFields.stream()
+                                    //字段名不是time且没有相同字段名的
+                                    .noneMatch(n -> n.getName().equals(f.getName())))
+                    .collect(Collectors.toList());
+            if (!dropFields.isEmpty()) {
+                sql = TableManager.getDropSTableColumnSql(tbName, dropFields);
+                response = tdRestApi.execSql(sql);
+                if (response.getCode() != TdResponse.CODE_SUCCESS) {
+                    throw exception(COLUMN_DEL,"drop table column error:" + JsonUtils.toJsonString(response));
+                }
+            }
+        } catch (Throwable e) {
+            throw e;
+        }
+    }
+
+    /**
+     * 初始化其它数据结构
+     */
+    @Override
+    @PostConstruct
+    public void initDbStructure() {
+        log.info("td init db structure start");
+        tdRestApi.execSql(String.format("CREATE DATABASE IF NOT EXISTS %s KEEP 365 DURATION 10 BUFFER 16 WAL_LEVEL 1;", dbName));
+
+        //创建规则日志超级表
+        String sql = TableManager.getCreateSTableSql("rule_log", Arrays.asList(
+                new TdField("state1", "NCHAR", 32),
+                new TdField("content", "NCHAR", 1024),
+                new TdField("success", "BOOL", -1)
+        ), new TdField("rule_id", "NCHAR", 50));
+        TdResponse response = tdRestApi.execSql(sql);
+        if (response.getCode() != TdResponse.CODE_SUCCESS) {
+            throw exception(TABLE_DEFINE,"create stable rule_log error:" + JsonUtils.toJsonString(response));
+        }
+
+        //创建规则日志超级表
+        sql = TableManager.getCreateSTableSql("task_log", Arrays.asList(
+                new TdField("content", "NCHAR", 1024),
+                new TdField("success", "BOOL", -1)
+        ), new TdField("task_id", "NCHAR", 50));
+        response = tdRestApi.execSql(sql);
+        if (response.getCode() != TdResponse.CODE_SUCCESS) {
+            throw exception(TABLE_DEFINE,"create stable task_log error:" + JsonUtils.toJsonString(response));
+        }
+
+        //创建物模型消息超级表
+        sql = TableManager.getCreateSTableSql("thing_model_message", Arrays.asList(
+                new TdField("mid", "NCHAR", 50),
+                new TdField("product_key", "NCHAR", 50),
+                new TdField("device_name", "NCHAR", 50),
+                new TdField("uid", "NCHAR", 50),
+                new TdField("type", "NCHAR", 20),
+                new TdField("identifier", "NCHAR", 50),
+                new TdField("code", "INT", -1),
+                new TdField("data", "NCHAR", 1024),
+                new TdField("report_time", "BIGINT", -1)
+        ), new TdField("device_id", "NCHAR", 50));
+        response = tdRestApi.execSql(sql);
+        if (response.getCode() != TdResponse.CODE_SUCCESS) {
+            throw exception(TABLE_DEFINE,"create stable thing_model_message error:" + JsonUtils.toJsonString(response));
+        }
+
+        //创建虚拟设备日志超级表
+        sql = TableManager.getCreateSTableSql("virtual_device_log", Arrays.asList(
+                new TdField("virtual_device_name", "NCHAR", 50),
+                new TdField("device_total", "INT", -1),
+                new TdField("result", "NCHAR", 1024)
+        ), new TdField("virtual_device_id", "NCHAR", 50));
+        response = tdRestApi.execSql(sql);
+        if (response.getCode() != TdResponse.CODE_SUCCESS) {
+            throw exception(TABLE_DEFINE,"create stable virtual_device_log error:" + JsonUtils.toJsonString(response));
+        }
+        log.info("td init db structure end");
+
+    }
+}

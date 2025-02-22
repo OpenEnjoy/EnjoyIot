@@ -1,36 +1,58 @@
-# Compiled class file
-*.class
+######################################################################
+# Build Tools
 
-# Log file
-log
-*.log
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
 
-# BlueJ files
-*.ctxt
+target/
+!.mvn/wrapper/maven-wrapper.jar
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-.idea
-target
-*.iml
-data/elasticsearch
-.init
-*.db
 .flattened-pom.xml
 
+######################################################################
+# IDE
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/*
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+######################################################################
+# Others
+*.log
+*.xml.versionsBackup
+*.swp
+
+!*/build/*.java
+!*/build/*.html
+!*/build/*.xml
+
+### JRebel ###
+rebel.xml
+
+application-my.yaml
+
+/iot-ui-app/unpackage/
+
 .DS_Store
-dependency-reduced-pom.xml
-/data/plugins
-/data/dist
-/data/iot-oss
+
+#### tools ###
+addHeader.py

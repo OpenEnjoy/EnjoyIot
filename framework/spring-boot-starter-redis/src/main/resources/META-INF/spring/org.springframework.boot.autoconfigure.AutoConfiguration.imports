@@ -1,0 +1,2 @@
+com.enjoyiot.framework.redis.config.EnjoyRedisAutoConfiguration
+com.enjoyiot.framework.redis.config.EnjoyCacheAutoConfiguration

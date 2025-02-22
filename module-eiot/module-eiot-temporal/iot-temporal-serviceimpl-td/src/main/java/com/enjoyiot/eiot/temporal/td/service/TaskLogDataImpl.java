@@ -1,0 +1,78 @@
+/*
+ *
+ *  * | Licensed 未经许可不能去掉「Enjoy-iot」相关版权
+ *  * +----------------------------------------------------------------------
+ *  * | Author: xw2sy@163.com
+ *  * +----------------------------------------------------------------------
+ *
+ *  Copyright [2025] [Enjoy-iot]
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * /
+ */
+package com.enjoyiot.eiot.temporal.td.service;
+
+
+import com.enjoyiot.eiot.ITaskLogData;
+import com.enjoyiot.eiot.temporal.td.dao.TdTemplate;
+import com.enjoyiot.eiot.temporal.td.dm.TableManager;
+import com.enjoyiot.eiot.temporal.td.model.TbTaskLog;
+import com.enjoyiot.framework.common.pojo.PageResult;
+import com.enjoyiot.module.eiot.api.task.dto.TaskLog;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class TaskLogDataImpl implements ITaskLogData {
+
+    @Autowired
+    private TdTemplate tdTemplate;
+
+    @Override
+    public void deleteByTaskId(Long taskId) {
+        tdTemplate.update("delete from task_log where task_id=? and time<=NOW()", taskId);
+    }
+
+    @Override
+    public PageResult<TaskLog> findByTaskId(Long taskId, int page, int size) {
+        String sql = "select time,content,success,task_id from task_log where task_id=? order by time desc limit %d offset %d";
+        sql = String.format(sql, size, (page - 1) * size);
+        List<TbTaskLog> taskLogs = tdTemplate.query(sql, new BeanPropertyRowMapper<>(TbTaskLog.class), taskId);
+
+        sql = "select count(*) from task_log where task_id=?";
+        List<Long> counts = tdTemplate.queryForList(sql, Long.class, taskId);
+
+        return new PageResult<TaskLog>( taskLogs.stream().map(r ->
+                        new TaskLog(r.getTime().toString(), taskId,
+                                r.getContent(), r.getSuccess(), r.getTime()))
+                .collect(Collectors.toList()),!counts.isEmpty() ? counts.get(0) : 0L);
+    }
+
+    @Override
+    public void add(TaskLog log) {
+        //使用taskId作表名
+        String sql = String.format("INSERT INTO %s (%s) USING %s TAGS ('%s') VALUES (%s);",
+                "task_log_" + TableManager.rightTbName(log.getTaskId().toString()),
+                "time,content,success",
+                "task_log",
+                log.getTaskId(),
+                "?,?,?"
+        );
+        tdTemplate.update(sql, System.currentTimeMillis(), log.getContent(), log.getSuccess());
+    }
+
+}

@@ -1,0 +1,3 @@
+com.enjoyiot.framework.datasource.config.EnjoyDataSourceAutoConfiguration
+com.enjoyiot.framework.mybatis.config.EnjoyMybatisAutoConfiguration
+com.enjoyiot.framework.translate.config.EnjoyTranslateAutoConfiguration

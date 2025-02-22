@@ -1,0 +1,1 @@
+https://docs.spring-boot-admin.com/2.2.0/

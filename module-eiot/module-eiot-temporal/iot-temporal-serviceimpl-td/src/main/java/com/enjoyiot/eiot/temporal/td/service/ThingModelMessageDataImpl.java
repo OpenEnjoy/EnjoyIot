@@ -1,0 +1,220 @@
+/*
+ *
+ *  * | Licensed 未经许可不能去掉「Enjoy-iot」相关版权
+ *  * +----------------------------------------------------------------------
+ *  * | Author: xw2sy@163.com
+ *  * +----------------------------------------------------------------------
+ *
+ *  Copyright [2025] [Enjoy-iot]
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * /
+ */
+package com.enjoyiot.eiot.temporal.td.service;
+
+
+import cn.hutool.core.util.ObjectUtil;
+import com.enjoyiot.eiot.IThingModelMessageData;
+import com.enjoyiot.eiot.TimeData;
+import com.enjoyiot.eiot.common.thing.ThingModelMessage;
+import com.enjoyiot.framework.common.pojo.PageResult;
+import com.enjoyiot.framework.common.util.json.JsonUtils;
+import com.enjoyiot.eiot.temporal.td.dao.TdTemplate;
+import com.enjoyiot.eiot.temporal.td.model.TbThingModelMessage;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Service
+public class ThingModelMessageDataImpl implements IThingModelMessageData {
+
+    @Autowired
+    private TdTemplate tdTemplate;
+
+    @Override
+    public PageResult<ThingModelMessage> findByTypeAndIdentifier(Long deviceId, String type,
+                                                                 String identifier,
+                                                                 int page, int size) {
+        String sql = "select time,mid,product_key,device_name,type,identifier,code,data,report_time " +
+                "from thing_model_message where device_id=? %s order by time desc limit %d offset %d";
+
+        //构建动态条件
+        List<Object> args = new ArrayList<>();
+        args.add(deviceId);
+        StringBuilder sbCond = new StringBuilder();
+        if (StringUtils.isNotBlank(type)) {
+            sbCond.append(" and type=? ");
+            args.add(type);
+        }
+        if (StringUtils.isNotBlank(identifier)) {
+            sbCond.append("and identifier=? ");
+            args.add(identifier);
+        }
+
+        sql = String.format(sql, sbCond.toString(), size, (page - 1) * size);
+        List<TbThingModelMessage> ruleLogs = tdTemplate.query(sql,
+                new BeanPropertyRowMapper<>(TbThingModelMessage.class),
+                args.toArray()
+        );
+
+        sql = String.format("select count(*) from thing_model_message where device_id=? %s",
+                sbCond.toString());
+        List<Long> counts = tdTemplate.queryForList(sql, Long.class, args.toArray());
+        long count = !counts.isEmpty() ? counts.get(0) : 0;
+
+        return new PageResult<>(ruleLogs.stream().map(r ->
+                        new ThingModelMessage(r.getTime().toString(), r.getMid(),
+                                deviceId, r.getProductKey(), r.getDeviceName(),
+                                r.getUid(), r.getType(), r.getIdentifier(), r.getCode(),
+                                JsonUtils.parseObject(r.getData(), Map.class),
+                                r.getTime(), r.getReportTime(), null))
+                .collect(Collectors.toList()), count);
+    }
+
+    @Override
+    public PageResult<ThingModelMessage> findByTypeAndDeviceIds(List<Long> deviceIds, String type,
+                                                                String identifier,
+                                                                int page, int size) {
+        String sql = "select time,mid,product_key,device_name,type,identifier,code,data,report_time " +
+                "from thing_model_message where type=? %s order by time desc limit %d offset %d";
+
+        //构建动态条件
+        List<Object> args = new ArrayList<>();
+        args.add(type);
+        StringBuilder sbCond = new StringBuilder();
+        if (!deviceIds.isEmpty()) {
+            sbCond.append(" and deviceIds in (?) ");
+            args.add(deviceIds.stream().map(Object::toString).collect(Collectors.joining(",")));
+        }
+        if (StringUtils.isNotBlank(identifier)) {
+            sbCond.append("and identifier=? ");
+            args.add(identifier);
+        }
+
+        sql = String.format(sql, sbCond.toString(), size, (page - 1) * size);
+        List<TbThingModelMessage> ruleLogs = tdTemplate.query(sql,
+                new BeanPropertyRowMapper<>(TbThingModelMessage.class),
+                args.toArray()
+        );
+
+        sql = String.format("select count(*) from thing_model_message where type=? %s",
+                sbCond.toString());
+        List<Long> counts = tdTemplate.queryForList(sql, Long.class, args.toArray());
+        long count = !counts.isEmpty() ? counts.get(0) : 0;
+
+        return new PageResult<>(ruleLogs.stream().map(r ->
+                        new ThingModelMessage(r.getTime().toString(), r.getMid(),
+                                r.getDeviceId(), r.getProductKey(), r.getDeviceName(),
+                                r.getUid(), r.getType(), r.getIdentifier(), r.getCode(),
+                                JsonUtils.parseObject(r.getData(), Map.class),
+                                r.getTime(), r.getReportTime(), null))
+                .collect(Collectors.toList()), count);
+    }
+
+    @Override
+    public List<TimeData> getDeviceMessageStatsWithUid(String uid, long start, long end) {
+        String sql = "select time,count(*) as data from(" +
+                "select TIMETRUNCATE(time,1h) as time from thing_model_message " +
+                "where time>=? and time<=? " + (uid != null ? "and uid=?" : "") +
+                ") a group by time order by time asc";
+
+        List<Object> args = new ArrayList<>();
+        args.add(start);
+        args.add(end);
+        if (uid != null) {
+            args.add(uid);
+        }
+
+        return tdTemplate.query(sql, new BeanPropertyRowMapper<>(TimeData.class), args.toArray());
+    }
+
+    @Override
+    public List<TimeData> getDeviceUpMessageStatsWithUid(String uid, Long start, Long end) {
+        String sql = "select time,count(*) as data from(" +
+                "select TIMETRUNCATE(time,1h) as time from thing_model_message " +
+                "where (type='property' and identifier='report') or type='event' ";
+        StringBuilder sqlBuffer = new StringBuilder();
+        sqlBuffer.append(sql);
+
+        List<Object> args = new ArrayList<>();
+        if (ObjectUtil.isNotEmpty(uid)) {
+            sqlBuffer.append(" and uid=?");
+            args.add(uid);
+        }
+
+        if (ObjectUtil.isNotEmpty(start) && ObjectUtil.isNotEmpty(end)) {
+            sqlBuffer.append(" and time>=? and time<=?");
+            args.add(start);
+            args.add(end);
+        }
+
+        sqlBuffer.append(") a group by time order by time asc");
+
+        return tdTemplate.query(sqlBuffer.toString(), new BeanPropertyRowMapper<>(TimeData.class), args.toArray());
+    }
+
+    @Override
+    public List<TimeData> getDeviceDownMessageStatsWithUid(String uid, Long start, Long end) {
+        String sql = "select time,count(*) as data from(" +
+                "select TIMETRUNCATE(time,1h) as time from thing_model_message " +
+                "where (type='property' and identifier!='report') or type='service' or type= 'config' ";
+        StringBuilder sqlBuffer = new StringBuilder();
+        sqlBuffer.append(sql);
+
+        List<Object> args = new ArrayList<>();
+        if (ObjectUtil.isNotEmpty(uid)) {
+            sqlBuffer.append(" and uid=?");
+            args.add(uid);
+        }
+
+        if (ObjectUtil.isNotEmpty(start) && ObjectUtil.isNotEmpty(end)) {
+            sqlBuffer.append(" and time>=? and time<=?");
+            args.add(start);
+            args.add(end);
+        }
+
+        sqlBuffer.append(") a group by time order by time asc");
+
+        return tdTemplate.query(sqlBuffer.toString(), new BeanPropertyRowMapper<>(TimeData.class), args.toArray());
+    }
+
+    @Override
+    public void add(ThingModelMessage msg) {
+        //使用deviceId作表名
+        String sql = String.format("INSERT INTO %s (%s) USING %s TAGS ('%s') VALUES (%s);",
+                "thing_model_message_" + msg.getDeviceId(),
+                "time,mid,product_key,device_name,uid,type,identifier,code,data,report_time",
+                "thing_model_message",
+                msg.getDeviceId(),
+                "?,?,?,?,?,?,?,?,?,?"
+        );
+        tdTemplate.update(sql, msg.getOccurred(), msg.getMid(),
+                msg.getProductKey(), msg.getDn(),
+                msg.getUid(), msg.getType(),
+                msg.getIdentifier(), msg.getCode(),
+                msg.getData() == null ? "{}" : JsonUtils.toJsonString(msg.getData()),
+                msg.getTime());
+    }
+
+    @Override
+    public long count() {
+        List<Long> counts = tdTemplate.queryForList("select count(*) from thing_model_message", Long.class);
+        return !counts.isEmpty() ? counts.get(0) : 0;
+    }
+}

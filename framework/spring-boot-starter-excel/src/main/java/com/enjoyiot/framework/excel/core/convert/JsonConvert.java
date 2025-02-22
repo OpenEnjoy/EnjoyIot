@@ -1,0 +1,57 @@
+
+/*
+ *
+ *  * | Licensed 未经许可不能去掉「Enjoy-iot」相关版权
+ *  * +----------------------------------------------------------------------
+ *  * | Author: xw2sy@163.com | Tel: 19918996474
+ *  * +----------------------------------------------------------------------
+ *
+ *  Copyright [2025] [Enjoy-iot] | Tel: 19918996474
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * /
+ */
+package com.enjoyiot.framework.excel.core.convert;
+
+import com.enjoyiot.framework.common.util.json.JsonUtils;
+import com.alibaba.excel.converters.Converter;
+import com.alibaba.excel.enums.CellDataTypeEnum;
+import com.alibaba.excel.metadata.GlobalConfiguration;
+import com.alibaba.excel.metadata.data.WriteCellData;
+import com.alibaba.excel.metadata.property.ExcelContentProperty;
+
+/**
+ * Excel Json 转换器
+ *
+ * @author EnjoyIot
+ */
+public class JsonConvert implements Converter<Object> {
+
+    @Override
+    public Class<?> supportJavaTypeKey() {
+        throw new UnsupportedOperationException("暂不支持，也不需要");
+    }
+
+    @Override
+    public CellDataTypeEnum supportExcelTypeKey() {
+        throw new UnsupportedOperationException("暂不支持，也不需要");
+    }
+
+    @Override
+    public WriteCellData<String> convertToExcelData(Object value, ExcelContentProperty contentProperty,
+                                                    GlobalConfiguration globalConfiguration) {
+        // 生成 Excel 小表格
+        return new WriteCellData<>(JsonUtils.toJsonString(value));
+    }
+
+}

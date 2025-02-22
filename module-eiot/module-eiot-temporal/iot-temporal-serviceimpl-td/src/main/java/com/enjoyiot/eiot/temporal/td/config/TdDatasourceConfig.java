@@ -1,0 +1,56 @@
+/*
+ *
+ *  * | Licensed 未经许可不能去掉「Enjoy-iot」相关版权
+ *  * +----------------------------------------------------------------------
+ *  * | Author: xw2sy@163.com
+ *  * +----------------------------------------------------------------------
+ *
+ *  Copyright [2025] [Enjoy-iot]
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * /
+ */
+package com.enjoyiot.eiot.temporal.td.config;
+
+import com.enjoyiot.eiot.temporal.td.dao.TdTemplate;
+import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class TdDatasourceConfig {
+
+    @Value("${spring.td-datasource.url}")
+    private String url;
+
+    @Value("${spring.td-datasource.driverClassName}")
+    private String driverClassName;
+
+    @Value("${spring.td-datasource.username}")
+    private String username;
+
+    @Value("${spring.td-datasource.password}")
+    private String password;
+
+    @Bean("tdJdbcTemplate")
+    public TdTemplate tdJdbcTemplate() {
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setJdbcUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        dataSource.setDriverClassName(driverClassName);
+        return new TdTemplate(dataSource);
+    }
+
+}

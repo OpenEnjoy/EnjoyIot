@@ -1,0 +1,1 @@
+https://mapstruct.org/

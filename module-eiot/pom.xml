@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.enjoy-iot</groupId>
+        <artifactId>iot-platform</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>module-eiot</artifactId>
+    <packaging>pom</packaging>
+    <description>enjoy iot模块,增强iot模块功能</description>
+    <modules>
+        <module>module-eiot-biz</module>
+        <module>module-eiot-api</module>
+        <module>module-eiot-core</module>
+        <module>module-eiot-task</module>
+        <module>module-eiot-temporal</module>
+        <module>iot-components</module>
+        <module>iot-virtual-device</module>
+    </modules>
+
+    <properties>
+        <vertx.version>4.2.2</vertx.version>
+        <apache.commons>3.14.0</apache.commons>
+
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--            普通依赖-->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache.commons}</version>
+            </dependency>
+
+            <!--            -->
+
+            <!--            vertx-->
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-kafka-client</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-web</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-core</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-mqtt</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-web-proxy</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-web-client</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-hazelcast</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
+            <!--            vertx end-->
+
+
+            <!--            项目依赖-->
+
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-common-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-message-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-message-kafka</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-message-spring</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-common-thing</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>module-eiot-task</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+
+            <!--component-->
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-cloud-component-api</artifactId>
+                <version>${revision}</version>
+
+            </dependency>
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-cloud-component-base</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-script-engine</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-message-notify</artifactId>
+                <version>${revision}</version>
+
+            </dependency>
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-rule-engine</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-virtual-device</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-temporal-service</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-temporal-serviceimpl-td</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>module-eiot-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!--            client-->
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-client</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-component-client</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-device-client</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!--            components-->
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-component-base</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+</project>

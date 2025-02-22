@@ -1,0 +1,74 @@
+
+/*
+ *
+ *  * | Licensed 未经许可不能去掉「Enjoy-iot」相关版权
+ *  * +----------------------------------------------------------------------
+ *  * | Author: xw2sy@163.com | Tel: 19918996474
+ *  * +----------------------------------------------------------------------
+ *
+ *  Copyright [2025] [Enjoy-iot] | Tel: 19918996474
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * /
+ */
+package com.enjoyiot.module.system.service.notice;
+
+import com.enjoyiot.framework.common.pojo.PageResult;
+import com.enjoyiot.module.system.controller.admin.notice.vo.NoticePageReqVO;
+import com.enjoyiot.module.system.controller.admin.notice.vo.NoticeSaveReqVO;
+import com.enjoyiot.module.system.dal.dataobject.notice.NoticeDO;
+
+/**
+ * 通知公告 Service 接口
+ */
+public interface NoticeService {
+
+    /**
+     * 创建通知公告
+     *
+     * @param createReqVO 通知公告
+     * @return 编号
+     */
+    Long createNotice(NoticeSaveReqVO createReqVO);
+
+    /**
+     * 更新通知公告
+     *
+     * @param reqVO 通知公告
+     */
+    void updateNotice(NoticeSaveReqVO reqVO);
+
+    /**
+     * 删除通知公告
+     *
+     * @param id 编号
+     */
+    void deleteNotice(Long id);
+
+    /**
+     * 获得通知公告分页列表
+     *
+     * @param reqVO 分页条件
+     * @return 部门分页列表
+     */
+    PageResult<NoticeDO> getNoticePage(NoticePageReqVO reqVO);
+
+    /**
+     * 获得通知公告
+     *
+     * @param id 编号
+     * @return 通知公告
+     */
+    NoticeDO getNotice(Long id);
+
+}

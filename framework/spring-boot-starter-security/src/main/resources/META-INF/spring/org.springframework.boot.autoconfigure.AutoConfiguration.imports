@@ -1,0 +1,3 @@
+com.enjoyiot.framework.security.config.EnjoySecurityAutoConfiguration
+com.enjoyiot.framework.security.config.EnjoyWebSecurityConfigurerAdapter
+com.enjoyiot.framework.operatelog.config.EnjoyOperateLogConfiguration

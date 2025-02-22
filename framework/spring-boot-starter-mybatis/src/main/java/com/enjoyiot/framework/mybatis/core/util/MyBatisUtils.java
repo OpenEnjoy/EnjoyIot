@@ -1,0 +1,129 @@
+
+/*
+ *
+ *  * | Licensed 未经许可不能去掉「Enjoy-iot」相关版权
+ *  * +----------------------------------------------------------------------
+ *  * | Author: xw2sy@163.com | Tel: 19918996474
+ *  * +----------------------------------------------------------------------
+ *
+ *  Copyright [2025] [Enjoy-iot] | Tel: 19918996474
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * /
+ */
+package com.enjoyiot.framework.mybatis.core.util;
+
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
+import com.enjoyiot.framework.common.pojo.PageParam;
+import com.enjoyiot.framework.common.pojo.SortingField;
+import com.enjoyiot.framework.mybatis.core.enums.DbTypeEnum;
+import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import net.sf.jsqlparser.expression.Alias;
+import net.sf.jsqlparser.schema.Column;
+import net.sf.jsqlparser.schema.Table;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * MyBatis 工具类
+ */
+public class MyBatisUtils {
+
+    private static final String MYSQL_ESCAPE_CHARACTER = "`";
+
+    public static <T> Page<T> buildPage(PageParam pageParam) {
+        return buildPage(pageParam, null);
+    }
+
+    public static <T> Page<T> buildPage(PageParam pageParam, Collection<SortingField> sortingFields) {
+        // 页码 + 数量
+        Page<T> page = new Page<>(pageParam.getPageNo(), pageParam.getPageSize());
+        // 排序字段
+        if (!CollectionUtil.isEmpty(sortingFields)) {
+            page.addOrder(sortingFields.stream().map(sortingField -> SortingField.ORDER_ASC.equals(sortingField.getOrder())
+                            ? OrderItem.asc(StrUtil.toUnderlineCase(sortingField.getField()))
+                            : OrderItem.desc(StrUtil.toUnderlineCase(sortingField.getField())))
+                    .collect(Collectors.toList()));
+        }
+        return page;
+    }
+
+    /**
+     * 将拦截器添加到链中
+     * 由于 MybatisPlusInterceptor 不支持添加拦截器，所以只能全量设置
+     *
+     * @param interceptor 链
+     * @param inner       拦截器
+     * @param index       位置
+     */
+    public static void addInterceptor(MybatisPlusInterceptor interceptor, InnerInterceptor inner, int index) {
+        List<InnerInterceptor> inners = new ArrayList<>(interceptor.getInterceptors());
+        inners.add(index, inner);
+        interceptor.setInterceptors(inners);
+    }
+
+    /**
+     * 获得 Table 对应的表名
+     * <p>
+     * 兼容 MySQL 转义表名 `t_xxx`
+     *
+     * @param table 表
+     * @return 去除转移字符后的表名
+     */
+    public static String getTableName(Table table) {
+        String tableName = table.getName();
+        if (tableName.startsWith(MYSQL_ESCAPE_CHARACTER) && tableName.endsWith(MYSQL_ESCAPE_CHARACTER)) {
+            tableName = tableName.substring(1, tableName.length() - 1);
+        }
+        return tableName;
+    }
+
+    /**
+     * 构建 Column 对象
+     *
+     * @param tableName  表名
+     * @param tableAlias 别名
+     * @param column     字段名
+     * @return Column 对象
+     */
+    public static Column buildColumn(String tableName, Alias tableAlias, String column) {
+        if (tableAlias != null) {
+            tableName = tableAlias.getName();
+        }
+        return new Column(tableName + StringPool.DOT + column);
+    }
+
+    /**
+     * 跨数据库的 find_in_set 实现
+     *
+     * @param column 字段名称
+     * @param value  查询值(不带单引号)
+     * @return sql
+     */
+    public static String findInSet(String column, Object value) {
+        DbType dbType = JdbcUtils.getDbType();
+        return DbTypeEnum.getFindInSetTemplate(dbType)
+                .replace("#{column}", column)
+                .replace("#{value}", StrUtil.toString(value));
+    }
+
+}

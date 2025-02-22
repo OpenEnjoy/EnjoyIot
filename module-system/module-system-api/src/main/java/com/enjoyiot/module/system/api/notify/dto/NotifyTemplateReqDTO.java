@@ -1,0 +1,57 @@
+
+/*
+ *
+ *  * | Licensed 未经许可不能去掉「Enjoy-iot」相关版权
+ *  * +----------------------------------------------------------------------
+ *  * | Author: xw2sy@163.com | Tel: 19918996474
+ *  * +----------------------------------------------------------------------
+ *
+ *  Copyright [2025] [Enjoy-iot] | Tel: 19918996474
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * /
+ */
+package com.enjoyiot.module.system.api.notify.dto;
+
+import com.enjoyiot.framework.common.enums.CommonStatusEnum;
+import com.enjoyiot.framework.common.validation.InEnum;
+import lombok.Data;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+@Data
+public class NotifyTemplateReqDTO {
+
+    @NotEmpty(message = "模版名称不能为空")
+    private String name;
+
+    @NotNull(message = "模版编码不能为空")
+    private String code;
+
+    @NotNull(message = "模版类型不能为空")
+    private Integer type;
+
+    @NotEmpty(message = "发送人名称不能为空")
+    private String nickname;
+
+    @NotEmpty(message = "模版内容不能为空")
+    private String content;
+
+    @NotNull(message = "状态不能为空")
+    @InEnum(value = CommonStatusEnum.class, message = "状态必须是 {value}")
+    private Integer status;
+
+    private String remark;
+
+}

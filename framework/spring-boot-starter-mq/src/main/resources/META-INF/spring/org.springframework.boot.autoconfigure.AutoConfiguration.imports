@@ -1,0 +1,3 @@
+com.enjoyiot.framework.mq.redis.config.EnjoyRedisMQProducerAutoConfiguration
+com.enjoyiot.framework.mq.redis.config.EnjoyRedisMQConsumerAutoConfiguration
+com.enjoyiot.framework.mq.rabbitmq.config.EnjoyRabbitMQAutoConfiguration

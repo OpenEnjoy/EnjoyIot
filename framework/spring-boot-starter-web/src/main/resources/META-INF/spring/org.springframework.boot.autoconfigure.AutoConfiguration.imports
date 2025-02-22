@@ -1,0 +1,6 @@
+com.enjoyiot.framework.apilog.config.EnjoyApiLogAutoConfiguration
+com.enjoyiot.framework.jackson.config.EnjoyJacksonAutoConfiguration
+com.enjoyiot.framework.swagger.config.EnjoySwaggerAutoConfiguration
+com.enjoyiot.framework.web.config.EnjoyWebAutoConfiguration
+com.enjoyiot.framework.xss.config.EnjoyXssAutoConfiguration
+com.enjoyiot.framework.banner.config.EnjoyBannerAutoConfiguration
