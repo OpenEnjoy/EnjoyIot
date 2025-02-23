@@ -105,6 +105,10 @@ public class DevicePropertyHandler implements DeviceMessageHandler {
             }
         });
 
+        if (addProperties.isEmpty()) {
+            return;
+        }
+
         //更新设备当前属性
         updateDeviceCurrentProperties(deviceId, addProperties);
 

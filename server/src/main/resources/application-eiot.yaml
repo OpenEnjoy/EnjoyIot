@@ -46,19 +46,19 @@ spring:
       primary: master
       datasource:
         master:
-          url: jdbc:mysql://eiot-server-db:3306/eiot?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&rewriteBatchedStatements=true # MySQL Connector/J 8.X 连接的示例
-          #          url: jdbc:mysql://eiot-server-db:3306/eiot?useSSL=true&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true # MySQL Connector/J 5.X 连接的示例
-          #          url: jdbc:postgresql://eiot-server-db:5432/eiot # PostgreSQL 连接的示例
-          #          url: jdbc:oracle:thin:@eiot-server-db:1521:xe # Oracle 连接的示例
-          #          url: jdbc:sqlserver://eiot-server-db:1433;DatabaseName=eiot;SelectMethod=cursor;encrypt=false;rewriteBatchedStatements=true;useUnicode=true;characterEncoding=utf-8 # SQLServer 连接的示例
-          #          url: jdbc:dm://eiot-server-db:5236?schema=RUOYI_VUE_PRO # DM 连接的示例
-          #          url: jdbc:kingbase8://eiot-server-db:54321/test  # 人大金仓 KingbaseES 连接的示例
-          #          url: jdbc:postgresql://eiot-server-db:5432/postgres # OpenGauss 连接的示例
+          url: jdbc:mysql://eiot-server-db:3306/enjoyiot?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&rewriteBatchedStatements=true # MySQL Connector/J 8.X 连接的示例
+          #          url: jdbc:mysql://eiot-server-db:3306/enjoyiot?useSSL=true&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true # MySQL Connector/J 5.X 连接的示例
+          #          url: jdbc:postgresql://eiot-server-db:5432/enjoyiot # PostgreSQL 连接的示例
+          #          url: jdbc:oracle:thin:@eiot-server-db:1521:enjoyiot # Oracle 连接的示例
+          #          url: jdbc:sqlserver://eiot-server-db:1433;DatabaseName=enjoyiot;SelectMethod=cursor;encrypt=false;rewriteBatchedStatements=true;useUnicode=true;characterEncoding=utf-8 # SQLServer 连接的示例
+          #          url: jdbc:dm://eiot-server-db:5236?schema=enjoyiot # DM 连接的示例
+          #          url: jdbc:kingbase8://eiot-server-db:54321/enjoyiot  # 人大金仓 KingbaseES 连接的示例
+          #          url: jdbc:postgresql://eiot-server-db:5432/enjoyiot # OpenGauss 连接的示例
           username: root
           password: 123456
         slave: # 模拟从库，可根据自己需要修改
           lazy: true # 开启懒加载，保证启动速度
-          url: jdbc:mysql://eiot-server-db:3306/eiot?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&nullCatalogMeansCurrent=true
+          url: jdbc:mysql://eiot-server-db:3306/enjoyiot?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&nullCatalogMeansCurrent=true
           username: root
           password: 123456
 
@@ -268,16 +268,3 @@ iot:
     kafka:
       boostrap-servers: eiot-kafka:9092
 
---- #################### mqtt协议组件相关配置 ####################
-mqtt:
-  port: 1883
-  enable: false
-
-
---- #################### emqx协议组件相关配置 ####################
-emqx:
-  host: iot-emqx
-  port: 1883
-  topics: /sys/#
-  authPort: 8104
-  enable: false

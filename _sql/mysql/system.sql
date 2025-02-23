@@ -2149,7 +2149,7 @@ INSERT INTO `system_menu` VALUES (2915, '告警消息', '', 2, 1, 2852, 'alarm-m
 INSERT INTO `system_menu` VALUES (2916, '告警工单', '', 2, 3, 2852, 'alarm-work-order', 'ep:checked', '', '', 0, b'1', b'1', b'1', '1', '2025-02-04 12:07:17', '1', '2025-02-04 12:07:17', b'0');
 INSERT INTO `system_menu` VALUES (2917, '算法管理', '', 2, 6, 0, '/algorithms', 'ep:cpu', 'ai/algorithm/index', '', 0, b'1', b'1', b'1', '1', '2025-02-04 12:08:46', '1', '2025-02-18 21:44:58', b'0');
 INSERT INTO `system_menu` VALUES (2918, '组件中心', '', 2, 5, 0, '/components', 'ep:paperclip', 'eiot/component/index', '', 0, b'1', b'1', b'1', '1', '2025-02-04 12:13:42', '1', '2025-02-18 21:44:50', b'0');
-INSERT INTO `system_menu` VALUES (2919, '数据中心', '', 1, 7, 0, '/data-center', 'ep:data-line', '', '', 0, b'1', b'1', b'1', '1', '2025-02-04 12:16:26', '1', '2025-02-18 21:45:04', b'0');
+--INSERT INTO `system_menu` VALUES (2919, '数据中心', '', 1, 7, 0, '/data-center', 'ep:data-line', '', '', 0, b'1', b'1', b'1', '1', '2025-02-04 12:16:26', '1', '2025-02-18 21:45:04', b'0');
 INSERT INTO `system_menu` VALUES (2920, '算法模型添加', 'ai:algorithm:create', 3, 1, 2917, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-06 10:10:28', '1', '2025-02-06 10:13:35', b'0');
 INSERT INTO `system_menu` VALUES (2921, '算法模型修改', ' ai:algorithm:update', 3, 2, 2917, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-06 10:10:50', '1', '2025-02-06 10:13:28', b'0');
 INSERT INTO `system_menu` VALUES (2922, '算法模型删除', 'ai:algorithm:delete', 3, 3, 2917, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-06 10:13:01', '1', '2025-02-06 10:13:01', b'0');
@@ -2847,7 +2847,7 @@ CREATE TABLE `system_users`  (
 -- ----------------------------
 INSERT INTO `system_users` VALUES (1, 'admin', '$2a$10$mRMIYLDtRHlf6.9ipiqH1.Z.bh/R9dO9d5iHiGYPigi6r5KOoR2Wm', 'EnjoyIot', '管理员', 103, '[1,2]', 'xw2sy@163.com', '19918996474', 1, 'http://127.0.0.1:48080/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 0, '0:0:0:0:0:0:0:1', '2025-02-22 18:17:27', 'admin', '2021-01-05 17:03:47', NULL, '2025-02-22 18:17:27', b'0', 1);
 INSERT INTO `system_users` VALUES (104, 'test', '$2a$04$jDFLttgfik0QqJKAbfhMa.2A9xXoZmAIxakdFJUzkX.MgBKT6ddo6', '测试号', NULL, 107, '[1,2]', '111@qq.com', '15601691200', 1, '', 0, '0:0:0:0:0:0:0:1', '2024-09-17 15:05:43', '', '2021-01-21 02:13:53', NULL, '2024-09-17 15:05:43', b'0', 1);
-I
+
 -- ----------------------------
 -- Table structure for task_info
 -- ----------------------------

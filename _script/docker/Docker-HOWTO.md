@@ -12,7 +12,7 @@
 ├── docker.env                      <-- 提供docker-compose环境变量配置
 ├── iot-server
 │   └── Dockerfile
-└── iot-ui-admin
+└── iot-web
     ├── .dockerignore
     ├── Dockerfile
     └── nginx.conf                  <-- 提供基础配置，gzip压缩、api转发
