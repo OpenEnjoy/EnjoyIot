@@ -41,7 +41,12 @@ docker run -it --rm --name iot-maven \
 如果服务器已经有mysql,不需要docker里的mysql,就移除mysql相关配置,或者修改mysql的端口
 
 ```
-启动服务
+2.修改docker.env,修改配置
+如redis改成宿主机的redis:
+```
+REDIS_HOST=host.docker.internal
+```
+3.启动服务
 ```shell
 docker compose --env-file docker.env up -d
 ```
@@ -63,4 +68,7 @@ docker compose --env-file docker.env up -d
 docker logs -f iot-server
 ```
 
-## 后续
+## 其他
+1. 单独启动server
+
+docker compose --env-file docker.env up  server

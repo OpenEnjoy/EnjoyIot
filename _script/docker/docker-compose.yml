@@ -108,6 +108,8 @@ services:
     restart: unless-stopped
     ports:
       - "48080:48080"
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"  ## 添加宿主机网络,一般情况下是172.17.0.1, 具体使用ip addr show docker0 查看
     environment:
       # https://github.com/polovyivan/docker-pass-configs-to-container
       SPRING_PROFILES_ACTIVE: eiot  # 启用的配置文件, application-eiot.yml
