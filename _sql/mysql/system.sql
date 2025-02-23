@@ -1,3 +1,12 @@
+/*
+ Navicat Premium Data Transfer
+
+ Target Server Type    : MySQL
+ Target Server Version : 80036
+ File Encoding         : 65001
+
+ Date: 23/02/2025 21:27:49
+*/
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -21,7 +30,7 @@ CREATE TABLE `ai_algorithm`  (
                                  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                  `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'AI算法表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'AI算法表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ai_algorithm
@@ -44,7 +53,7 @@ CREATE TABLE `channel`  (
                             `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                             `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                             PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '通道' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '通道' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of channel
@@ -76,7 +85,7 @@ CREATE TABLE `device_ota_detail`  (
                                       `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                       `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '设备ota详情' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '设备ota详情' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of device_ota_detail
@@ -105,7 +114,7 @@ CREATE TABLE `device_ota_info`  (
                                     `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                     `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                     PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '设备ota信息' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '设备ota信息' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of device_ota_info
@@ -150,7 +159,7 @@ CREATE TABLE `eiot_alert_config`  (
                                       `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                       `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '报警配置' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '报警配置' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_alert_config
@@ -176,7 +185,7 @@ CREATE TABLE `eiot_alert_record`  (
                                       `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                       `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '告警记录' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '告警记录' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_alert_record
@@ -206,7 +215,7 @@ CREATE TABLE `eiot_category`  (
                                   `img_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图片地址',
                                   `is_sys` tinyint NOT NULL DEFAULT 0 COMMENT '是否系统通用（0-否，1-是）',
                                   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 98 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'eiot产品分类' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 98 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'eiot产品分类' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_category
@@ -236,14 +245,14 @@ CREATE TABLE `eiot_channel_config`  (
                                         `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                         `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                         PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '通道配置' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '通道配置' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_channel_config
 -- ----------------------------
 INSERT INTO `eiot_channel_config` VALUES (1, '钉钉通道', 'DingTalk', '{\"dingTalkSecret\":\"xxx\",\"dingTalkWebhook\":\"http://xxx.com\"}', '1', '2025-02-10 09:13:20', '1', '2025-02-10 09:13:20', b'0', 1, 0);
 INSERT INTO `eiot_channel_config` VALUES (2, '企业微信通道', 'QyWechat', '{\"qyWechatWebhook\":\"http://xxxx.com\"}', '1', '2025-02-16 17:58:25', '1', '2025-02-16 17:58:25', b'0', 1, 0);
-INSERT INTO `eiot_channel_config` VALUES (3, '邮箱通道', 'Email', '{\"qyWechatWebhook\":\"http://xxxx.com\",\"from\":\"xxxx@163.com\",\"host\":\"smtp.163.com\",\"userName\":\"xxx@163.com\",\"passWord\":\"xxx\",\"to\":\"xxxx@163.com\",\"mailSmtpAuth\":true}', '1', '2025-02-16 17:59:50', '1', '2025-02-16 17:59:50', b'0', 1, 0);
+INSERT INTO `eiot_channel_config` VALUES (3, '邮箱通道', 'Email', '{\"qyWechatWebhook\":\"http://xxxx.com\",\"from\":\"xxxx@163.com\",\"host\":\"smtp.163.com\",\"userName\":\"xxx@163.com\",\"passWord\":\"xxx1\",\"to\":\"xxxx@163.com\",\"mailSmtpAuth\":true}', '1', '2025-02-16 17:59:50', '1', '2025-02-16 17:59:50', b'0', 1, 0);
 
 -- ----------------------------
 -- Table structure for eiot_channel_template
@@ -262,7 +271,7 @@ CREATE TABLE `eiot_channel_template`  (
                                           `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                           `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                           PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '通道模板' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '通道模板' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_channel_template
@@ -287,7 +296,7 @@ CREATE TABLE `eiot_component`  (
                                    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                    `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '组件配置' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '组件配置' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_component
@@ -314,7 +323,7 @@ CREATE TABLE `eiot_dept_product`  (
                                       `category_id` bigint NOT NULL COMMENT '分类id',
                                       `product_key` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '内部产品key',
                                       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '机构产品信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '机构产品信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_dept_product
@@ -339,7 +348,7 @@ CREATE TABLE `eiot_dept_product_category`  (
                                                `img_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图片地址',
                                                `is_sys` tinyint NOT NULL DEFAULT 0 COMMENT '是否系统通用（0-否，1-是）',
                                                PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 88 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'eiot产品分类' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 88 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'eiot产品分类' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_dept_product_category
@@ -361,7 +370,7 @@ CREATE TABLE `eiot_device_config`  (
                                        `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                        `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                        PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_device_config
@@ -400,7 +409,7 @@ CREATE TABLE `eiot_device_info`  (
                                      `transparent` bit(1) NULL DEFAULT NULL COMMENT '是否透传',
                                      `node_type` int NOT NULL COMMENT '设备类型',
                                      PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1892227827321597953 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '设备主控表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1892227827321597953 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '设备主控表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_device_info
@@ -429,8 +438,8 @@ INSERT INTO `eiot_device_info` VALUES (1892053974882209792, 'TEST_SW_000002', 'R
 INSERT INTO `eiot_device_info` VALUES (1892053976098557952, 'TEST_SW_000004', 'Rf4QSjbm65X45753', 0, NULL, NULL, '2025-02-19 11:29:55', NULL, '2025-02-19 15:22:10', b'0', 1, '设备1892053976098557952', 2, NULL, NULL, 'TEST_SW_000004', NULL, NULL, NULL, 'S01', 1892053962605481984, NULL, 'nmqnXTsUhSScIJwN', '1.0.0', NULL, NULL, 1);
 INSERT INTO `eiot_device_info` VALUES (1892053977256185856, 'TEST_SW_000000', 'Rf4QSjbm65X45753', 0, NULL, NULL, '2025-02-19 11:29:55', NULL, '2025-02-19 15:22:10', b'0', 1, '设备1892053977256185856', 2, NULL, NULL, 'TEST_SW_000000', NULL, NULL, NULL, 'S01', 1892053963456925696, NULL, 'pyQCJzvfPXMLRIEL', '1.0.0', NULL, NULL, 1);
 INSERT INTO `eiot_device_info` VALUES (1892053979932151808, 'TEST_SW_000003', 'Rf4QSjbm65X45753', 0, NULL, NULL, '2025-02-19 11:29:56', NULL, '2025-02-19 15:22:10', b'0', 1, '设备1892053979932151808', 2, NULL, NULL, 'TEST_SW_000003', NULL, NULL, NULL, 'S01', 1892053964220289024, NULL, 'UebFTNIxilNbncDt', '1.0.0', NULL, NULL, 1);
-INSERT INTO `eiot_device_info` VALUES (1892227036623990784, 'CC68', 'R755G5Wb3jst4tD7', 0, NULL, '1', '2025-02-19 22:57:36', '1', '2025-02-22 17:37:00', b'0', 1, '我的猫砂盆', 1, 1740217010221, 1740217021961, 'CC68', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, 2);
-INSERT INTO `eiot_device_info` VALUES (1892227827321597952, 'C18338', 'R755G5Wb3jst4tD7', 0, NULL, '1', '2025-02-19 23:00:45', '1', '2025-02-22 17:37:00', b'0', 1, '小花的猫砂盆', 1, 1740217010221, 1740217021957, 'C18338', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, 2);
+INSERT INTO `eiot_device_info` VALUES (1892227036623990784, 'CC68', 'R755G5Wb3jst4tD7', 0, NULL, '1', '2025-02-19 22:57:36', '1', '2025-02-23 18:24:26', b'0', 1, '我的猫砂盆', 0, 1740306266093, 1740263646879, 'CC68', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, 2);
+INSERT INTO `eiot_device_info` VALUES (1892227827321597952, 'C18338', 'R755G5Wb3jst4tD7', 0, NULL, '1', '2025-02-19 23:00:45', '1', '2025-02-23 20:00:15', b'0', 1, '猫砂盆', 0, 1740306265974, 1740263646876, 'C18338', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, 2);
 
 -- ----------------------------
 -- Table structure for eiot_iot_device_group
@@ -509,7 +518,7 @@ CREATE TABLE `eiot_product`  (
                                  `transparent` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否透传',
                                  `locate_type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '定位方式(0无定位, 1自动上报 2手动定位)',
                                  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'eiot产品' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'eiot产品' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_product
@@ -536,7 +545,7 @@ CREATE TABLE `eiot_product_config`  (
                                         `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                         `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                         PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_product_config
@@ -563,7 +572,7 @@ CREATE TABLE `eiot_rule_info`  (
                                    `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                    `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '规则引擎' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '规则引擎' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_rule_info
@@ -592,7 +601,7 @@ CREATE TABLE `eiot_show_model`  (
                                     `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                     `product_key` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT 'productKey',
                                     PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '产品显示模型' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '产品显示模型' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_show_model
@@ -613,7 +622,7 @@ CREATE TABLE `eiot_thing_model`  (
                                      `product_key` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '产品key',
                                      `model` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL COMMENT '物模型',
                                      PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '产品物模型' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '产品物模型' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_thing_model
@@ -641,7 +650,7 @@ CREATE TABLE `eiot_virtual_device`  (
                                         `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                         `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                         PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1892398879810187267 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '虚拟设备信息' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1892398879810187267 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '虚拟设备信息' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_virtual_device
@@ -650,7 +659,7 @@ INSERT INTO `eiot_virtual_device` VALUES (1, '2', 'pfxt7ymAmc5TCdNE', 'thingMode
 INSERT INTO `eiot_virtual_device` VALUES (2, '1', 'pfxt7ymAmc5TCdNE', 'thingModel', '\nvar mid=1000;\n\nfunction getMid(){\n  mid++;\n  if(mid>9999){\n	mid=1;\n  }\n  return mid+\"\";\n}\n\nfunction getRequestId(){\n  return \"RID\"+new Date().getTime()+getMid();\n}\n\n\nthis.receive=function(service,device){\n  return [];\n}\n\nthis.report=function(device){\n  return {\n    \"mid\":getRequestId(),\n    \"productKey\":device.productKey,  \n    \"deviceName\":device.deviceName,\n  \"deviceId\": device.deviceId,\n  \"type\":\"property\",\n    \"identifier\":\"report\",\n    \"occurred\":new Date().getTime(),	//时间戳，设备上的事件或数据产生的本地时间\n    \"time\":new Date().getTime(),		//时间戳，消息上报时间\n   // 根据你设备属性修改 \n \"data\":{\n	  \"rssi\":127-parseInt(Math.random()*127),\n	  \"powerstate_1\":Math.random()>0.5?1:0,\n	  \"powerstate_2\":Math.random()>0.5?1:0,\n	  \"powerstate_3\":Math.random()>0.5?1:0\n    }\n  }\n}', 'cron', '0 0 0 L * ?', 'running', '1', '2025-02-19 14:44:38', '1', '2025-02-19 17:09:32', b'1', 1);
 INSERT INTO `eiot_virtual_device` VALUES (3, '2', 'pfxt7ymAmc5TCdNE', 'thingModel', '\nvar mid=1000;\n\nfunction getMid(){\n  mid++;\n  if(mid>9999){\n	mid=1;\n  }\n  return mid+\"\";\n}\n\nfunction getRequestId(){\n  return \"RID\"+new Date().getTime()+getMid();\n}\n\n\nthis.receive=function(service,device){\n  return [];\n}\n\nthis.report=function(device){\n  return {\n    \"mid\":getRequestId(),\n    \"productKey\":device.productKey,  \n    \"deviceName\":device.deviceName,\n  \"deviceId\": device.deviceId,\n  \"type\":\"property\",\n    \"identifier\":\"report\",\n    \"occurred\":new Date().getTime(),	//时间戳，设备上的事件或数据产生的本地时间\n    \"time\":new Date().getTime(),		//时间戳，消息上报时间\n   // 根据你设备属性修改 \n \"data\":{\n	  \"rssi\":127-parseInt(Math.random()*127),\n	  \"powerstate_1\":Math.random()>0.5?1:0,\n	  \"powerstate_2\":Math.random()>0.5?1:0,\n	  \"powerstate_3\":Math.random()>0.5?1:0\n    }\n  }\n}', 'cron', NULL, 'stopped', '1', '2025-02-19 17:12:48', '1', '2025-02-19 17:12:51', b'1', 1);
 INSERT INTO `eiot_virtual_device` VALUES (4, '虚拟设备', 'nechCiDrhjzzA2A5', 'thingModel', '\nvar mid=1000;\n\nfunction getMid(){\n  mid++;\n  if(mid>9999){\n	mid=1;\n  }\n  return mid+\"\";\n}\n\nfunction getRequestId(){\n  return \"RID\"+new Date().getTime()+getMid();\n}\n\n\nthis.receive=function(service,device){\n  return [];\n}\n\nthis.report=function(device){\n  return {\n    \"mid\":getRequestId(),\n    \"productKey\":device.productKey,  \n    \"deviceName\":device.deviceName,\n  \"deviceId\": device.id,\n  \"type\":\"property\",\n    \"identifier\":\"report\",\n    \"occurred\":new Date().getTime(),	//时间戳，设备上的事件或数据产生的本地时间\n    \"time\":new Date().getTime(),		//时间戳，消息上报时间\n   // 根据你设备属性修改 \n \"data\":{\n	  \"rssi\":127-parseInt(Math.random()*127),\n	  \"powerstate_1\":Math.random()>0.5?1:0,\n	  \"powerstate_2\":Math.random()>0.5?1:0,\n	  \"powerstate_3\":Math.random()>0.5?1:0\n    }\n  }\n}', 'cron', NULL, 'running', '1', '2025-02-19 19:10:30', '1', '2025-02-20 11:00:59', b'1', 1);
-INSERT INTO `eiot_virtual_device` VALUES (1892396467372355586, '2', 'pfxt7ymAmc5TCdNE', 'thingModel', '\nvar mid=1000;\n\nfunction getMid(){\n  mid++;\n  if(mid>9999){\n	mid=1;\n  }\n  return mid+\"\";\n}\n\nfunction getRequestId(){\n  return \"RID\"+new Date().getTime()+getMid();\n}\n\n\nthis.receive=function(service,device){\n  return [];\n}\n\nthis.report=function(device){\n  return {\n    \"mid\":getRequestId(),\n    \"productKey\":device.productKey,  \n    \"dn\":device.name,\n  \"deviceId\": device.id,\n  \"type\":\"property\",\n    \"identifier\":\"report\",\n    \"occurred\":new Date().getTime(),	//时间戳，设备上的事件或数据产生的本地时间\n    \"time\":new Date().getTime(),		//时间戳，消息上报时间\n   // 根据你设备属性修改 \n \"data\":{\n	  \"rssi\":127-parseInt(Math.random()*127),\n	  \"powerstate_1\":Math.random()>0.5?1:0,\n	  \"powerstate_2\":Math.random()>0.5?1:0,\n	  \"powerstate_3\":Math.random()>0.5?1:0\n    }\n  }\n}', 'cron', '0 * * * * ?', 'running', '1', '2025-02-20 10:10:52', '1', '2025-02-21 00:23:55', b'0', 1);
+INSERT INTO `eiot_virtual_device` VALUES (1892396467372355586, '2', 'pfxt7ymAmc5TCdNE', 'thingModel', '\nvar mid=1000;\n\nfunction getMid(){\n  mid++;\n  if(mid>9999){\n	mid=1;\n  }\n  return mid+\"\";\n}\n\nfunction getRequestId(){\n  return \"RID\"+new Date().getTime()+getMid();\n}\n\n\nthis.receive=function(service,device){\n  return [];\n}\n\nthis.report=function(device){\n  return {\n    \"mid\":getRequestId(),\n    \"productKey\":device.productKey,  \n    \"dn\":device.name,\n  \"deviceId\": device.id,\n  \"type\":\"property\",\n    \"identifier\":\"report\",\n    \"occurred\":new Date().getTime(),	//时间戳，设备上的事件或数据产生的本地时间\n    \"time\":new Date().getTime(),		//时间戳，消息上报时间\n   // 根据你设备属性修改 \n \"data\":{\n	  \"rssi\":127-parseInt(Math.random()*127),\n	  \"powerstate_1\":Math.random()>0.5?1:0,\n	  \"powerstate_2\":Math.random()>0.5?1:0,\n	  \"powerstate_3\":Math.random()>0.5?1:0\n    }\n  }\n}', 'cron', '0 * * * * ?', 'stopped', '1', '2025-02-20 10:10:52', '1', '2025-02-23 21:10:53', b'0', 1);
 INSERT INTO `eiot_virtual_device` VALUES (1892398879810187266, 'ces', 'pfxt7ymAmc5TCdNE', 'thingModel', '\nvar mid=1000;\n\nfunction getMid(){\n  mid++;\n  if(mid>9999){\n	mid=1;\n  }\n  return mid+\"\";\n}\n\nfunction getRequestId(){\n  return \"RID\"+new Date().getTime()+getMid();\n}\n\n\nthis.receive=function(service,device){\n  return [];\n}\n\nthis.report=function(device){\n  return {\n    \"mid\":getRequestId(),\n    \"productKey\":device.productKey,  \n    \"deviceName\":device.deviceName,\n  \"deviceId\": device.deviceId,\n  \"type\":\"property\",\n    \"identifier\":\"report\",\n    \"occurred\":new Date().getTime(),	//时间戳，设备上的事件或数据产生的本地时间\n    \"time\":new Date().getTime(),		//时间戳，消息上报时间\n   // 根据你设备属性修改 \n \"data\":{\n	  \"rssi\":127-parseInt(Math.random()*127),\n	  \"powerstate_1\":Math.random()>0.5?1:0,\n	  \"powerstate_2\":Math.random()>0.5?1:0,\n	  \"powerstate_3\":Math.random()>0.5?1:0\n    }\n  }\n}', 'cron', '0 * * * * ?', 'stopped', '1', '2025-02-20 10:20:27', '1', '2025-02-20 10:20:27', b'0', 1);
 
 -- ----------------------------
@@ -668,7 +677,7 @@ CREATE TABLE `eiot_virtual_device_mapping`  (
                                                 `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                                 `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                                 PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1892610417427156994 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '虚拟设备信息' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1892610417427156994 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '虚拟设备信息' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_virtual_device_mapping
@@ -718,7 +727,7 @@ CREATE TABLE `infra_api_access_log`  (
                                          `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                          PRIMARY KEY (`id`) USING BTREE,
                                          INDEX `idx_create_time`(`create_time` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 35942 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'API 访问日志表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 35942 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'API 访问日志表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of infra_api_access_log
@@ -758,7 +767,26 @@ CREATE TABLE `infra_api_error_log`  (
                                         `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                         `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                         PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 21292 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '系统异常日志' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 21307 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '系统异常日志' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of infra_api_error_log
+-- ----------------------------
+INSERT INTO `infra_api_error_log` VALUES (21292, '', 0, 2, 'iot-server', 'GET', '/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', '{\"query\":{},\"body\":null}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '2025-02-23 06:35:05', 'cn.hutool.core.io.IORuntimeException', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'cn.hutool.core.io.IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png\n	at cn.hutool.core.io.file.FileReader.checkFile(FileReader.java:300)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:57)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:93)\n	at cn.hutool.core.io.file.FileReader.create(FileReader.java:46)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2085)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2098)\n	at com.enjoyiot.module.infra.framework.file.core.client.local.LocalFileClient.getContent(LocalFileClient.java:68)\n	at com.enjoyiot.module.infra.service.file.FileServiceImpl.getFileContent(FileServiceImpl.java:129)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController.getFileContent(FileController.java:109)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$FastClassBySpringCGLIB$$65c8df3b.invoke(<generated>)\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:123)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:707)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$EnhancerBySpringCGLIB$$5502101e.getFileContent(<generated>)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)\n	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)\n	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:903)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:809)\n	at org.springframework.web.servlet.mvc.method.AbstractHandlerM', 'cn.hutool.core.io.file.FileReader', 'FileReader.java', 'checkFile', 300, 0, NULL, 0, NULL, '2025-02-23 06:35:05', NULL, '2025-02-23 06:35:05', b'0', 0);
+INSERT INTO `infra_api_error_log` VALUES (21293, '', 0, 2, 'iot-server', 'GET', '/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', '{\"query\":{},\"body\":null}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '2025-02-23 06:35:15', 'cn.hutool.core.io.IORuntimeException', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'cn.hutool.core.io.IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png\n	at cn.hutool.core.io.file.FileReader.checkFile(FileReader.java:300)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:57)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:93)\n	at cn.hutool.core.io.file.FileReader.create(FileReader.java:46)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2085)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2098)\n	at com.enjoyiot.module.infra.framework.file.core.client.local.LocalFileClient.getContent(LocalFileClient.java:68)\n	at com.enjoyiot.module.infra.service.file.FileServiceImpl.getFileContent(FileServiceImpl.java:129)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController.getFileContent(FileController.java:109)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$FastClassBySpringCGLIB$$65c8df3b.invoke(<generated>)\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:123)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:707)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$EnhancerBySpringCGLIB$$5502101e.getFileContent(<generated>)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)\n	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)\n	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:903)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:809)\n	at org.springframework.web.servlet.mvc.method.AbstractHandlerM', 'cn.hutool.core.io.file.FileReader', 'FileReader.java', 'checkFile', 300, 0, NULL, 0, NULL, '2025-02-23 06:35:15', NULL, '2025-02-23 06:35:15', b'0', 0);
+INSERT INTO `infra_api_error_log` VALUES (21294, '', 0, 2, 'iot-server', 'GET', '/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', '{\"query\":{},\"body\":null}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '2025-02-23 06:35:25', 'cn.hutool.core.io.IORuntimeException', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'cn.hutool.core.io.IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png\n	at cn.hutool.core.io.file.FileReader.checkFile(FileReader.java:300)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:57)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:93)\n	at cn.hutool.core.io.file.FileReader.create(FileReader.java:46)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2085)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2098)\n	at com.enjoyiot.module.infra.framework.file.core.client.local.LocalFileClient.getContent(LocalFileClient.java:68)\n	at com.enjoyiot.module.infra.service.file.FileServiceImpl.getFileContent(FileServiceImpl.java:129)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController.getFileContent(FileController.java:109)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$FastClassBySpringCGLIB$$65c8df3b.invoke(<generated>)\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:123)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:707)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$EnhancerBySpringCGLIB$$5502101e.getFileContent(<generated>)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)\n	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)\n	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:903)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:809)\n	at org.springframework.web.servlet.mvc.method.AbstractHandlerM', 'cn.hutool.core.io.file.FileReader', 'FileReader.java', 'checkFile', 300, 0, NULL, 0, NULL, '2025-02-23 06:35:25', NULL, '2025-02-23 06:35:25', b'0', 0);
+INSERT INTO `infra_api_error_log` VALUES (21295, '', 0, 2, 'iot-server', 'GET', '/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', '{\"query\":{},\"body\":null}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '2025-02-23 06:35:34', 'cn.hutool.core.io.IORuntimeException', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'cn.hutool.core.io.IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png\n	at cn.hutool.core.io.file.FileReader.checkFile(FileReader.java:300)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:57)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:93)\n	at cn.hutool.core.io.file.FileReader.create(FileReader.java:46)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2085)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2098)\n	at com.enjoyiot.module.infra.framework.file.core.client.local.LocalFileClient.getContent(LocalFileClient.java:68)\n	at com.enjoyiot.module.infra.service.file.FileServiceImpl.getFileContent(FileServiceImpl.java:129)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController.getFileContent(FileController.java:109)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$FastClassBySpringCGLIB$$65c8df3b.invoke(<generated>)\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:123)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:707)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$EnhancerBySpringCGLIB$$5502101e.getFileContent(<generated>)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)\n	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)\n	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:903)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:809)\n	at org.springframework.web.servlet.mvc.method.AbstractHandlerM', 'cn.hutool.core.io.file.FileReader', 'FileReader.java', 'checkFile', 300, 0, NULL, 0, NULL, '2025-02-23 06:35:34', NULL, '2025-02-23 06:35:34', b'0', 0);
+INSERT INTO `infra_api_error_log` VALUES (21296, '', 0, 2, 'iot-server', 'GET', '/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', '{\"query\":{},\"body\":null}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '2025-02-23 06:36:40', 'cn.hutool.core.io.IORuntimeException', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'cn.hutool.core.io.IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png\n	at cn.hutool.core.io.file.FileReader.checkFile(FileReader.java:300)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:57)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:93)\n	at cn.hutool.core.io.file.FileReader.create(FileReader.java:46)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2085)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2098)\n	at com.enjoyiot.module.infra.framework.file.core.client.local.LocalFileClient.getContent(LocalFileClient.java:68)\n	at com.enjoyiot.module.infra.service.file.FileServiceImpl.getFileContent(FileServiceImpl.java:129)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController.getFileContent(FileController.java:109)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$FastClassBySpringCGLIB$$65c8df3b.invoke(<generated>)\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:123)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:707)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$EnhancerBySpringCGLIB$$5502101e.getFileContent(<generated>)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)\n	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)\n	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:903)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:809)\n	at org.springframework.web.servlet.mvc.method.AbstractHandlerM', 'cn.hutool.core.io.file.FileReader', 'FileReader.java', 'checkFile', 300, 0, NULL, 0, NULL, '2025-02-23 06:36:40', NULL, '2025-02-23 06:36:40', b'0', 0);
+INSERT INTO `infra_api_error_log` VALUES (21297, '', 0, 2, 'iot-server', 'GET', '/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', '{\"query\":{},\"body\":null}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '2025-02-23 06:38:27', 'cn.hutool.core.io.IORuntimeException', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'cn.hutool.core.io.IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png\n	at cn.hutool.core.io.file.FileReader.checkFile(FileReader.java:300)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:57)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:93)\n	at cn.hutool.core.io.file.FileReader.create(FileReader.java:46)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2085)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2098)\n	at com.enjoyiot.module.infra.framework.file.core.client.local.LocalFileClient.getContent(LocalFileClient.java:68)\n	at com.enjoyiot.module.infra.service.file.FileServiceImpl.getFileContent(FileServiceImpl.java:129)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController.getFileContent(FileController.java:109)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$FastClassBySpringCGLIB$$65c8df3b.invoke(<generated>)\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:123)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:707)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$EnhancerBySpringCGLIB$$5502101e.getFileContent(<generated>)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)\n	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)\n	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:903)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:809)\n	at org.springframework.web.servlet.mvc.method.AbstractHandlerM', 'cn.hutool.core.io.file.FileReader', 'FileReader.java', 'checkFile', 300, 0, NULL, 0, NULL, '2025-02-23 06:38:27', NULL, '2025-02-23 06:38:27', b'0', 0);
+INSERT INTO `infra_api_error_log` VALUES (21298, '', 0, 2, 'iot-server', 'GET', '/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', '{\"query\":{},\"body\":null}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '2025-02-23 06:39:13', 'cn.hutool.core.io.IORuntimeException', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'cn.hutool.core.io.IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png\n	at cn.hutool.core.io.file.FileReader.checkFile(FileReader.java:300)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:57)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:93)\n	at cn.hutool.core.io.file.FileReader.create(FileReader.java:46)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2085)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2098)\n	at com.enjoyiot.module.infra.framework.file.core.client.local.LocalFileClient.getContent(LocalFileClient.java:68)\n	at com.enjoyiot.module.infra.service.file.FileServiceImpl.getFileContent(FileServiceImpl.java:129)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController.getFileContent(FileController.java:109)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$FastClassBySpringCGLIB$$65c8df3b.invoke(<generated>)\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:123)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:707)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$EnhancerBySpringCGLIB$$5502101e.getFileContent(<generated>)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)\n	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)\n	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:903)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:809)\n	at org.springframework.web.servlet.mvc.method.AbstractHandlerM', 'cn.hutool.core.io.file.FileReader', 'FileReader.java', 'checkFile', 300, 0, NULL, 0, NULL, '2025-02-23 06:39:13', NULL, '2025-02-23 06:39:13', b'0', 0);
+INSERT INTO `infra_api_error_log` VALUES (21299, '', 0, 2, 'iot-server', 'GET', '/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', '{\"query\":{},\"body\":null}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '2025-02-23 06:46:13', 'cn.hutool.core.io.IORuntimeException', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'cn.hutool.core.io.IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png\n	at cn.hutool.core.io.file.FileReader.checkFile(FileReader.java:300)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:57)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:93)\n	at cn.hutool.core.io.file.FileReader.create(FileReader.java:46)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2085)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2098)\n	at com.enjoyiot.module.infra.framework.file.core.client.local.LocalFileClient.getContent(LocalFileClient.java:68)\n	at com.enjoyiot.module.infra.service.file.FileServiceImpl.getFileContent(FileServiceImpl.java:129)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController.getFileContent(FileController.java:109)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$FastClassBySpringCGLIB$$65c8df3b.invoke(<generated>)\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:123)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:707)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$EnhancerBySpringCGLIB$$5502101e.getFileContent(<generated>)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)\n	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)\n	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:903)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:809)\n	at org.springframework.web.servlet.mvc.method.AbstractHandlerM', 'cn.hutool.core.io.file.FileReader', 'FileReader.java', 'checkFile', 300, 0, NULL, 0, NULL, '2025-02-23 06:46:13', NULL, '2025-02-23 06:46:13', b'0', 0);
+INSERT INTO `infra_api_error_log` VALUES (21300, '', 0, 2, 'iot-server', 'GET', '/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', '{\"query\":{},\"body\":null}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '2025-02-23 06:49:58', 'cn.hutool.core.io.IORuntimeException', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'cn.hutool.core.io.IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png\n	at cn.hutool.core.io.file.FileReader.checkFile(FileReader.java:300)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:57)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:93)\n	at cn.hutool.core.io.file.FileReader.create(FileReader.java:46)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2085)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2098)\n	at com.enjoyiot.module.infra.framework.file.core.client.local.LocalFileClient.getContent(LocalFileClient.java:68)\n	at com.enjoyiot.module.infra.service.file.FileServiceImpl.getFileContent(FileServiceImpl.java:129)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController.getFileContent(FileController.java:109)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$FastClassBySpringCGLIB$$65c8df3b.invoke(<generated>)\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:123)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:707)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$EnhancerBySpringCGLIB$$5502101e.getFileContent(<generated>)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)\n	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)\n	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:903)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:809)\n	at org.springframework.web.servlet.mvc.method.AbstractHandlerM', 'cn.hutool.core.io.file.FileReader', 'FileReader.java', 'checkFile', 300, 0, NULL, 0, NULL, '2025-02-23 06:49:58', NULL, '2025-02-23 06:49:58', b'0', 0);
+INSERT INTO `infra_api_error_log` VALUES (21301, '', 0, 2, 'iot-server', 'GET', '/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', '{\"query\":{},\"body\":null}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '2025-02-23 06:51:44', 'cn.hutool.core.io.IORuntimeException', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'cn.hutool.core.io.IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png\n	at cn.hutool.core.io.file.FileReader.checkFile(FileReader.java:300)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:57)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:93)\n	at cn.hutool.core.io.file.FileReader.create(FileReader.java:46)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2085)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2098)\n	at com.enjoyiot.module.infra.framework.file.core.client.local.LocalFileClient.getContent(LocalFileClient.java:68)\n	at com.enjoyiot.module.infra.service.file.FileServiceImpl.getFileContent(FileServiceImpl.java:129)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController.getFileContent(FileController.java:109)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$FastClassBySpringCGLIB$$65c8df3b.invoke(<generated>)\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:123)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:707)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$EnhancerBySpringCGLIB$$5502101e.getFileContent(<generated>)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)\n	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)\n	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:903)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:809)\n	at org.springframework.web.servlet.mvc.method.AbstractHandlerM', 'cn.hutool.core.io.file.FileReader', 'FileReader.java', 'checkFile', 300, 0, NULL, 0, NULL, '2025-02-23 06:51:44', NULL, '2025-02-23 06:51:44', b'0', 0);
+INSERT INTO `infra_api_error_log` VALUES (21302, '', 0, 2, 'iot-server', 'GET', '/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', '{\"query\":{},\"body\":null}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '2025-02-23 07:59:15', 'cn.hutool.core.io.IORuntimeException', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'cn.hutool.core.io.IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png\n	at cn.hutool.core.io.file.FileReader.checkFile(FileReader.java:300)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:57)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:93)\n	at cn.hutool.core.io.file.FileReader.create(FileReader.java:46)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2085)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2098)\n	at com.enjoyiot.module.infra.framework.file.core.client.local.LocalFileClient.getContent(LocalFileClient.java:68)\n	at com.enjoyiot.module.infra.service.file.FileServiceImpl.getFileContent(FileServiceImpl.java:129)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController.getFileContent(FileController.java:109)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$FastClassBySpringCGLIB$$65c8df3b.invoke(<generated>)\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:123)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:707)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$EnhancerBySpringCGLIB$$5502101e.getFileContent(<generated>)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)\n	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)\n	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:903)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:809)\n	at org.springframework.web.servlet.mvc.method.AbstractHandlerM', 'cn.hutool.core.io.file.FileReader', 'FileReader.java', 'checkFile', 300, 0, NULL, 0, NULL, '2025-02-23 07:59:15', NULL, '2025-02-23 07:59:15', b'0', 0);
+INSERT INTO `infra_api_error_log` VALUES (21303, '', 0, 2, 'iot-server', 'GET', '/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', '{\"query\":{},\"body\":null}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '2025-02-23 07:59:23', 'cn.hutool.core.io.IORuntimeException', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'cn.hutool.core.io.IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png\n	at cn.hutool.core.io.file.FileReader.checkFile(FileReader.java:300)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:57)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:93)\n	at cn.hutool.core.io.file.FileReader.create(FileReader.java:46)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2085)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2098)\n	at com.enjoyiot.module.infra.framework.file.core.client.local.LocalFileClient.getContent(LocalFileClient.java:68)\n	at com.enjoyiot.module.infra.service.file.FileServiceImpl.getFileContent(FileServiceImpl.java:129)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController.getFileContent(FileController.java:109)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$FastClassBySpringCGLIB$$65c8df3b.invoke(<generated>)\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:123)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:707)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$EnhancerBySpringCGLIB$$5502101e.getFileContent(<generated>)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)\n	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)\n	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:903)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:809)\n	at org.springframework.web.servlet.mvc.method.AbstractHandlerM', 'cn.hutool.core.io.file.FileReader', 'FileReader.java', 'checkFile', 300, 0, NULL, 0, NULL, '2025-02-23 07:59:23', NULL, '2025-02-23 07:59:23', b'0', 0);
+INSERT INTO `infra_api_error_log` VALUES (21304, '', 0, 2, 'iot-server', 'GET', '/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', '{\"query\":{},\"body\":null}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '2025-02-23 08:00:07', 'cn.hutool.core.io.IORuntimeException', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'cn.hutool.core.io.IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png\n	at cn.hutool.core.io.file.FileReader.checkFile(FileReader.java:300)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:57)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:93)\n	at cn.hutool.core.io.file.FileReader.create(FileReader.java:46)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2085)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2098)\n	at com.enjoyiot.module.infra.framework.file.core.client.local.LocalFileClient.getContent(LocalFileClient.java:68)\n	at com.enjoyiot.module.infra.service.file.FileServiceImpl.getFileContent(FileServiceImpl.java:129)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController.getFileContent(FileController.java:109)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$FastClassBySpringCGLIB$$65c8df3b.invoke(<generated>)\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:123)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:707)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$EnhancerBySpringCGLIB$$5502101e.getFileContent(<generated>)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)\n	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)\n	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:903)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:809)\n	at org.springframework.web.servlet.mvc.method.AbstractHandlerM', 'cn.hutool.core.io.file.FileReader', 'FileReader.java', 'checkFile', 300, 0, NULL, 0, NULL, '2025-02-23 08:00:07', NULL, '2025-02-23 08:00:07', b'0', 0);
+INSERT INTO `infra_api_error_log` VALUES (21305, '', 0, 2, 'iot-server', 'GET', '/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', '{\"query\":{},\"body\":null}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '2025-02-23 08:03:28', 'cn.hutool.core.io.IORuntimeException', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'cn.hutool.core.io.IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png\n	at cn.hutool.core.io.file.FileReader.checkFile(FileReader.java:300)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:57)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:93)\n	at cn.hutool.core.io.file.FileReader.create(FileReader.java:46)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2085)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2098)\n	at com.enjoyiot.module.infra.framework.file.core.client.local.LocalFileClient.getContent(LocalFileClient.java:68)\n	at com.enjoyiot.module.infra.service.file.FileServiceImpl.getFileContent(FileServiceImpl.java:129)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController.getFileContent(FileController.java:109)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$FastClassBySpringCGLIB$$65c8df3b.invoke(<generated>)\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:123)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:707)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$EnhancerBySpringCGLIB$$5502101e.getFileContent(<generated>)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)\n	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)\n	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:903)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:809)\n	at org.springframework.web.servlet.mvc.method.AbstractHandlerM', 'cn.hutool.core.io.file.FileReader', 'FileReader.java', 'checkFile', 300, 0, NULL, 0, NULL, '2025-02-23 08:03:28', NULL, '2025-02-23 08:03:28', b'0', 0);
+INSERT INTO `infra_api_error_log` VALUES (21306, '', 0, 2, 'iot-server', 'GET', '/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', '{\"query\":{},\"body\":null}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '2025-02-23 08:04:28', 'cn.hutool.core.io.IORuntimeException', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 'cn.hutool.core.io.IORuntimeException: File not exist: /Users/sjg/home/物联网/开源/enjoy-iot/server/target/classes/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png\n	at cn.hutool.core.io.file.FileReader.checkFile(FileReader.java:300)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:57)\n	at cn.hutool.core.io.file.FileReader.<init>(FileReader.java:93)\n	at cn.hutool.core.io.file.FileReader.create(FileReader.java:46)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2085)\n	at cn.hutool.core.io.FileUtil.readBytes(FileUtil.java:2098)\n	at com.enjoyiot.module.infra.framework.file.core.client.local.LocalFileClient.getContent(LocalFileClient.java:68)\n	at com.enjoyiot.module.infra.service.file.FileServiceImpl.getFileContent(FileServiceImpl.java:129)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController.getFileContent(FileController.java:109)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$FastClassBySpringCGLIB$$65c8df3b.invoke(<generated>)\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:123)\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\n	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:707)\n	at com.enjoyiot.module.infra.controller.admin.file.FileController$$EnhancerBySpringCGLIB$$5502101e.getFileContent(<generated>)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)\n	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)\n	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:903)\n	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:809)\n	at org.springframework.web.servlet.mvc.method.AbstractHandlerM', 'cn.hutool.core.io.file.FileReader', 'FileReader.java', 'checkFile', 300, 0, NULL, 0, NULL, '2025-02-23 08:04:28', NULL, '2025-02-23 08:04:28', b'0', 0);
 
 -- ----------------------------
 -- Table structure for infra_codegen_column
@@ -789,7 +817,7 @@ CREATE TABLE `infra_codegen_column`  (
                                          `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                          `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                          PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2483 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '代码生成表字段定义' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2483 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '代码生成表字段定义' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of infra_codegen_column
@@ -825,7 +853,7 @@ CREATE TABLE `infra_codegen_table`  (
                                         `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                         `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                         PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 187 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '代码生成表定义' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 187 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '代码生成表定义' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of infra_codegen_table
@@ -850,7 +878,7 @@ CREATE TABLE `infra_config`  (
                                  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '参数配置表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '参数配置表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of infra_config
@@ -879,7 +907,7 @@ CREATE TABLE `infra_data_source_config`  (
                                              `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                              `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                              PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '数据源配置表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '数据源配置表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of infra_data_source_config
@@ -903,7 +931,11 @@ CREATE TABLE `infra_file`  (
                                `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1593 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文件表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1593 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文件表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of infra_file
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for infra_file_config
@@ -922,7 +954,7 @@ CREATE TABLE `infra_file_config`  (
                                       `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                       `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文件配置表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文件配置表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of infra_file_config
@@ -951,7 +983,7 @@ CREATE TABLE `infra_file_content`  (
                                        `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                        `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                        PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 283 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文件表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 283 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文件表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of infra_file_content
@@ -977,7 +1009,7 @@ CREATE TABLE `infra_job`  (
                               `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                               `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                               PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '定时任务表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '定时任务表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of infra_job
@@ -1016,7 +1048,7 @@ CREATE TABLE `infra_job_log`  (
                                   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                   `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 638 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '定时任务日志表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 638 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '定时任务日志表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of infra_job_log
@@ -1039,7 +1071,7 @@ CREATE TABLE `notify_message`  (
                                    `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                    `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'iot通知消息' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'iot通知消息' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of notify_message
@@ -1070,7 +1102,7 @@ CREATE TABLE `ota_package`  (
                                 `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                 `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                 PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'ota包' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'ota包' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ota_package
@@ -1098,7 +1130,7 @@ CREATE TABLE `system_dept`  (
                                 `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                 `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                 PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 115 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '部门表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 115 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '部门表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_dept
@@ -1138,7 +1170,7 @@ CREATE TABLE `system_dict_data`  (
                                      `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                      `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                      PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1710 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '字典数据表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1710 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '字典数据表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_dict_data
@@ -1627,7 +1659,7 @@ CREATE TABLE `system_dict_type`  (
                                      `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                      `deleted_time` datetime NULL DEFAULT NULL COMMENT '删除时间',
                                      PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 650 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '字典类型表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 650 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '字典类型表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_dict_type
@@ -1765,7 +1797,29 @@ CREATE TABLE `system_login_log`  (
                                      `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                      `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                      PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3426 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '系统访问记录' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3427 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '系统访问记录' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of system_login_log
+-- ----------------------------
+INSERT INTO `system_login_log` VALUES (3426, 100, '', 1, 2, 'admin', 0, '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', NULL, '2025-02-23 06:35:01', NULL, '2025-02-23 06:35:01', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3427, 100, '', 1, 2, 'admin', 0, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', NULL, '2025-02-23 19:59:22', NULL, '2025-02-23 19:59:22', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3428, 100, '', 1, 2, 'admin', 0, '222.247.113.4', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', NULL, '2025-02-23 20:00:21', NULL, '2025-02-23 20:00:21', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3429, 200, '', 1, 2, 'admin', 0, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '1', '2025-02-23 20:11:40', '1', '2025-02-23 20:11:40', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3430, 100, '', 104, 2, 'test', 10, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', NULL, '2025-02-23 20:11:48', NULL, '2025-02-23 20:11:48', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3431, 100, '', 1, 2, 'admin', 0, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', NULL, '2025-02-23 20:12:00', NULL, '2025-02-23 20:12:00', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3432, 200, '', 1, 2, 'admin', 0, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '1', '2025-02-23 20:12:43', '1', '2025-02-23 20:12:43', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3433, 100, '', 104, 2, 'test', 0, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', NULL, '2025-02-23 20:12:50', NULL, '2025-02-23 20:12:50', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3434, 100, '', 1, 2, 'admin', 0, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 NetType/WIFI MicroMessenger/7.0.20.1781(0x6700143B) WindowsWechat(0x63090c2d) XWEB/13307 Flue', NULL, '2025-02-23 20:17:49', NULL, '2025-02-23 20:17:49', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3435, 100, '', 1, 2, 'admin', 0, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', NULL, '2025-02-23 20:25:07', NULL, '2025-02-23 20:25:07', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3436, 200, '', 1, 2, 'admin', 0, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '1', '2025-02-23 21:17:37', '1', '2025-02-23 21:17:37', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3437, 100, '', 104, 2, 'test', 0, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', NULL, '2025-02-23 21:18:02', NULL, '2025-02-23 21:18:02', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3438, 200, '', 104, 2, 'test', 0, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '104', '2025-02-23 21:21:04', '104', '2025-02-23 21:21:04', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3439, 100, '', 1, 2, 'admin', 0, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', NULL, '2025-02-23 21:21:13', NULL, '2025-02-23 21:21:13', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3440, 200, '', 1, 2, 'admin', 0, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '1', '2025-02-23 21:25:26', '1', '2025-02-23 21:25:26', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3441, 100, '', 104, 2, 'test', 0, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', NULL, '2025-02-23 21:25:34', NULL, '2025-02-23 21:25:34', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3442, 200, '', 104, 2, 'test', 0, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', '104', '2025-02-23 21:26:40', '104', '2025-02-23 21:26:40', b'0', 1);
+INSERT INTO `system_login_log` VALUES (3443, 100, '', 1, 2, 'admin', 0, '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', NULL, '2025-02-23 21:26:47', NULL, '2025-02-23 21:26:47', b'0', 1);
 
 -- ----------------------------
 -- Table structure for system_mail_account
@@ -1786,7 +1840,7 @@ CREATE TABLE `system_mail_account`  (
                                         `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                         `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                         PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '邮箱账号表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '邮箱账号表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_mail_account
@@ -1823,7 +1877,7 @@ CREATE TABLE `system_mail_log`  (
                                     `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                     `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                     PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 359 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '邮件日志表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 359 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '邮件日志表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_mail_log
@@ -1850,7 +1904,7 @@ CREATE TABLE `system_mail_template`  (
                                          `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                          `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                          PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '邮件模版表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '邮件模版表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_mail_template
@@ -1882,7 +1936,7 @@ CREATE TABLE `system_menu`  (
                                 `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                 `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                 PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2932 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2932 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '菜单权限表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_menu
@@ -2089,23 +2143,23 @@ INSERT INTO `system_menu` VALUES (2739, '消息中心', '', 1, 7, 1, 'messages',
 INSERT INTO `system_menu` VALUES (2740, '监控中心', '', 1, 10, 2, 'monitors', 'ep:monitor', '', '', 0, b'1', b'1', b'1', '1', '2024-04-23 00:04:44', '1', '2024-04-23 00:04:44', b'0');
 INSERT INTO `system_menu` VALUES (2814, '设备中心', '', 1, 1, 0, '/device', 'ep:grid', '', '', 0, b'1', b'1', b'1', '1', '2024-12-04 13:59:59', '1', '2025-02-04 11:55:31', b'0');
 INSERT INTO `system_menu` VALUES (2815, '品类管理', '', 2, 0, 2814, 'category', 'ep:cherry', 'eiot/category/index', 'Category', 0, b'1', b'1', b'1', '', '2024-12-04 18:48:09', '1', '2025-02-04 11:57:31', b'0');
-INSERT INTO `system_menu` VALUES (2816, 'IOT产品分类查询', 'eiot:category:query', 3, 1, 2815, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-04 18:48:09', '140', '2025-01-13 10:28:01', b'0');
-INSERT INTO `system_menu` VALUES (2817, 'IOT产品分类创建', 'eiot:category:create', 3, 2, 2815, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-04 18:48:09', '', '2024-12-04 18:48:09', b'0');
-INSERT INTO `system_menu` VALUES (2818, 'IOT产品分类更新', 'eiot:category:update', 3, 3, 2815, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-04 18:48:09', '', '2024-12-04 18:48:09', b'0');
-INSERT INTO `system_menu` VALUES (2819, 'IOT产品分类删除', 'eiot:category:delete', 3, 4, 2815, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-04 18:48:09', '', '2024-12-04 18:48:09', b'0');
-INSERT INTO `system_menu` VALUES (2820, 'IOT产品分类导出', 'eiot:category:export', 3, 5, 2815, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-04 18:48:09', '', '2024-12-04 18:48:09', b'0');
+INSERT INTO `system_menu` VALUES (2816, 'IOT产品分类查询', 'iot:category:query', 3, 1, 2815, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-04 18:48:09', '1', '2025-02-23 20:30:29', b'0');
+INSERT INTO `system_menu` VALUES (2817, 'IOT产品分类创建', 'iot:category:create', 3, 2, 2815, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-04 18:48:09', '1', '2025-02-23 20:30:35', b'0');
+INSERT INTO `system_menu` VALUES (2818, 'IOT产品分类更新', 'iot:category:update', 3, 3, 2815, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-04 18:48:09', '1', '2025-02-23 20:30:43', b'0');
+INSERT INTO `system_menu` VALUES (2819, 'IOT产品分类删除', 'iot:category:delete', 3, 4, 2815, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-04 18:48:09', '1', '2025-02-23 20:30:48', b'0');
+INSERT INTO `system_menu` VALUES (2820, 'IOT产品分类导出', 'iot:category:export', 3, 5, 2815, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-04 18:48:09', '1', '2025-02-23 20:30:55', b'0');
 INSERT INTO `system_menu` VALUES (2821, '产品管理', '', 2, 0, 2814, 'eiotproduct', 'ep:credit-card', 'eiot/product/index', '', 0, b'1', b'1', b'1', '', '2024-12-04 19:31:42', '1', '2025-02-04 11:57:57', b'0');
-INSERT INTO `system_menu` VALUES (2822, '物联网产品查询', 'eiot:product:query', 3, 1, 2821, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-04 19:31:42', '140', '2025-01-13 19:04:57', b'0');
-INSERT INTO `system_menu` VALUES (2823, '物联网产品创建', 'eiot:product:create', 3, 2, 2821, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-04 19:31:42', '', '2024-12-04 19:31:42', b'0');
-INSERT INTO `system_menu` VALUES (2824, '物联网产品更新', 'eiot:product:update', 3, 3, 2821, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-04 19:31:42', '', '2024-12-04 19:31:42', b'0');
-INSERT INTO `system_menu` VALUES (2825, '物联网产品删除', 'eiot:product:delete', 3, 4, 2821, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-04 19:31:42', '', '2024-12-04 19:31:42', b'0');
-INSERT INTO `system_menu` VALUES (2826, '物联网产品导出', 'eiot:product:export', 3, 5, 2821, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-04 19:31:42', '', '2024-12-04 19:31:42', b'0');
+INSERT INTO `system_menu` VALUES (2822, '物联网产品查询', 'iot:product:query', 3, 1, 2821, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-04 19:31:42', '1', '2025-02-23 20:30:02', b'0');
+INSERT INTO `system_menu` VALUES (2823, '物联网产品创建', 'iot:product:create', 3, 2, 2821, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-04 19:31:42', '1', '2025-02-23 20:30:10', b'0');
+INSERT INTO `system_menu` VALUES (2824, '物联网产品更新', 'iot:product:update', 3, 3, 2821, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-04 19:31:42', '1', '2025-02-23 20:30:16', b'0');
+INSERT INTO `system_menu` VALUES (2825, '物联网产品删除', 'iot:product:delete', 3, 4, 2821, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-04 19:31:42', '1', '2025-02-23 20:31:21', b'0');
+INSERT INTO `system_menu` VALUES (2826, '物联网产品导出', 'iot:product:export', 3, 5, 2821, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-04 19:31:42', '1', '2025-02-23 20:31:26', b'0');
 INSERT INTO `system_menu` VALUES (2827, '设备管理', '', 2, 0, 2814, 'device-info', 'ep:monitor', 'eiot/deviceinfo/index', '', 0, b'1', b'1', b'1', '', '2024-12-06 14:17:52', '1', '2025-02-04 11:58:59', b'0');
-INSERT INTO `system_menu` VALUES (2828, '设备信息查询', 'eiot:device-info:query', 3, 1, 2827, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-06 14:17:52', '140', '2025-01-13 19:04:47', b'0');
-INSERT INTO `system_menu` VALUES (2829, '设备信息创建', 'eiot:device-info:create', 3, 2, 2827, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-06 14:17:52', '', '2024-12-06 14:17:52', b'0');
-INSERT INTO `system_menu` VALUES (2830, '设备信息更新', 'eiot:device-info:update', 3, 3, 2827, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-06 14:17:52', '', '2024-12-06 14:17:52', b'0');
-INSERT INTO `system_menu` VALUES (2831, '设备信息删除', 'eiot:device-info:delete', 3, 4, 2827, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-06 14:17:52', '', '2024-12-06 14:17:52', b'0');
-INSERT INTO `system_menu` VALUES (2832, '设备信息导出', 'eiot:device-info:export', 3, 5, 2827, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-06 14:17:52', '', '2024-12-06 14:17:52', b'0');
+INSERT INTO `system_menu` VALUES (2828, '设备信息查询', 'iot:device-info:query', 3, 1, 2827, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-06 14:17:52', '1', '2025-02-23 20:36:53', b'0');
+INSERT INTO `system_menu` VALUES (2829, '设备信息创建', 'iot:device-info:create', 3, 2, 2827, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-06 14:17:52', '1', '2025-02-23 20:36:58', b'0');
+INSERT INTO `system_menu` VALUES (2830, '设备信息更新', 'iot:device-info:update', 3, 3, 2827, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-06 14:17:52', '1', '2025-02-23 20:37:07', b'0');
+INSERT INTO `system_menu` VALUES (2831, '设备信息删除', 'iot:device-info:delete', 3, 4, 2827, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-06 14:17:52', '1', '2025-02-23 20:37:13', b'0');
+INSERT INTO `system_menu` VALUES (2832, '设备信息导出', 'iot:device-info:export', 3, 5, 2827, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-06 14:17:52', '1', '2025-02-23 20:37:20', b'0');
 INSERT INTO `system_menu` VALUES (2833, '产品显示模型管理', '', 2, 0, 2814, 'show-model', '', 'eiot/showmodel/index', 'ShowModel', 0, b'1', b'1', b'1', '', '2024-12-11 11:48:45', '1', '2025-01-08 10:38:27', b'1');
 INSERT INTO `system_menu` VALUES (2834, '产品显示模型查询', 'eiot:show-model:query', 3, 1, 2833, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-11 11:48:45', '1', '2025-01-08 10:37:44', b'1');
 INSERT INTO `system_menu` VALUES (2835, '产品显示模型创建', 'eiot:show-model:create', 3, 2, 2833, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-11 11:48:45', '1', '2025-01-08 10:37:48', b'1');
@@ -2120,40 +2174,40 @@ INSERT INTO `system_menu` VALUES (2843, '产品物模型删除', 'eiot:thing-mod
 INSERT INTO `system_menu` VALUES (2844, '产品物模型导出', 'eiot:thing-model:export', 3, 5, 2839, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-11 11:51:51', '1', '2025-01-08 10:38:38', b'1');
 INSERT INTO `system_menu` VALUES (2845, '规则引擎', '', 1, 3, 0, '/rule', 'ep:operation', '', '', 0, b'1', b'1', b'1', '1', '2024-12-25 14:25:34', '1', '2025-02-04 12:00:53', b'0');
 INSERT INTO `system_menu` VALUES (2846, '规则引擎管理', '', 2, 0, 2845, 'rule-info', 'ep:credit-card', 'eiot/ruleinfo/index', 'EiotRuleInfo', 0, b'1', b'1', b'1', '', '2024-12-25 15:04:19', '1', '2025-02-04 12:01:13', b'0');
-INSERT INTO `system_menu` VALUES (2847, '规则引擎查询', 'eiot:rule-info:query', 3, 1, 2846, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-25 15:04:19', '', '2024-12-25 15:04:19', b'0');
-INSERT INTO `system_menu` VALUES (2848, '规则引擎创建', 'eiot:rule-info:create', 3, 2, 2846, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-25 15:04:19', '', '2024-12-25 15:04:19', b'0');
-INSERT INTO `system_menu` VALUES (2849, '规则引擎更新', 'eiot:rule-info:update', 3, 3, 2846, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-25 15:04:19', '', '2024-12-25 15:04:19', b'0');
-INSERT INTO `system_menu` VALUES (2850, '规则引擎删除', 'eiot:rule-info:delete', 3, 4, 2846, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-25 15:04:19', '', '2024-12-25 15:04:19', b'0');
-INSERT INTO `system_menu` VALUES (2851, '规则引擎导出', 'eiot:rule-info:export', 3, 5, 2846, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-25 15:04:19', '', '2024-12-25 15:04:19', b'0');
+INSERT INTO `system_menu` VALUES (2847, '规则引擎查询', 'iot:rule-info:query', 3, 1, 2846, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-25 15:04:19', '1', '2025-02-23 21:22:11', b'0');
+INSERT INTO `system_menu` VALUES (2848, '规则引擎创建', 'iot:rule-info:create', 3, 2, 2846, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-25 15:04:19', '1', '2025-02-23 21:22:20', b'0');
+INSERT INTO `system_menu` VALUES (2849, '规则引擎更新', 'iot:rule-info:update', 3, 3, 2846, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-25 15:04:19', '1', '2025-02-23 21:22:27', b'0');
+INSERT INTO `system_menu` VALUES (2850, '规则引擎删除', 'iot:rule-info:remove', 3, 4, 2846, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-25 15:04:19', '1', '2025-02-23 21:22:33', b'0');
+INSERT INTO `system_menu` VALUES (2851, '规则引擎导出', 'iot:rule-info:export', 3, 5, 2846, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-25 15:04:19', '1', '2025-02-23 21:22:38', b'0');
 INSERT INTO `system_menu` VALUES (2852, '告警中心', '', 1, 4, 0, '/notify', 'ep:message', '', '', 0, b'1', b'1', b'1', '1', '2024-12-25 19:21:08', '1', '2025-02-04 12:02:43', b'0');
 INSERT INTO `system_menu` VALUES (2853, '通道模板管理', '', 2, 0, 2914, 'channel-template', '', 'eiot/channel/template', 'ChannelTemplate', 0, b'1', b'1', b'1', '', '2024-12-26 14:25:40', '1', '2025-02-04 12:05:07', b'0');
-INSERT INTO `system_menu` VALUES (2854, '通道模板查询', 'eiot:channel-template:query', 3, 1, 2853, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-26 14:25:40', '', '2024-12-26 14:25:40', b'0');
-INSERT INTO `system_menu` VALUES (2855, '通道模板创建', 'eiot:channel-template:create', 3, 2, 2853, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-26 14:25:40', '', '2024-12-26 14:25:40', b'0');
-INSERT INTO `system_menu` VALUES (2856, '通道模板更新', 'eiot:channel-template:update', 3, 3, 2853, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-26 14:25:40', '', '2024-12-26 14:25:40', b'0');
-INSERT INTO `system_menu` VALUES (2857, '通道模板删除', 'eiot:channel-template:delete', 3, 4, 2853, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-26 14:25:40', '', '2024-12-26 14:25:40', b'0');
-INSERT INTO `system_menu` VALUES (2858, '通道模板导出', 'eiot:channel-template:export', 3, 5, 2853, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-26 14:25:40', '', '2024-12-26 14:25:40', b'0');
+INSERT INTO `system_menu` VALUES (2854, '通道模板查询', 'iot:channel:query', 3, 1, 2853, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-26 14:25:40', '1', '2025-02-23 21:05:01', b'0');
+INSERT INTO `system_menu` VALUES (2855, '通道模板创建', 'iot:channel:add', 3, 2, 2853, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-26 14:25:40', '1', '2025-02-23 21:05:57', b'0');
+INSERT INTO `system_menu` VALUES (2856, '通道模板更新', 'iot:channel:update', 3, 3, 2853, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-26 14:25:40', '1', '2025-02-23 21:06:06', b'0');
+INSERT INTO `system_menu` VALUES (2857, '通道模板删除', 'iot:channel:remove', 3, 4, 2853, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-26 14:25:40', '1', '2025-02-23 21:06:31', b'0');
+INSERT INTO `system_menu` VALUES (2858, '通道模板导出', 'iot:channel:query', 3, 5, 2853, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-26 14:25:40', '1', '2025-02-23 21:06:51', b'0');
 INSERT INTO `system_menu` VALUES (2859, '通道配置管理', '', 2, 0, 2914, 'channel-config', '', 'eiot/channel/config', 'ChannelConfig', 0, b'1', b'1', b'1', '', '2024-12-26 14:26:29', '1', '2025-02-04 12:05:14', b'0');
-INSERT INTO `system_menu` VALUES (2860, '通道配置查询', 'eiot:channel-config:query', 3, 1, 2859, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-26 14:26:30', '', '2024-12-26 14:26:30', b'0');
-INSERT INTO `system_menu` VALUES (2861, '通道配置创建', 'eiot:channel-config:create', 3, 2, 2859, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-26 14:26:30', '', '2024-12-26 14:26:30', b'0');
-INSERT INTO `system_menu` VALUES (2862, '通道配置更新', 'eiot:channel-config:update', 3, 3, 2859, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-26 14:26:30', '', '2024-12-26 14:26:30', b'0');
-INSERT INTO `system_menu` VALUES (2863, '通道配置删除', 'eiot:channel-config:delete', 3, 4, 2859, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-26 14:26:30', '', '2024-12-26 14:26:30', b'0');
+INSERT INTO `system_menu` VALUES (2860, '通道配置查询', 'iot:channel:query', 3, 1, 2859, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-26 14:26:30', '1', '2025-02-23 21:07:00', b'0');
+INSERT INTO `system_menu` VALUES (2861, '通道配置创建', 'iot:channel:add', 3, 2, 2859, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-26 14:26:30', '1', '2025-02-23 21:07:09', b'0');
+INSERT INTO `system_menu` VALUES (2862, '通道配置更新', 'iot:channel:update', 3, 3, 2859, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-26 14:26:30', '1', '2025-02-23 21:07:21', b'0');
+INSERT INTO `system_menu` VALUES (2863, '通道配置删除', 'iot:channel:remove', 3, 4, 2859, '', '', '', '', 0, b'1', b'1', b'1', '', '2024-12-26 14:26:30', '1', '2025-02-23 21:07:30', b'0');
 INSERT INTO `system_menu` VALUES (2864, '通道配置导出', 'eiot:channel-config:export', 3, 5, 2859, '', '', '', NULL, 0, b'1', b'1', b'1', '', '2024-12-26 14:26:30', '', '2024-12-26 14:26:30', b'0');
 INSERT INTO `system_menu` VALUES (2865, '设备分组', 'iot:deviceGroup:list', 2, 3, 2814, 'deviceGroup', 'ep:connection', 'eiot/deviceinfo/deviceGroup', '', 0, b'1', b'1', b'1', '1', '2025-01-14 13:35:37', '1', '2025-02-04 11:59:31', b'0');
 INSERT INTO `system_menu` VALUES (2866, '设备分组详情', 'iot:device:query', 2, 5, 2814, 'deviceGroupDetail/:id', '', 'eiot/deviceinfo/deviceGroupDetail', '', 0, b'0', b'0', b'0', '1', '2025-01-14 14:26:36', '1', '2025-01-14 14:27:17', b'0');
-INSERT INTO `system_menu` VALUES (2867, '定时任务', 'iot:task:list', 2, 2, 2845, 'scheduledTask', 'ep:compass', 'eiot/scheduledTask/index', '', 0, b'1', b'1', b'1', '1', '2025-01-21 15:18:09', '1', '2025-01-21 15:20:50', b'0');
+INSERT INTO `system_menu` VALUES (2867, '定时任务', 'iot:task:query', 2, 2, 2845, 'scheduledTask', 'ep:compass', 'eiot/scheduledTask/index', '', 0, b'1', b'1', b'1', '1', '2025-01-21 15:18:09', '1', '2025-02-23 20:58:38', b'0');
 INSERT INTO `system_menu` VALUES (2868, 'OTA', 'iot:ota:query', 2, 6, 2814, 'deviceOta', 'ep:mostly-cloudy', 'eiot/ota/upgradePack/index', '', 0, b'1', b'1', b'1', '1', '2025-01-21 19:06:31', '1', '2025-01-22 11:26:37', b'0');
 INSERT INTO `system_menu` VALUES (2869, 'OTA查询', 'iot:ota:query', 3, 1, 2868, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-01-21 19:08:56', '1', '2025-01-21 19:08:56', b'0');
 INSERT INTO `system_menu` VALUES (2913, 'EIOT物联网', '', 1, 4, 0, '/eiot', 'ep:apple', '', '', 0, b'1', b'1', b'1', '1', '2025-02-02 21:20:13', '1', '2025-02-04 11:54:48', b'1');
 INSERT INTO `system_menu` VALUES (2914, '告警推送', '', 1, 2, 2852, 'alarm-setting', 'ep:operation', '', '', 0, b'1', b'1', b'1', '1', '2025-02-04 12:04:41', '1', '2025-02-04 12:06:21', b'0');
-INSERT INTO `system_menu` VALUES (2915, '告警消息', '', 2, 1, 2852, 'alarm-messages', 'ep:bell', 'eiot/alarm/list', '', 0, b'1', b'1', b'1', '1', '2025-02-04 12:06:13', '1', '2025-02-16 17:52:49', b'0');
+INSERT INTO `system_menu` VALUES (2915, '告警消息', 'iot:alert:query', 2, 1, 2852, 'alarm-messages', 'ep:bell', 'eiot/alarm/list', '', 0, b'1', b'1', b'1', '1', '2025-02-04 12:06:13', '1', '2025-02-23 21:25:17', b'0');
 INSERT INTO `system_menu` VALUES (2916, '告警工单', '', 2, 3, 2852, 'alarm-work-order', 'ep:checked', '', '', 0, b'1', b'1', b'1', '1', '2025-02-04 12:07:17', '1', '2025-02-04 12:07:17', b'0');
 INSERT INTO `system_menu` VALUES (2917, '算法管理', '', 2, 6, 0, '/algorithms', 'ep:cpu', 'ai/algorithm/index', '', 0, b'1', b'1', b'1', '1', '2025-02-04 12:08:46', '1', '2025-02-18 21:44:58', b'0');
-INSERT INTO `system_menu` VALUES (2918, '组件中心', '', 2, 5, 0, '/components', 'ep:paperclip', 'eiot/component/index', '', 0, b'1', b'1', b'1', '1', '2025-02-04 12:13:42', '1', '2025-02-18 21:44:50', b'0');
---INSERT INTO `system_menu` VALUES (2919, '数据中心', '', 1, 7, 0, '/data-center', 'ep:data-line', '', '', 0, b'1', b'1', b'1', '1', '2025-02-04 12:16:26', '1', '2025-02-18 21:45:04', b'0');
+INSERT INTO `system_menu` VALUES (2918, '组件中心', 'eiot:component:query', 2, 5, 0, '/components', 'ep:paperclip', 'eiot/component/index', '', 0, b'1', b'1', b'1', '1', '2025-02-04 12:13:42', '1', '2025-02-23 20:46:10', b'0');
+INSERT INTO `system_menu` VALUES (2919, '数据中心', '', 1, 7, 0, '/data-center', 'ep:data-line', '', '', 0, b'1', b'1', b'1', '1', '2025-02-04 12:16:26', '1', '2025-02-18 21:45:04', b'0');
 INSERT INTO `system_menu` VALUES (2920, '算法模型添加', 'ai:algorithm:create', 3, 1, 2917, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-06 10:10:28', '1', '2025-02-06 10:13:35', b'0');
 INSERT INTO `system_menu` VALUES (2921, '算法模型修改', ' ai:algorithm:update', 3, 2, 2917, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-06 10:10:50', '1', '2025-02-06 10:13:28', b'0');
 INSERT INTO `system_menu` VALUES (2922, '算法模型删除', 'ai:algorithm:delete', 3, 3, 2917, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-06 10:13:01', '1', '2025-02-06 10:13:01', b'0');
-INSERT INTO `system_menu` VALUES (2923, '告警配置', 'iot:alertConfig:list', 2, 2, 2852, 'alarmconfig', 'ep:basketball', 'eiot/alarm/config', '', 0, b'1', b'1', b'1', '1', '2025-02-09 15:40:26', '1', '2025-02-09 15:40:26', b'0');
+INSERT INTO `system_menu` VALUES (2923, '告警配置', 'iot:alertConfig:query', 2, 2, 2852, 'alarmconfig', 'ep:basketball', 'eiot/alarm/config', '', 0, b'1', b'1', b'1', '1', '2025-02-09 15:40:26', '1', '2025-02-23 21:24:43', b'0');
 INSERT INTO `system_menu` VALUES (2924, '更新组件', 'eiot:component:update', 3, 1, 2918, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-19 01:19:59', '1', '2025-02-19 01:19:59', b'0');
 INSERT INTO `system_menu` VALUES (2925, '虚拟设备', 'eiot:virtual-device:query', 2, 10, 2814, 'virtualDeviceList', 'ep:dish-dot', 'eiot/virtualDevice/index', '', 0, b'1', b'0', b'1', '1', '2025-02-19 14:30:29', '1', '2025-02-19 16:44:58', b'0');
 INSERT INTO `system_menu` VALUES (2926, '虚拟设备详情', 'eiot:virtual-device:query', 2, 10, 2814, 'virtualDeviceConfig/:id', '', 'eiot/virtualDevice/virtualDeviceConfig', '', 0, b'0', b'0', b'0', '1', '2025-02-19 15:10:05', '1', '2025-02-19 16:43:22', b'0');
@@ -2162,6 +2216,27 @@ INSERT INTO `system_menu` VALUES (2928, '虚拟设备创建', 'eiot:virtual-devi
 INSERT INTO `system_menu` VALUES (2929, '虚拟设备更新', 'eiot:virtual-device:update', 3, 3, 2925, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-19 16:45:59', '1', '2025-02-19 16:46:38', b'0');
 INSERT INTO `system_menu` VALUES (2930, '虚拟设备删除', 'eiot:virtual-device:delete', 3, 4, 2925, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-19 16:46:15', '1', '2025-02-19 16:46:15', b'0');
 INSERT INTO `system_menu` VALUES (2931, '设备详情', '', 2, 10, 2814, 'deviceDetail/:id', '', 'eiot/deviceinfo/detail', '', 0, b'0', b'0', b'0', '1', '2025-02-21 01:02:15', '1', '2025-02-21 01:03:08', b'0');
+INSERT INTO `system_menu` VALUES (2932, '物模型修改', 'iot:thing-model:update', 3, 6, 2821, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 20:34:19', '1', '2025-02-23 20:34:19', b'0');
+INSERT INTO `system_menu` VALUES (2933, '物模型查询', 'iot:thing-model:query', 3, 7, 2821, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 20:34:58', '1', '2025-02-23 20:34:58', b'0');
+INSERT INTO `system_menu` VALUES (2934, '设备控制', 'iot:device:ctrl', 3, 6, 2827, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 20:36:20', '1', '2025-02-23 20:36:20', b'0');
+INSERT INTO `system_menu` VALUES (2935, '设备日志', 'iot:deviceLog:query', 3, 7, 2827, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 20:39:51', '1', '2025-02-23 20:39:51', b'0');
+INSERT INTO `system_menu` VALUES (2936, '设备分组添加', 'iot:deviceGroup:add', 3, 8, 2827, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 20:41:08', '1', '2025-02-23 20:41:08', b'0');
+INSERT INTO `system_menu` VALUES (2937, '设备组修改', 'iot:deviceGroup:edit', 3, 9, 2827, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 20:41:45', '1', '2025-02-23 20:41:45', b'0');
+INSERT INTO `system_menu` VALUES (2938, '设备组查询', 'iot:deviceGroup:query', 3, 10, 2827, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 20:42:13', '1', '2025-02-23 20:42:13', b'0');
+INSERT INTO `system_menu` VALUES (2939, '设备组删除', 'iot:deviceGroup:remove', 3, 11, 2827, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 20:42:45', '1', '2025-02-23 20:42:45', b'0');
+INSERT INTO `system_menu` VALUES (2940, '新增组件', 'eiot:component:create', 3, 2, 2918, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 20:46:45', '1', '2025-02-23 20:46:45', b'0');
+INSERT INTO `system_menu` VALUES (2941, '组件删除', 'eiot:component:delete', 3, 3, 2918, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 20:47:06', '1', '2025-02-23 20:47:06', b'0');
+INSERT INTO `system_menu` VALUES (2942, '暂停规则', 'iot:rule-info:pause', 3, 6, 2846, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 20:55:16', '1', '2025-02-23 20:55:22', b'0');
+INSERT INTO `system_menu` VALUES (2943, '恢复规则', 'iot:rule-info:resume', 3, 7, 2846, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 20:55:56', '1', '2025-02-23 20:55:56', b'0');
+INSERT INTO `system_menu` VALUES (2944, '编辑定时任务', 'iot:task:edit', 3, 1, 2867, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 20:57:50', '1', '2025-02-23 20:57:50', b'0');
+INSERT INTO `system_menu` VALUES (2945, '删除定时任务', 'iot:task:remove', 3, 2, 2867, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 20:58:10', '1', '2025-02-23 20:58:10', b'0');
+INSERT INTO `system_menu` VALUES (2946, '新增告警配置', 'iot:alertConfig:add', 3, 1, 2923, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 21:08:32', '1', '2025-02-23 21:08:32', b'0');
+INSERT INTO `system_menu` VALUES (2947, '查询告警配置', 'iot:alertConfig:query', 3, 2, 2923, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 21:08:56', '1', '2025-02-23 21:08:56', b'0');
+INSERT INTO `system_menu` VALUES (2948, '更新告警配置', 'iot:alertConfig:edit', 3, 3, 2923, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 21:09:26', '1', '2025-02-23 21:10:22', b'0');
+INSERT INTO `system_menu` VALUES (2949, '删除告警配置', 'iot:alertConfig:remove', 3, 4, 2923, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 21:09:42', '1', '2025-02-23 21:09:42', b'0');
+INSERT INTO `system_menu` VALUES (2950, '新增OTA', 'iot:ota:add', 3, 2, 2868, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 21:14:28', '1', '2025-02-23 21:14:28', b'0');
+INSERT INTO `system_menu` VALUES (2951, '移除OTA', 'iot:ota:remove', 3, 3, 2868, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 21:14:52', '1', '2025-02-23 21:14:52', b'0');
+INSERT INTO `system_menu` VALUES (2952, '执行ota', 'iot:ota:upgrade', 3, 4, 2868, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 21:15:31', '1', '2025-02-23 21:15:31', b'0');
 
 -- ----------------------------
 -- Table structure for system_notice
@@ -2180,7 +2255,7 @@ CREATE TABLE `system_notice`  (
                                   `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                   `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '通知公告表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '通知公告表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_notice
@@ -2210,7 +2285,11 @@ CREATE TABLE `system_notify_message`  (
                                           `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                           `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                           PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '站内信消息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '站内信消息表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of system_notify_message
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for system_notify_template
@@ -2232,7 +2311,7 @@ CREATE TABLE `system_notify_template`  (
                                            `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                            `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                            PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '站内信模板表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '站内信模板表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_notify_template
@@ -2261,7 +2340,28 @@ CREATE TABLE `system_oauth2_access_token`  (
                                                PRIMARY KEY (`id`) USING BTREE,
                                                INDEX `idx_access_token`(`access_token` ASC) USING BTREE,
                                                INDEX `idx_refresh_token`(`refresh_token` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1891133221308539075 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'OAuth2 访问令牌' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1891133221308539079 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'OAuth2 访问令牌' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of system_oauth2_access_token
+-- ----------------------------
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539075, 1, 2, '{\"nickname\":\"EnjoyIot\",\"deptId\":\"103\"}', '671c2e52d6a848098aa1bde826378977', '3697fe2caa3c42fbbf14b25167d27e5d', 'default', NULL, '2025-02-23 07:05:01', NULL, '2025-02-23 06:35:01', NULL, '2025-02-23 07:05:52', b'1', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539076, 1, 2, '{\"nickname\":\"EnjoyIot\",\"deptId\":\"103\"}', 'a6b320293435426bb9c4fd1b4c474598', '3697fe2caa3c42fbbf14b25167d27e5d', 'default', NULL, '2025-02-23 07:35:52', NULL, '2025-02-23 07:05:52', NULL, '2025-02-23 07:37:51', b'1', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539077, 1, 2, '{\"nickname\":\"EnjoyIot\",\"deptId\":\"103\"}', '0fb206b6e0b148b5822c7f9e0d1a06e3', '3697fe2caa3c42fbbf14b25167d27e5d', 'default', NULL, '2025-02-23 08:07:52', NULL, '2025-02-23 07:37:52', NULL, '2025-02-23 08:08:28', b'1', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539078, 1, 2, '{\"nickname\":\"EnjoyIot\",\"deptId\":\"103\"}', 'd18dc53722ce4810a196c16fa288bfee', '3697fe2caa3c42fbbf14b25167d27e5d', 'default', NULL, '2025-02-23 08:38:28', NULL, '2025-02-23 08:08:28', NULL, '2025-02-23 08:08:28', b'0', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539079, 1, 2, '{\"nickname\":\"EnjoyIot\",\"deptId\":\"103\"}', '2151ff0f3b8146fb9d9f4d1a126864f5', '27522033a27342b2b04752e3a2647392', 'default', NULL, '2025-02-23 20:29:22', NULL, '2025-02-23 19:59:22', '1', '2025-02-23 20:11:40', b'1', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539080, 1, 2, '{\"nickname\":\"EnjoyIot\",\"deptId\":\"103\"}', '960fb22b30cc4141822e4467db4079aa', '1dc5295cbbbe4d5ea4665b751cd34208', 'default', NULL, '2025-02-23 20:30:21', NULL, '2025-02-23 20:00:21', NULL, '2025-02-23 20:30:22', b'1', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539081, 1, 2, '{\"nickname\":\"EnjoyIot\",\"deptId\":\"103\"}', '78301042b7a14645b4eed54850aac14b', 'c05966dd8a6c461f9375979a786e502f', 'default', NULL, '2025-02-23 20:42:00', NULL, '2025-02-23 20:12:00', '1', '2025-02-23 20:12:43', b'1', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539082, 104, 2, '{\"nickname\":\"测试号\",\"deptId\":\"107\"}', '85c60a6c823b4d769f7e4520ad1c346e', '5e8bf32b6bc147128e24781562e7ee2f', 'default', NULL, '2025-02-23 20:42:50', NULL, '2025-02-23 20:12:50', NULL, '2025-02-23 20:12:50', b'0', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539083, 1, 2, '{\"nickname\":\"EnjoyIot\",\"deptId\":\"103\"}', '548881f0c4cf4050ab6ede06aea141b4', '6c630caa533246d8a48c50e36ba6af11', 'default', NULL, '2025-02-23 20:47:49', NULL, '2025-02-23 20:17:49', NULL, '2025-02-23 20:17:49', b'0', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539084, 1, 2, '{\"nickname\":\"EnjoyIot\",\"deptId\":\"103\"}', '252840e2e4ad46bd8881ea36ab1d56ec', '15871af084ad4726a25386b6fafd90e1', 'default', NULL, '2025-02-23 20:55:08', NULL, '2025-02-23 20:25:08', NULL, '2025-02-23 20:55:16', b'1', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539085, 1, 2, '{\"nickname\":\"EnjoyIot\",\"deptId\":\"103\"}', '0eeabc414ee84d12af6ec27267ca034d', '1dc5295cbbbe4d5ea4665b751cd34208', 'default', NULL, '2025-02-23 21:00:22', NULL, '2025-02-23 20:30:22', NULL, '2025-02-23 21:00:32', b'1', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539086, 1, 2, '{\"nickname\":\"EnjoyIot\",\"deptId\":\"103\"}', '1828a8d71a794745912592980a4b658a', '15871af084ad4726a25386b6fafd90e1', 'default', NULL, '2025-02-23 21:25:16', NULL, '2025-02-23 20:55:16', '1', '2025-02-23 21:17:37', b'1', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539087, 1, 2, '{\"nickname\":\"EnjoyIot\",\"deptId\":\"103\"}', '89fa5b026d7f4bbbab9baf5927cb1b42', '1dc5295cbbbe4d5ea4665b751cd34208', 'default', NULL, '2025-02-23 21:30:32', NULL, '2025-02-23 21:00:32', NULL, '2025-02-23 21:00:32', b'0', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539088, 104, 2, '{\"nickname\":\"测试号\",\"deptId\":\"107\"}', '7dc77d72b7f7449186f24a41a8426eed', '4df0a1cd23674557aab2cd2ad45ca5c1', 'default', NULL, '2025-02-23 21:48:02', NULL, '2025-02-23 21:18:02', '104', '2025-02-23 21:21:04', b'1', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539089, 1, 2, '{\"nickname\":\"EnjoyIot\",\"deptId\":\"103\"}', 'f02057564b6f477ba4dcc3e9d5eaceb2', 'cc72a55ee66d405d882a228640f4dd53', 'default', NULL, '2025-02-23 21:51:13', NULL, '2025-02-23 21:21:13', '1', '2025-02-23 21:25:26', b'1', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539090, 104, 2, '{\"nickname\":\"测试号\",\"deptId\":\"107\"}', '294e5776aa454e83af6774d205aa5f5f', 'ce7de432a49643718a9bfb4f12561f8b', 'default', NULL, '2025-02-23 21:55:34', NULL, '2025-02-23 21:25:34', '104', '2025-02-23 21:26:40', b'1', 1);
+INSERT INTO `system_oauth2_access_token` VALUES (1891133221308539091, 1, 2, '{\"nickname\":\"EnjoyIot\",\"deptId\":\"103\"}', '1093dea5ac3e42d080ed43623400f1b8', '5523e085b00a4bd982e6ecf4a89424a7', 'default', NULL, '2025-02-23 21:56:47', NULL, '2025-02-23 21:26:47', NULL, '2025-02-23 21:26:47', b'0', 1);
 
 -- ----------------------------
 -- Table structure for system_oauth2_approve
@@ -2282,7 +2382,7 @@ CREATE TABLE `system_oauth2_approve`  (
                                           `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                           `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                           PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 82 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'OAuth2 批准表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 82 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'OAuth2 批准表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_oauth2_approve
@@ -2315,7 +2415,7 @@ CREATE TABLE `system_oauth2_client`  (
                                          `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                          `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                          PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 43 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'OAuth2 客户端表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 43 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'OAuth2 客户端表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_oauth2_client
@@ -2343,7 +2443,7 @@ CREATE TABLE `system_oauth2_code`  (
                                        `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                        `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                        PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 147 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'OAuth2 授权码表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 147 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'OAuth2 授权码表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_oauth2_code
@@ -2368,7 +2468,22 @@ CREATE TABLE `system_oauth2_refresh_token`  (
                                                 `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                                 `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                                 PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1720 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'OAuth2 刷新令牌' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1721 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'OAuth2 刷新令牌' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of system_oauth2_refresh_token
+-- ----------------------------
+INSERT INTO `system_oauth2_refresh_token` VALUES (1720, 1, '3697fe2caa3c42fbbf14b25167d27e5d', 2, 'default', NULL, '2025-03-25 06:35:01', NULL, '2025-02-23 06:35:01', NULL, '2025-02-23 06:35:01', b'0', 1);
+INSERT INTO `system_oauth2_refresh_token` VALUES (1721, 1, '27522033a27342b2b04752e3a2647392', 2, 'default', NULL, '2025-03-25 19:59:22', NULL, '2025-02-23 19:59:22', NULL, '2025-02-23 20:11:39', b'1', 1);
+INSERT INTO `system_oauth2_refresh_token` VALUES (1722, 1, '1dc5295cbbbe4d5ea4665b751cd34208', 2, 'default', NULL, '2025-03-25 20:00:21', NULL, '2025-02-23 20:00:21', NULL, '2025-02-23 20:00:21', b'0', 1);
+INSERT INTO `system_oauth2_refresh_token` VALUES (1723, 1, 'c05966dd8a6c461f9375979a786e502f', 2, 'default', NULL, '2025-03-25 20:12:00', NULL, '2025-02-23 20:12:00', NULL, '2025-02-23 20:12:43', b'1', 1);
+INSERT INTO `system_oauth2_refresh_token` VALUES (1724, 104, '5e8bf32b6bc147128e24781562e7ee2f', 2, 'default', NULL, '2025-03-25 20:12:50', NULL, '2025-02-23 20:12:50', NULL, '2025-02-23 20:12:50', b'0', 1);
+INSERT INTO `system_oauth2_refresh_token` VALUES (1725, 1, '6c630caa533246d8a48c50e36ba6af11', 2, 'default', NULL, '2025-03-25 20:17:49', NULL, '2025-02-23 20:17:49', NULL, '2025-02-23 20:17:49', b'0', 1);
+INSERT INTO `system_oauth2_refresh_token` VALUES (1726, 1, '15871af084ad4726a25386b6fafd90e1', 2, 'default', NULL, '2025-03-25 20:25:08', NULL, '2025-02-23 20:25:08', NULL, '2025-02-23 21:17:36', b'1', 1);
+INSERT INTO `system_oauth2_refresh_token` VALUES (1727, 104, '4df0a1cd23674557aab2cd2ad45ca5c1', 2, 'default', NULL, '2025-03-25 21:18:02', NULL, '2025-02-23 21:18:02', NULL, '2025-02-23 21:21:03', b'1', 1);
+INSERT INTO `system_oauth2_refresh_token` VALUES (1728, 1, 'cc72a55ee66d405d882a228640f4dd53', 2, 'default', NULL, '2025-03-25 21:21:13', NULL, '2025-02-23 21:21:13', NULL, '2025-02-23 21:25:26', b'1', 1);
+INSERT INTO `system_oauth2_refresh_token` VALUES (1729, 104, 'ce7de432a49643718a9bfb4f12561f8b', 2, 'default', NULL, '2025-03-25 21:25:34', NULL, '2025-02-23 21:25:34', NULL, '2025-02-23 21:26:39', b'1', 1);
+INSERT INTO `system_oauth2_refresh_token` VALUES (1730, 1, '5523e085b00a4bd982e6ecf4a89424a7', 2, 'default', NULL, '2025-03-25 21:26:47', NULL, '2025-02-23 21:26:47', NULL, '2025-02-23 21:26:47', b'0', 1);
 
 -- ----------------------------
 -- Table structure for system_operate_log
@@ -2396,11 +2511,13 @@ CREATE TABLE `system_operate_log`  (
                                        `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                        `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                        PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9064 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '操作日志记录 V2 版本' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9064 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '操作日志记录 V2 版本' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_operate_log
 -- ----------------------------
+INSERT INTO `system_operate_log` VALUES (9064, '', 1, 2, 'SYSTEM 角色', '创建角色', 154, '创建了角色【只读用户】', b'1', '', 'POST', '/admin-api/system/role/create', '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', NULL, '2025-02-23 20:05:09', NULL, '2025-02-23 20:05:09', b'0', 1);
+INSERT INTO `system_operate_log` VALUES (9065, '', 1, 2, 'SYSTEM 用户', '重置用户密码', 104, '将用户【测试号】的密码从【$2a$04$jDFLttgfik0QqJKAbfhMa.2A9xXoZmAIxakdFJUzkX.MgBKT6ddo6】重置为【$2a$04$KG9vBvKLO5PP9Tfd8ttF0.CDObtXPhMQb8I7vPEdVBSuI7uOx51Ey】', b'1', '', 'PUT', '/admin-api/system/user/update-password', '27.38.247.37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', NULL, '2025-02-23 20:12:38', NULL, '2025-02-23 20:12:38', b'0', 1);
 
 -- ----------------------------
 -- Table structure for system_post
@@ -2420,7 +2537,7 @@ CREATE TABLE `system_post`  (
                                 `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                 `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                 PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '岗位信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '岗位信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_post
@@ -2451,12 +2568,13 @@ CREATE TABLE `system_role`  (
                                 `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                 `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                 PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 154 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '角色信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 154 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '角色信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_role
 -- ----------------------------
 INSERT INTO `system_role` VALUES (1, '超级管理员', 'super_admin', 1, 1, '', 0, 1, '超级管理员', 'admin', '2021-01-05 17:03:48', '', '2022-02-22 05:08:21', b'0', 1);
+INSERT INTO `system_role` VALUES (154, '只读用户', 'reader', 2, 1, '', 0, 2, '', '1', '2025-02-23 20:05:08', '1', '2025-02-23 20:05:08', b'0', 1);
 
 -- ----------------------------
 -- Table structure for system_role_menu
@@ -2473,11 +2591,195 @@ CREATE TABLE `system_role_menu`  (
                                      `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                      `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                      PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5793 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '角色和菜单关联表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5793 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '角色和菜单关联表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_role_menu
 -- ----------------------------
+INSERT INTO `system_role_menu` VALUES (5793, 154, 2816, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5794, 154, 2817, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5795, 154, 1025, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5796, 154, 1, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5797, 154, 1026, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5798, 154, 2, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5799, 154, 2820, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5800, 154, 2821, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5801, 154, 2822, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5802, 154, 1030, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5803, 154, 2823, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5804, 154, 1031, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5805, 154, 2826, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5806, 154, 1035, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5807, 154, 2827, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5808, 154, 2828, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5809, 154, 1036, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5810, 154, 2829, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5811, 154, 2832, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5812, 154, 1040, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5813, 154, 1042, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5814, 154, 1043, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5815, 154, 1045, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5816, 154, 1046, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5817, 154, 2845, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5818, 154, 1054, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5819, 154, 2846, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5820, 154, 2847, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5821, 154, 2848, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5822, 154, 1056, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5823, 154, 1057, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5824, 154, 1058, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5825, 154, 2851, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5826, 154, 2083, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5827, 154, 1059, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5828, 154, 1060, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5829, 154, 2852, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5830, 154, 2853, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5831, 154, 2854, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5832, 154, 2855, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5833, 154, 2858, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5834, 154, 1066, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5835, 154, 1067, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5836, 154, 2859, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5837, 154, 2860, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5838, 154, 2861, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5839, 154, 1070, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5840, 154, 2864, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5841, 154, 2865, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5842, 154, 2866, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5843, 154, 2867, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5844, 154, 2868, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5845, 154, 2869, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5846, 154, 1077, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5847, 154, 1078, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5848, 154, 1082, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5849, 154, 1083, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5850, 154, 1084, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5851, 154, 1085, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5852, 154, 1086, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5853, 154, 1087, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5854, 154, 1088, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5855, 154, 1089, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5856, 154, 1090, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5857, 154, 1091, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5858, 154, 1093, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5859, 154, 1094, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5860, 154, 1095, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5861, 154, 1100, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5862, 154, 1101, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5863, 154, 1105, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5864, 154, 1106, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5865, 154, 2130, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5866, 154, 1107, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5867, 154, 2131, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5868, 154, 1108, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5869, 154, 2132, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5870, 154, 1109, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5871, 154, 2136, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5872, 154, 2137, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5873, 154, 2141, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5874, 154, 2142, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5875, 154, 2143, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5876, 154, 2144, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5877, 154, 2145, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5878, 154, 2146, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5879, 154, 2914, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5880, 154, 2915, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5881, 154, 2916, '1', '2025-02-23 20:11:14', '1', '2025-02-23 21:27:29', b'1', 1);
+INSERT INTO `system_role_menu` VALUES (5882, 154, 100, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5883, 154, 2917, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5884, 154, 101, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5885, 154, 2918, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5886, 154, 2150, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5887, 154, 102, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5888, 154, 2151, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5889, 154, 103, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5890, 154, 2920, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5891, 154, 2152, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5892, 154, 104, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5893, 154, 105, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5894, 154, 106, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5895, 154, 2923, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5896, 154, 107, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5897, 154, 2924, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5898, 154, 108, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5899, 154, 2925, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5900, 154, 109, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5901, 154, 2926, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5902, 154, 110, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5903, 154, 2927, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5904, 154, 111, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5905, 154, 2928, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5906, 154, 112, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5907, 154, 2929, '1', '2025-02-23 20:11:14', '1', '2025-02-23 21:17:29', b'1', 1);
+INSERT INTO `system_role_menu` VALUES (5908, 154, 113, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5909, 154, 2930, '1', '2025-02-23 20:11:14', '1', '2025-02-23 21:17:29', b'1', 1);
+INSERT INTO `system_role_menu` VALUES (5910, 154, 114, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5911, 154, 1138, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5912, 154, 2931, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5913, 154, 1139, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5914, 154, 115, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5915, 154, 116, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5916, 154, 1143, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5917, 154, 2447, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5918, 154, 2448, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5919, 154, 2449, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5920, 154, 2453, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5921, 154, 2472, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5922, 154, 2478, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5923, 154, 2479, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5924, 154, 2480, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5925, 154, 2481, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5926, 154, 2482, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5927, 154, 2483, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5928, 154, 2739, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5929, 154, 2484, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5930, 154, 2740, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5931, 154, 2485, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5932, 154, 2486, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5933, 154, 2487, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5934, 154, 2488, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5935, 154, 2489, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5936, 154, 2490, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5937, 154, 2491, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5938, 154, 2492, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5939, 154, 2493, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5940, 154, 2494, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5941, 154, 2495, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5942, 154, 2497, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5943, 154, 1224, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5944, 154, 1225, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5945, 154, 1226, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5946, 154, 1237, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5947, 154, 1238, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5948, 154, 1242, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5949, 154, 1243, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5950, 154, 2525, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5951, 154, 1255, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5952, 154, 1256, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5953, 154, 1001, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5954, 154, 1260, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5955, 154, 1005, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5956, 154, 1261, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5957, 154, 1006, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5958, 154, 1263, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5959, 154, 1008, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5960, 154, 1264, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5961, 154, 1012, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5962, 154, 500, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5963, 154, 1013, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5964, 154, 501, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5965, 154, 1017, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5966, 154, 1021, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5967, 154, 2814, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5968, 154, 2815, '1', '2025-02-23 20:11:14', '1', '2025-02-23 20:11:14', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5969, 154, 2933, '1', '2025-02-23 21:16:06', '1', '2025-02-23 21:16:06', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5970, 154, 2934, '1', '2025-02-23 21:16:06', '1', '2025-02-23 21:16:06', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5971, 154, 2935, '1', '2025-02-23 21:16:06', '1', '2025-02-23 21:16:06', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5972, 154, 2936, '1', '2025-02-23 21:16:06', '1', '2025-02-23 21:16:06', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5973, 154, 2938, '1', '2025-02-23 21:16:06', '1', '2025-02-23 21:16:06', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5974, 154, 2944, '1', '2025-02-23 21:16:06', '1', '2025-02-23 21:16:06', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5975, 154, 2947, '1', '2025-02-23 21:16:06', '1', '2025-02-23 21:16:06', b'0', 1);
+INSERT INTO `system_role_menu` VALUES (5976, 154, 2948, '1', '2025-02-23 21:16:06', '1', '2025-02-23 21:16:06', b'0', 1);
 
 -- ----------------------------
 -- Table structure for system_sms_channel
@@ -2498,7 +2800,7 @@ CREATE TABLE `system_sms_channel`  (
                                        `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                        `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                        PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '短信渠道' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '短信渠道' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_sms_channel
@@ -2529,7 +2831,7 @@ CREATE TABLE `system_sms_code`  (
                                     `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                     PRIMARY KEY (`id`) USING BTREE,
                                     INDEX `idx_mobile`(`mobile` ASC) USING BTREE COMMENT '手机号'
-) ENGINE = InnoDB AUTO_INCREMENT = 645 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '手机验证码' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 645 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '手机验证码' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_sms_code
@@ -2568,7 +2870,7 @@ CREATE TABLE `system_sms_log`  (
                                    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                    `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1241 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '短信日志' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1241 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '短信日志' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_sms_log
@@ -2596,7 +2898,7 @@ CREATE TABLE `system_sms_template`  (
                                         `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                         `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                         PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '短信模板' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '短信模板' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_sms_template
@@ -2635,7 +2937,7 @@ CREATE TABLE `system_social_client`  (
                                          `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                          `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                          PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 44 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '社交客户端表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 44 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '社交客户端表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_social_client
@@ -2667,7 +2969,7 @@ CREATE TABLE `system_social_user`  (
                                        `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                        `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                        PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 38 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '社交用户表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 38 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '社交用户表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_social_user
@@ -2690,7 +2992,7 @@ CREATE TABLE `system_social_user_bind`  (
                                             `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                             `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                             PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 121 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '社交绑定表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 121 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '社交绑定表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_social_user_bind
@@ -2717,7 +3019,7 @@ CREATE TABLE `system_tenant`  (
                                   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                   `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 162 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '租户表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 162 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '租户表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_tenant
@@ -2740,7 +3042,7 @@ CREATE TABLE `system_tenant_package`  (
                                           `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                           `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                           PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 112 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '租户套餐表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 112 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '租户套餐表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_tenant_package
@@ -2762,7 +3064,7 @@ CREATE TABLE `system_user_post`  (
                                      `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                      `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                      PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 126 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户岗位表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 126 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户岗位表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_user_post
@@ -2792,7 +3094,7 @@ CREATE TABLE `system_user_role`  (
                                      `deleted` bit(1) NULL DEFAULT b'0' COMMENT '是否删除',
                                      `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                      PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 47 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户和角色关联表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 47 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户和角色关联表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_user_role
@@ -2807,12 +3109,13 @@ INSERT INTO `system_user_role` VALUES (14, 110, 109, '1', '2022-02-22 00:56:14',
 INSERT INTO `system_user_role` VALUES (15, 111, 110, '110', '2022-02-23 13:14:38', '110', '2022-02-23 13:14:38', b'0', 121);
 INSERT INTO `system_user_role` VALUES (16, 113, 111, '1', '2022-03-07 21:37:58', '1', '2022-03-07 21:37:58', b'0', 122);
 INSERT INTO `system_user_role` VALUES (18, 1, 2, '1', '2022-05-12 20:39:29', '1', '2022-05-12 20:39:29', b'0', 1);
-INSERT INTO `system_user_role` VALUES (20, 104, 101, '1', '2022-05-28 15:43:57', '1', '2022-05-28 15:43:57', b'0', 1);
+INSERT INTO `system_user_role` VALUES (20, 104, 101, '1', '2022-05-28 15:43:57', '1', '2025-02-23 20:11:30', b'1', 1);
 INSERT INTO `system_user_role` VALUES (22, 115, 2, '1', '2022-07-21 22:08:30', '1', '2022-07-21 22:08:30', b'0', 1);
 INSERT INTO `system_user_role` VALUES (35, 112, 1, '1', '2024-03-15 20:00:24', '1', '2024-03-15 20:00:24', b'0', 1);
 INSERT INTO `system_user_role` VALUES (36, 118, 1, '1', '2024-03-17 09:12:08', '1', '2024-03-17 09:12:08', b'0', 1);
 INSERT INTO `system_user_role` VALUES (38, 114, 101, '1', '2024-03-24 22:23:03', '1', '2024-03-24 22:23:03', b'0', 1);
 INSERT INTO `system_user_role` VALUES (46, 117, 1, '1', '2024-10-02 10:16:11', '1', '2024-10-02 10:16:11', b'0', 1);
+INSERT INTO `system_user_role` VALUES (47, 104, 154, '1', '2025-02-23 20:11:31', '1', '2025-02-23 20:11:31', b'0', 1);
 
 -- ----------------------------
 -- Table structure for system_users
@@ -2840,13 +3143,13 @@ CREATE TABLE `system_users`  (
                                  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                  `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 140 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 140 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_users
 -- ----------------------------
-INSERT INTO `system_users` VALUES (1, 'admin', '$2a$10$mRMIYLDtRHlf6.9ipiqH1.Z.bh/R9dO9d5iHiGYPigi6r5KOoR2Wm', 'EnjoyIot', '管理员', 103, '[1,2]', 'xw2sy@163.com', '19918996474', 1, 'http://127.0.0.1:48080/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 0, '0:0:0:0:0:0:0:1', '2025-02-22 18:17:27', 'admin', '2021-01-05 17:03:47', NULL, '2025-02-22 18:17:27', b'0', 1);
-INSERT INTO `system_users` VALUES (104, 'test', '$2a$04$jDFLttgfik0QqJKAbfhMa.2A9xXoZmAIxakdFJUzkX.MgBKT6ddo6', '测试号', NULL, 107, '[1,2]', '111@qq.com', '15601691200', 1, '', 0, '0:0:0:0:0:0:0:1', '2024-09-17 15:05:43', '', '2021-01-21 02:13:53', NULL, '2024-09-17 15:05:43', b'0', 1);
+INSERT INTO `system_users` VALUES (1, 'admin', '$2a$10$mRMIYLDtRHlf6.9ipiqH1.Z.bh/R9dO9d5iHiGYPigi6r5KOoR2Wm', 'EnjoyIot', '管理员', 103, '[1,2]', 'xw2sy@163.com', '19918996474', 1, 'http://127.0.0.1:48080/admin-api/infra/file/29/get/ed16f2223a3b2999b491dcf8fcf989e7342ae9d73e6bb419c0e4084f1c20c6d5.png', 0, '27.38.247.37', '2025-02-23 21:26:47', 'admin', '2021-01-05 17:03:47', NULL, '2025-02-23 21:26:47', b'0', 1);
+INSERT INTO `system_users` VALUES (104, 'test', '$2a$04$KG9vBvKLO5PP9Tfd8ttF0.CDObtXPhMQb8I7vPEdVBSuI7uOx51Ey', '测试号', NULL, 107, '[1,2]', '111@qq.com', '15601691200', 1, '', 0, '27.38.247.37', '2025-02-23 21:25:34', '', '2021-01-21 02:13:53', NULL, '2025-02-23 21:25:34', b'0', 1);
 
 -- ----------------------------
 -- Table structure for task_info
@@ -2868,7 +3171,7 @@ CREATE TABLE `task_info`  (
                               `expression` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '表达式',
                               `remark` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '备注',
                               PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'iot任务' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'iot任务' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of task_info

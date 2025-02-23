@@ -80,7 +80,7 @@ public class EiotRuleInfoController {
 
     @PostMapping("/delete")
     @Operation(summary = "删除规则引擎")
-    @PreAuthorize("@ss.hasPermission('iot:rule-info:delete')")
+    @PreAuthorize("@ss.hasPermission('iot:rule-info:remove')")
     public CommonResult<Boolean> deleteRuleInfo(@Validated @RequestBody IdReqVo req) {
         ruleEngineService.deleteRuleInfo(req.getId());
         return success(true);
@@ -103,7 +103,7 @@ public class EiotRuleInfoController {
     }
 
     @Operation(summary = "规则日志")
-    @PreAuthorize("@ss.hasPermission('iot:rule:query')")
+    @PreAuthorize("@ss.hasPermission('iot:rule-info:query')")
     @PostMapping("/ruleLog/list")
     public CommonResult<PageResult<RuleLogVo>> getRuleLogs(
             @Validated @RequestBody RuleLogPageReq request
@@ -112,7 +112,7 @@ public class EiotRuleInfoController {
     }
 
     @Operation(summary = "清理日志")
-    @PreAuthorize("@ss.hasPermission('iot:rule:remove')")
+    @PreAuthorize("@ss.hasPermission('iot:rule-info:remove')")
     @PostMapping("/ruleLog/clear")
     public CommonResult<Boolean> clearRuleLogs(@Validated @RequestBody RuleIdReq request) {
         Long ruleId = request.getRuleId();
