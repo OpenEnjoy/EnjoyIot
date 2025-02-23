@@ -36,10 +36,16 @@
 ### 前端仓库
 [![乐联开源/enjoy-web](https://gitee.com/open-enjoy/enjoy-web/widgets/widget_card.svg?colors=393222,ebdfc1,fffae5,d8ca9f,393222,a28b40)](https://gitee.com/open-enjoy/enjoy-web)
 
+### 界面展示
+
+<img alt="wx.png" src=".image/devices.png" width="600"/>
+
+### 文档
+文档还在构建中。。。有任何问题请加群沟通
 
 ## 联系我们
 
  **添加微信，备注：进群**
 
-<img alt="wx.png" height="300" src=".image/wx.png" width="200"/>
+<img alt="wx.png" height="300" src=".image/wx.png" width="250"/>
 
