@@ -15,7 +15,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123456}
     volumes:
       - mysql:/var/lib/mysql/
-      - ../../sql/mysql/system.sql:/docker-entrypoint-initdb.d/system.sql:ro
+      - ../../_sql/mysql/system.sql:/docker-entrypoint-initdb.d/system.sql:ro
 
   redis:
     container_name: iot-redis
@@ -25,45 +25,80 @@ services:
       - "6379:6379"
     volumes:
       - redis:/data
-
-  zookeeper:
-    image: bitnami/zookeeper:3.9.3-debian-12-r2
-    restart: always
-    container_name: iot-zookeeper
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
-      - ZOOKEEPER_CLIENT_PORT=2181
-      - ZOOKEEPER_TICK_TIME=2000
-      - JVM_OPTS=-Xms32M -XX:MaxRAM=860M
+  tdengine:
+    image: tdengine/tdengine:3.3.3.0
+    container_name: eiot-server-td
     ports:
-      - "2181:2181"
-    volumes:
-      - zookeeper:/data
-      - zookeeper:/datalog
-
-  kafka:
-    image: bitnami/kafka:2.8.1-debian-10-r18
-    restart: always
-    ports:
-      - "9092:9092"
-      - '9093:9093'
+      - "6030:6030"          # TDengine server port
+      - "6041:6041"          # TDengine client port
+      - "6043:6043"          # TDengine monitoring port
+      - "6044-6049:6044-6049" # Additional ports range
+      - "6044-6045:6044-6045/udp" # UDP ports
+      - "6060:6060"          # Another port for service
     environment:
-      - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_BROKER_ID=1
-      - KAFKA_LOG_RETENTION_HOURS=2160
-      - KAFKA_ZOOKEEPER_CONNECT=iot-zookeeper:2181
-      - KAFKA_LISTENERS=INTERNAL://iot-kafka:9092,EXTERNAL://iot-kafka:9093
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://iot-kafka:9092,EXTERNAL://iot-kafka:9093
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
-      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-      - KAFKA_LOG4J_LOGGERS='kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO'
-      - JVM_OPTS=-Xms32M -XX:MaxRAM=860M
+      TAOS_USER: ${TAOS_USER:-root}      # 设置默认用户名
+      TAOS_PASSWORD: ${TAOS_PASSWORD:-taosdata} # 设置默认密码
     volumes:
-      - kafka:/var/lib/kafka/data
-    depends_on:
-      - zookeeper
-    container_name: iot-kafka
+      - tdengine_lib:/var/lib/taos   # 持久化存储
+      - tdengine_log:/var/log/taos  # 持久化存储
+
+#  zookeeper:
+#    image: bitnami/zookeeper:3.9.3-debian-12-r2
+#    restart: always
+#    container_name: iot-zookeeper
+#    environment:
+#      - ALLOW_ANONYMOUS_LOGIN=yes
+#      - ZOOKEEPER_CLIENT_PORT=2181
+#      - ZOOKEEPER_TICK_TIME=2000
+#      - JVM_OPTS=-Xms32M -XX:MaxRAM=860M
+#    ports:
+#      - "2181:2181"
+#    volumes:
+#      - zookeeper:/data
+#      - zookeeper:/datalog
+#
+#  kafka:
+#    image: bitnami/kafka:2.8.1-debian-10-r18
+#    restart: always
+#    ports:
+#      - "9092:9092"
+#      - '9093:9093'
+#    environment:
+#      - ALLOW_PLAINTEXT_LISTENER=yes
+#      - KAFKA_BROKER_ID=1
+#      - KAFKA_LOG_RETENTION_HOURS=2160
+#      - KAFKA_ZOOKEEPER_CONNECT=iot-zookeeper:2181
+#      - KAFKA_LISTENERS=INTERNAL://iot-kafka:9092,EXTERNAL://iot-kafka:9093
+#      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://iot-kafka:9092,EXTERNAL://iot-kafka:9093
+#      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+#      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+#      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+#      - KAFKA_LOG4J_LOGGERS='kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO'
+#      - JVM_OPTS=-Xms32M -XX:MaxRAM=860M
+#    volumes:
+#      - kafka:/var/lib/kafka/data
+#    depends_on:
+#      - zookeeper
+#    container_name: iot-kafka
+
+#  elasticsearch:
+#    image: elasticsearch:7.9.3
+#    container_name: iot-es
+#    environment:
+#      - bootstrap.memory_lock=true   # 内存交换的选项，官网建议为true
+#      - "ES_JAVA_OPTS=-Xms256m -Xmx256m" # 设置内存，如内存不足，可以尝试调低点
+#      - discovery.type=single-node      # 是否启用单节点模式
+#    ulimits: # 栈内存的上限
+#      memlock:
+#        soft: -1    # 不限制
+#        hard: -1    # 不限制
+#    volumes:
+#      - elasticsearch:/usr/share/elasticsearch
+#    hostname: iot-es
+#    restart: always
+#    ports:
+#      - 9200:9200
+#      - 9300:9300
 
   server:
     container_name: iot-server
@@ -75,7 +110,7 @@ services:
       - "48080:48080"
     environment:
       # https://github.com/polovyivan/docker-pass-configs-to-container
-      SPRING_PROFILES_ACTIVE: local
+      SPRING_PROFILES_ACTIVE: eiot  # 启用的配置文件, application-eiot.yml
       JAVA_OPTS:
         ${JAVA_OPTS:-
           -Xms512m
@@ -93,31 +128,42 @@ services:
     depends_on:
       - mysql
       - redis
+      - tdengine
 
-  admin:
-    container_name: iot-admin
-    build:
-      context: ./iot-ui-admin
-      args:
-        NODE_ENV:
-          ENV=${NODE_ENV:-production}
-          PUBLIC_PATH=${PUBLIC_PATH:-/}
-          VUE_APP_TITLE=${VUE_APP_TITLE:-EnjoyIot物联网平台}
-          VUE_APP_BASE_API=${VUE_APP_BASE_API:-/prod-api}
-          VUE_APP_APP_NAME=${VUE_APP_APP_NAME:-/}
-          VUE_APP_TENANT_ENABLE=${VUE_APP_TENANT_ENABLE:-true}
-          VUE_APP_CAPTCHA_ENABLE=${VUE_APP_CAPTCHA_ENABLE:-true}
-          VUE_APP_DOC_ENABLE=${VUE_APP_DOC_ENABLE:-true}
-          VUE_APP_BAIDU_CODE=${VUE_APP_BAIDU_CODE:-fadc1bd5db1a1d6f581df60a1807f8ab}
-    image: iot-admin
-    restart: unless-stopped
-    ports:
-      - "8080:80"
-    depends_on:
-      - server
+#  admin:
+#    container_name: iot-admin
+#    build:
+#      context: ./iot-ui-admin
+#      args:
+#        NODE_ENV:
+#          ENV=${NODE_ENV:-production}
+#          PUBLIC_PATH=${PUBLIC_PATH:-/}
+#          VUE_APP_TITLE=${VUE_APP_TITLE:-EnjoyIot物联网平台}
+#          VUE_APP_BASE_API=${VUE_APP_BASE_API:-/prod-api}
+#          VUE_APP_APP_NAME=${VUE_APP_APP_NAME:-/}
+#          VUE_APP_TENANT_ENABLE=${VUE_APP_TENANT_ENABLE:-true}
+#          VUE_APP_CAPTCHA_ENABLE=${VUE_APP_CAPTCHA_ENABLE:-true}
+#          VUE_APP_DOC_ENABLE=${VUE_APP_DOC_ENABLE:-true}
+#          VUE_APP_BAIDU_CODE=${VUE_APP_BAIDU_CODE:-fadc1bd5db1a1d6f581df60a1807f8ab}
+#    image: iot-admin
+#    restart: unless-stopped
+#    ports:
+#      - "8080:80"
+#    depends_on:
+#      - server
 
 volumes:
   mysql:
     driver: local
   redis:
+    driver: local
+  zookeeper:
+    driver: local
+  kafka:
+    driver: local
+  elasticsearch:
+    driver: local
+  tdengine_lib:
+    driver: local
+  tdengine_log:
     driver: local
