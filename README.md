@@ -33,6 +33,10 @@
 * 另提供可视化大屏、第三方平台对接、视频接入、无人机接入、AI算法集成等功能
 
 
+### 前端仓库
+[![乐联开源/enjoy-web](https://gitee.com/open-enjoy/enjoy-web/widgets/widget_card.svg?colors=393222,ebdfc1,fffae5,d8ca9f,393222,a28b40)](https://gitee.com/open-enjoy/enjoy-web)
+
+
 ## 联系我们
 
  **添加微信，备注：进群**
