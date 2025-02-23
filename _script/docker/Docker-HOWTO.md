@@ -66,6 +66,8 @@ docker compose --env-file docker.env up -d
 ## 查看后台日志
 ```aiignore
 docker logs -f iot-server
+或
+docker compose logs -f server
 ```
 
 ## 其他
