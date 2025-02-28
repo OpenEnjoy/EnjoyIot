@@ -49,7 +49,7 @@ public class MqttVerticle extends AbstractVerticle {
 
     private MqttComponent mqttComponent;
 
-    public void startMqttServer(MqttConfig config) {
+    public void startServer(MqttConfig config) {
         MqttServerOptions options = new MqttServerOptions()
                 .setPort(config.getPort());
         if (config.isSsl()) {
@@ -71,7 +71,7 @@ public class MqttVerticle extends AbstractVerticle {
         });
     }
 
-    public void stopMqttServer() {
+    public void stopServer() {
         try {
             mqttComponent.offlineAll();
             if (mqttServer != null) {

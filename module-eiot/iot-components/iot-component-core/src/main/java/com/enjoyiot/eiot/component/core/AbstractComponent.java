@@ -43,6 +43,7 @@ public abstract class AbstractComponent implements Component, ConsumerHandler<Th
 
     protected final ComponentServices componentServices;
     private final String componentId; // 添加字段来存储 UUID
+    private Boolean isSubDiscoverReply = false;
 
     protected AbstractComponent(ComponentServices componentServices) {
         this.componentServices = componentServices;
@@ -59,8 +60,12 @@ public abstract class AbstractComponent implements Component, ConsumerHandler<Th
                             //组件成功注册
                             //订阅组件消息
                             // TODO: 没必要重复订阅
-                            componentServices.getConsumer().consume(
-                                    getSendToDeviceTopic(), this);
+                            if(!isSubDiscoverReply){
+                                componentServices.getConsumer().consume(
+                                        getSendToDeviceTopic(), this);
+                                isSubDiscoverReply = true;
+                            }
+
                         }
                         return;
                     }

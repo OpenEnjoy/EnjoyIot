@@ -24,10 +24,8 @@
 package com.enjoyiot.module.eiot.api.device;
 
 import com.enjoyiot.eiot.common.thing.ThingService;
-import com.enjoyiot.module.eiot.api.device.dto.DeviceConfig;
-import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
-import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
-import com.enjoyiot.module.eiot.api.device.dto.RegisterDevice;
+import com.enjoyiot.framework.common.pojo.CommonResult;
+import com.enjoyiot.module.eiot.api.device.dto.*;
 
 import java.util.Map;
 
@@ -38,6 +36,8 @@ public interface DeviceApi {
     DeviceInfo getDeviceInfoFromCache(Long deviceId);
 
     DeviceInfo registerDevice(RegisterDevice registerDevice);
+
+    CommonResult<DeviceInfo> auth(DeviceAuth deviceAuth);
 
     Map<String, DevicePropertyCache> getPropertiesFromCache(Long deviceId);
 

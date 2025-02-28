@@ -101,7 +101,7 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
 
         //停止组件
         if (!enable) {
-            mqttVerticle.stopMqttServer();
+            mqttVerticle.stopServer();
             return true;
         }
 
@@ -115,8 +115,8 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
             return false;
         }
 
-        mqttVerticle.stopMqttServer();
-        mqttVerticle.startMqttServer(mqttConfig);
+        mqttVerticle.stopServer();
+        mqttVerticle.startServer(mqttConfig);
         return true;
     }
 

@@ -23,7 +23,7 @@
     </modules>
 
     <properties>
-        <vertx.version>4.2.2</vertx.version>
+        <vertx.version>4.5.13</vertx.version>
         <apache.commons>3.14.0</apache.commons>
 
     </properties>
@@ -76,11 +76,11 @@
                 <version>${vertx.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>io.vertx</groupId>
-                <artifactId>vertx-hazelcast</artifactId>
-                <version>${vertx.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>io.vertx</groupId>-->
+<!--                <artifactId>vertx-hazelcast</artifactId>-->
+<!--                <version>${vertx.version}</version>-->
+<!--            </dependency>-->
             <!--            vertx end-->
 
 

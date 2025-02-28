@@ -23,6 +23,7 @@
  */
 package com.enjoyiot.module.eiot.service.device;
 
+import com.enjoyiot.framework.common.pojo.CommonResult;
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
 import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
@@ -109,4 +110,5 @@ public interface DeviceInfoService {
     Boolean updateDeviceState(Long deviceId, boolean online);
 
     void savePropertiesCache(Long deviceId, Map<String, DevicePropertyCache> properties);
+
 }
