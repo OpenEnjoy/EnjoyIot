@@ -73,15 +73,6 @@
 
 
         <!-- 业务组件 -->
-        <dependency>
-            <groupId>com.enjoy-iot</groupId>
-            <artifactId>spring-boot-starter-biz-data-permission</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.enjoy-iot</groupId>
-            <artifactId>spring-boot-starter-biz-tenant</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.enjoy-iot</groupId>
