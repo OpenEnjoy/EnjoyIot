@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=cc.iotkit.config.com.enjoyiot.eiot.virtualdevice.VirtualConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.enjoyiot.eiot.virtualdevice.VirtualConfig
