@@ -21,30 +21,19 @@
  * /
  */
 
-package com.enjoyiot.module.eiot.controller.admin.virtualdevice.vo;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
-import javax.validation.constraints.NotNull;
-import java.util.List;
+package com.enjoyiot.eiot.temporal.es.config;
 
 
-/**
- * @author clickear
- */
-@Schema(description = "管理后台 - 规则引擎设置状态 VO")
-@Data
-public class EiotVirtualSaveDevicesMappingVo {
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
-    private static final long serialVersionUID = -1L;
-
-    @NotNull(message = "id不能为空")
-    @Schema(description = "id", example = "1")
-    private Long id;
-
-
-    @Schema(description = "设备列表", example = "[1]")
-    private List<Long> devices;
-
+@Lazy
+@Configuration
+@EnableElasticsearchRepositories(basePackages = "com.enjoyiot.eiot.temporal.es.dao", includeFilters =
+@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = ElasticsearchRepository.class))
+public class ElasticsearchConfiguration {
 }

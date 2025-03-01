@@ -21,30 +21,27 @@
  * /
  */
 
-package com.enjoyiot.module.eiot.controller.admin.virtualdevice.vo;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
-import javax.validation.constraints.NotNull;
-import java.util.List;
+package com.enjoyiot.eiot.temporal.es.service;
 
 
-/**
- * @author clickear
- */
-@Schema(description = "管理后台 - 规则引擎设置状态 VO")
-@Data
-public class EiotVirtualSaveDevicesMappingVo {
+import com.enjoyiot.eiot.IDbStructureData;
+import com.enjoyiot.module.eiot.api.thingmodel.dto.ThingModel;
+import org.springframework.stereotype.Service;
 
-    private static final long serialVersionUID = -1L;
+@Service
+public class DbStructureDataImpl implements IDbStructureData {
+    @Override
+    public void defineThingModel(ThingModel thingModel) {
 
-    @NotNull(message = "id不能为空")
-    @Schema(description = "id", example = "1")
-    private Long id;
+    }
 
+    @Override
+    public void updateThingModel(ThingModel thingModel) {
 
-    @Schema(description = "设备列表", example = "[1]")
-    private List<Long> devices;
+    }
 
+    @Override
+    public void initDbStructure() {
+
+    }
 }

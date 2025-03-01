@@ -1,11 +1,11 @@
 package com.enjoyiot.eiot.engine;/*
  *
- *  * | Licensed 未经许可不能去掉「OPENIITA」相关版权
+ *  * | Licensed 未经许可不能去掉「Enjoy-iot」相关版权
  *  * +----------------------------------------------------------------------
- *  * | Author: xw2sy@163.com
+ *  * | Author: xw2sy@163.com | Tel: 19918996474
  *  * +----------------------------------------------------------------------
  *
- *  Copyright [2024] [OPENIITA]
+ *  Copyright [2025] [Enjoy-iot] | Tel: 19918996474
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.

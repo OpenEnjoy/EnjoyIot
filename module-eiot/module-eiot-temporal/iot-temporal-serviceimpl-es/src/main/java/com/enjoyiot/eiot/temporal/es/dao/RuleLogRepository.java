@@ -20,31 +20,17 @@
  *  limitations under the License.
  * /
  */
+package com.enjoyiot.eiot.temporal.es.dao;
 
-package com.enjoyiot.module.eiot.controller.admin.virtualdevice.vo;
+import com.enjoyiot.eiot.temporal.es.document.DocRuleLog;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
+public interface RuleLogRepository extends ElasticsearchRepository<DocRuleLog, String> {
 
-import javax.validation.constraints.NotNull;
-import java.util.List;
+    void deleteByRuleId(Long ruleId);
 
-
-/**
- * @author clickear
- */
-@Schema(description = "管理后台 - 规则引擎设置状态 VO")
-@Data
-public class EiotVirtualSaveDevicesMappingVo {
-
-    private static final long serialVersionUID = -1L;
-
-    @NotNull(message = "id不能为空")
-    @Schema(description = "id", example = "1")
-    private Long id;
-
-
-    @Schema(description = "设备列表", example = "[1]")
-    private List<Long> devices;
+    Page<DocRuleLog> findByRuleIdOrderByLogAtDesc(Long ruleId, Pageable pageable);
 
 }

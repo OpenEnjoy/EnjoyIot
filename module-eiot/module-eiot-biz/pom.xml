@@ -62,7 +62,7 @@
 
         <dependency>
             <groupId>com.enjoy-iot</groupId>
-            <artifactId>iot-temporal-serviceimpl-td</artifactId>
+            <artifactId>iot-temporal-service</artifactId>
         </dependency>
 
         <dependency>

@@ -101,6 +101,7 @@ spring:
       initialize-schema: NEVER # 是否自动使用 SQL 初始化 Quartz 表结构。这里设置成 never ，我们手动创建表结构。
 
   #<<===========tdengine时序数据库配置开始============
+  #  注意缩进
   td-datasource:
     #  taosadpter的地址及端口, 还有数据库
     url: jdbc:TAOS-RS://eiot-server-td:6041/eiot?timezone=UTC-8&charset=UTF-8&locale=en_US.UTF-8
@@ -111,6 +112,15 @@ spring:
     #  密码
     password: taosdata
     driverClassName: com.taosdata.jdbc.rs.RestfulDriver
+  #<<================es时序数据配置开始===============
+#  注意缩进
+  elasticsearch:
+    rest:
+      # es的连接配置
+      uris: http://eiot-server-es:9200
+      username:
+      password:
+      connection-timeout: 10s
 --- #################### 消息队列相关 ####################
 
 # rocketmq 配置项，对应 RocketMQProperties 配置类

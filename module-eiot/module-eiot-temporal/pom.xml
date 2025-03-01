@@ -15,5 +15,6 @@
     <modules>
         <module>iot-temporal-service</module>
         <module>iot-temporal-serviceimpl-td</module>
+        <module>iot-temporal-serviceimpl-es</module>
     </modules>
 </project>

@@ -20,31 +20,35 @@
  *  limitations under the License.
  * /
  */
+package com.enjoyiot.eiot.temporal.es.document;
 
-package com.enjoyiot.module.eiot.controller.admin.virtualdevice.vo;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import javax.validation.constraints.NotNull;
-import java.util.List;
-
-
-/**
- * @author clickear
- */
-@Schema(description = "管理后台 - 规则引擎设置状态 VO")
 @Data
-public class EiotVirtualSaveDevicesMappingVo {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Document(indexName = "rule_log")
+public class DocRuleLog {
+    @Id
+    private String id;
 
-    private static final long serialVersionUID = -1L;
+    private Long ruleId;
 
-    @NotNull(message = "id不能为空")
-    @Schema(description = "id", example = "1")
-    private Long id;
+    private String state;
 
+    private String content;
 
-    @Schema(description = "设备列表", example = "[1]")
-    private List<Long> devices;
+    private Boolean success;
 
+    @Field(type = FieldType.Date)
+    private Long logAt;
 }

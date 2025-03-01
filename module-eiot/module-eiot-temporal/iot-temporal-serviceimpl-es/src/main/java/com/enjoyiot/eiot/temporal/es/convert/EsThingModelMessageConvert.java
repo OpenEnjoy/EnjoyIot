@@ -1,3 +1,4 @@
+
 /*
  *
  *  * | Licensed 未经许可不能去掉「Enjoy-iot」相关版权
@@ -20,31 +21,35 @@
  *  limitations under the License.
  * /
  */
+package com.enjoyiot.eiot.temporal.es.convert;
 
-package com.enjoyiot.module.eiot.controller.admin.virtualdevice.vo;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-import java.util.List;
-
+import com.enjoyiot.eiot.common.thing.ThingModelMessage;
+import com.enjoyiot.eiot.temporal.es.document.DocTaskLog;
+import com.enjoyiot.eiot.temporal.es.document.DocThingModelMessage;
+import com.enjoyiot.module.eiot.api.task.dto.TaskLog;
+import org.mapstruct.Builder;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 /**
- * @author clickear
+ * @Author: EnjoyIot
+ * @Date: 2024/12/24 19:02
+ * @Version: V1.0
+ * @Description:
  */
-@Schema(description = "管理后台 - 规则引擎设置状态 VO")
-@Data
-public class EiotVirtualSaveDevicesMappingVo {
+@Mapper(builder = @Builder(disableBuilder = true))
 
-    private static final long serialVersionUID = -1L;
+public interface EsThingModelMessageConvert {
+    EsThingModelMessageConvert INSTANCE = Mappers.getMapper(EsThingModelMessageConvert.class);
 
-    @NotNull(message = "id不能为空")
-    @Schema(description = "id", example = "1")
-    private Long id;
+    @Mapping(source = "deviceName", target = "dn")
+    ThingModelMessage convert(DocThingModelMessage content);
 
-
-    @Schema(description = "设备列表", example = "[1]")
-    private List<Long> devices;
-
+    @Mapping(source = "dn", target = "deviceName")
+    DocThingModelMessage convertDoc(ThingModelMessage msg);
 }
+
+
