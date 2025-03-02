@@ -15,7 +15,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123456}
     volumes:
       - mysql:/var/lib/mysql/
-      - ../../_sql/mysql/system.sql:/docker-entrypoint-initdb.d/system.sql:ro
+      - ../../_sql/mysql/system.sql:/docker-entrypoint-initdb.d/system.sql:ro #会自动使用system.sql文件来初始化数据库,请确保sql文件存在
 
   redis:
     container_name: iot-redis
