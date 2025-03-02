@@ -103,7 +103,7 @@ public class ComponentManager implements ConsumerHandler<ComponentMessage> {
         //组件类型
         String type = msg.getType();
         //组件实例id
-        String id = msg.getComponentId();
+        String componentId = msg.getComponentId();
         //组件名称
         String name = msg.getName();
 
@@ -123,7 +123,7 @@ public class ComponentManager implements ConsumerHandler<ComponentMessage> {
         componentMessageMqProducer.publish(COMPONENT_DISCOVER_REPLY_TOPIC, ComponentMessage.builder()
                 .id(IdUtil.fastSimpleUUID())
                 .content(COMPONENT_DISCOVER_REPLY_TOPIC)
-                .componentId(id)
+                .componentId(componentId)
                 .type(type)
                 .time(System.currentTimeMillis())
                 .name(name)
