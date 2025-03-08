@@ -60,6 +60,15 @@
             <artifactId>iot-message-spring</artifactId>
         </dependency>
 
+            <!--使用rocketmq-->
+<!--         <dependency>-->
+<!--             <groupId>com.enjoy-iot</groupId>-->
+<!--             <artifactId>iot-message-rocketmq</artifactId>-->
+<!--         </dependency>-->
+
+
+
+
         <dependency>
             <groupId>com.enjoy-iot</groupId>
             <artifactId>iot-temporal-service</artifactId>
