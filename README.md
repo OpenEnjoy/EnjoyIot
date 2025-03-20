@@ -52,6 +52,12 @@
 
 商业版：筹划中。。
 
+### 开源之星活动
+
+快来参与开源活动,有现金奖励哦!!!
+https://y5yrmmjjns.feishu.cn/wiki/PsPEwXms0iJEayk88Wgc4xH1nob?fromScene=spaceOverview
+
+<img alt="wx.png" src=".image/image.png" width="600"/>
 
 ## 联系我们
 

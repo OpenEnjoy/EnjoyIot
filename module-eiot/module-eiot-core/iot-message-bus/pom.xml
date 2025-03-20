@@ -16,6 +16,7 @@
         <module>iot-message-core</module>
         <module>iot-message-kafka</module>
         <module>iot-message-spring</module>
+        <module>iot-message-rocketmq</module>
     </modules>
 
 
