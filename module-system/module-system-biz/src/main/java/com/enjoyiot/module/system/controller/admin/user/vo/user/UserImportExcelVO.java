@@ -23,10 +23,10 @@
  */
 package com.enjoyiot.module.system.controller.admin.user.vo.user;
 
+import cn.idev.excel.annotation.ExcelProperty;
 import com.enjoyiot.framework.excel.core.annotations.DictFormat;
 import com.enjoyiot.framework.excel.core.convert.DictConvert;
 import com.enjoyiot.module.system.enums.DictTypeConstants;
-import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
