@@ -32,7 +32,7 @@ public class HttpVerticle extends AbstractVerticle {
         httpServer = vertx.createHttpServer(options);
         Router router = Router.router(vertx);
         router.route().handler(BodyHandler.create()).handler(httpComponent);
-        httpServer.requestHandler(router).listen(config.getPort(), ar -> {
+        httpServer.requestHandler(router).listen(ar -> {
             if (ar.succeeded()) {
                 log.info("HTTP服务启动成功，监听端口 {}", ar.result().actualPort());
             } else {
