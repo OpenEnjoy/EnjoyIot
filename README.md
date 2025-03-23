@@ -65,3 +65,11 @@ https://y5yrmmjjns.feishu.cn/wiki/PsPEwXms0iJEayk88Wgc4xH1nob?fromScene=spaceOve
 
 <img alt="wx.png" height="300" src=".image/wx.png" width="250"/>
 
+
+
+## :fa-chain-broken: 友情链接
+
+  :fa-star:    **MyEMS能源管理系统** ([https://gitee.com/myems/myems](https://gitee.com/myems/myems))
+
+
+
