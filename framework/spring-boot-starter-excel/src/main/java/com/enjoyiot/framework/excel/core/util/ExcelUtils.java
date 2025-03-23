@@ -23,10 +23,10 @@
  */
 package com.enjoyiot.framework.excel.core.util;
 
+import cn.idev.excel.EasyExcel;
+import cn.idev.excel.converters.longconverter.LongStringConverter;
+import cn.idev.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import com.enjoyiot.framework.excel.core.handler.SelectSheetWriteHandler;
-import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.converters.longconverter.LongStringConverter;
-import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
