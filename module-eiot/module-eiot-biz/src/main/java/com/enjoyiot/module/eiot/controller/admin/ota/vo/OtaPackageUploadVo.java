@@ -23,7 +23,7 @@
 
 package com.enjoyiot.module.eiot.controller.admin.ota.vo;
 
-import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+import cn.idev.excel.annotation.ExcelIgnoreUnannotated;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

@@ -23,8 +23,7 @@
 
 package com.enjoyiot.module.eiot.controller.admin.device.vo.devicegroup;
 
-
-import com.alibaba.excel.annotation.ExcelProperty;
+import cn.idev.excel.annotation.ExcelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

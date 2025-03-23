@@ -68,12 +68,23 @@ public class HttpService extends ScriptService {
             headers.forEach((key, val) -> builder.header(key, val.toString()));
         }
         HttpHeader httpHeader = new HttpHeader();
+        if (headers != null && headers.containsKey("contentType")) {
+            httpHeader.setContentType(headers.get("contentType").toString());
+        }
         BeanUtils.populate(httpHeader, headers);
 
         builder.url(url);
-        RequestBody requestBody;
-        requestBody = RequestBody.create(MediaType.get(httpHeader.getContentType()),
-                httpData.getBody().toString());
+        Object json = httpData.getBody();
+        String bodyStr;
+        if (json instanceof String) {
+            bodyStr = (String) json;
+        } else {
+            bodyStr = JsonUtils.toJsonString(json); // 使用工具类序列化为 JSON 字符串
+        }
+
+        // 确保 bodyStr 是有效的 JSON
+        RequestBody requestBody = RequestBody.create(MediaType.get(httpHeader.getContentType()), bodyStr);
+
 
         Request request = builder.method(httpData.getMethod().toUpperCase(), requestBody).build();
         String requestDataStr = JsonUtils.toJsonString(httpData);
