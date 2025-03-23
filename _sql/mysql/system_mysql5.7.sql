@@ -309,7 +309,12 @@ INSERT INTO enjoyiot.eiot_component (id, name, type, config, status, remark, cre
      "port": 6666,
      "host": "127.0.0.1"
 }', 1, null, null, '2025-02-19 01:01:54', '1', '2025-03-23 15:59:27', false);
-
+INSERT INTO `eiot_component` (`id`, `name`, `type`, `config`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`)  VALUES (4, '内置官方http协议组件', 'http', '{
+    "port":18834,
+    "ssl": false,
+    "sslKey": "",
+    "sslCert": ""
+}', 1, NULL, NULL, '2025-02-19 01:01:54', '1', '2025-02-20 11:25:26', b'0');
 -- ----------------------------
 -- Table structure for eiot_dept_product
 -- ----------------------------
