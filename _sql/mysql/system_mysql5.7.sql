@@ -6,6 +6,8 @@
  File Encoding         : 65001
 
  Date: 23/02/2025 21:27:49
+
+ create schema enjoyiot collate utf8mb4_unicode_ci;
 */
 
 SET NAMES utf8mb4;
@@ -42,9 +44,9 @@ CREATE TABLE `ai_algorithm`  (
 DROP TABLE IF EXISTS `channel`;
 CREATE TABLE `channel`  (
                             `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-                            `code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '通道名称',
-                            `icon` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '图标',
-                            `title` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '标题',
+                            `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '通道名称',
+                            `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图标',
+                            `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '标题',
                             `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                             `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                             `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
@@ -53,7 +55,7 @@ CREATE TABLE `channel`  (
                             `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                             `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                             PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '通道' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '通道' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of channel
@@ -98,14 +100,14 @@ INSERT INTO `device_ota_detail` VALUES (1, NULL, 1892227827321597952, '2', NULL,
 DROP TABLE IF EXISTS `device_ota_info`;
 CREATE TABLE `device_ota_info`  (
                                     `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-                                    `remark` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '备注',
+                                    `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
                                     `fail` int NULL DEFAULT NULL COMMENT '识别数量',
-                                    `module` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '模块',
+                                    `module` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '模块',
                                     `package_id` bigint NULL DEFAULT NULL COMMENT '升级包id',
-                                    `product_key` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '产品key',
+                                    `product_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '产品key',
                                     `success` int NULL DEFAULT NULL COMMENT '成功数量',
                                     `total` int NULL DEFAULT NULL COMMENT '总数',
-                                    `version` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '版本',
+                                    `version` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '版本',
                                     `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                                     `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                     `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
@@ -114,7 +116,7 @@ CREATE TABLE `device_ota_info`  (
                                     `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                     `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                     PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '设备ota信息' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '设备ota信息' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of device_ota_info
@@ -145,11 +147,11 @@ INSERT INTO `device_ota_info` VALUES (19, NULL, 0, 'j', 2, 'R755G5Wb3jst4tD7', 1
 DROP TABLE IF EXISTS `eiot_alert_config`;
 CREATE TABLE `eiot_alert_config`  (
                                       `id` bigint NOT NULL AUTO_INCREMENT COMMENT '告警配置id',
-                                      `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '告警名称',
+                                      `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '告警名称',
                                       `message_template_id` bigint NULL DEFAULT NULL COMMENT '关联消息转发模板ID',
                                       `rule_info_id` bigint NOT NULL COMMENT '规则引擎id',
-                                      `level` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '告警等级',
-                                      `remark` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '备注',
+                                      `level` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '告警等级',
+                                      `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
                                       `status` tinyint NULL DEFAULT NULL COMMENT '状态(0启动 1禁用)',
                                       `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                                       `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -159,7 +161,7 @@ CREATE TABLE `eiot_alert_config`  (
                                       `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                       `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '报警配置' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '报警配置' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_alert_config
@@ -173,9 +175,9 @@ DROP TABLE IF EXISTS `eiot_alert_record`;
 CREATE TABLE `eiot_alert_record`  (
                                       `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
                                       `alert_time` bigint NOT NULL COMMENT '告警时间',
-                                      `details` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '告警详情',
-                                      `level` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '告警等级',
-                                      `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '告警名称',
+                                      `details` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '告警详情',
+                                      `level` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '告警等级',
+                                      `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '告警名称',
                                       `read_flg` bit(1) NULL DEFAULT NULL COMMENT '是否已读',
                                       `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                                       `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -185,7 +187,7 @@ CREATE TABLE `eiot_alert_record`  (
                                       `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                       `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '告警记录' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '告警记录' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_alert_record
@@ -234,9 +236,9 @@ INSERT INTO `eiot_category` VALUES (97, 0, '猫砂盆', 7, 0, '1', '2025-02-19 2
 DROP TABLE IF EXISTS `eiot_channel_config`;
 CREATE TABLE `eiot_channel_config`  (
                                         `id` bigint NOT NULL AUTO_INCREMENT COMMENT '通道配置id',
-                                        `title` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '配置名称',
-                                        `code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '通道编码',
-                                        `param` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '通道配置参数',
+                                        `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '配置名称',
+                                        `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '通道编码',
+                                        `param` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '通道配置参数',
                                         `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                                         `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                         `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
@@ -245,7 +247,7 @@ CREATE TABLE `eiot_channel_config`  (
                                         `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                         `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                         PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '通道配置' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '通道配置' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_channel_config
@@ -260,9 +262,9 @@ INSERT INTO `eiot_channel_config` VALUES (3, '邮箱通道', 'Email', '{\"qyWech
 DROP TABLE IF EXISTS `eiot_channel_template`;
 CREATE TABLE `eiot_channel_template`  (
                                           `id` bigint NOT NULL AUTO_INCREMENT COMMENT '通道模板id',
-                                          `title` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '通道模板名称',
+                                          `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '通道模板名称',
                                           `channel_config_id` bigint NOT NULL COMMENT '通道配置id',
-                                          `content` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '通道模板内容',
+                                          `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '通道模板内容',
                                           `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                                           `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                           `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
@@ -271,7 +273,7 @@ CREATE TABLE `eiot_channel_template`  (
                                           `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                           `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                           PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '通道模板' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '通道模板' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_channel_template
@@ -303,10 +305,6 @@ CREATE TABLE `eiot_component`  (
 -- ----------------------------
 INSERT INTO `eiot_component` VALUES (1, '内置官方mqtt协议组件', 'mqtt', '{\"port\":18831}', 1, NULL, NULL, '2025-02-19 01:01:54', '1', '2025-02-20 11:25:26', b'0');
 INSERT INTO `eiot_component` (`id`, `name`, `type`, `config`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (2, '内置emqx协议组件', 'emqx', '{\n     \"port\": 1883,\n     \"host\": \"127.0.0.1\",\n     \"topics\": \"/sys/#\",\n     \"authPort\": 8104\n}', 0, NULL, NULL, '2025-02-19 01:01:54', '1', '2025-02-28 10:29:51', b'0');
-INSERT INTO `eiot_component` (id, name, type, config, status, remark, creator, create_time, updater, update_time, deleted) VALUES (3, '内置TCP协议组件', 'tcp', '{
-     "port": 6666,
-     "host": "127.0.0.1"
-}', 1, null, null, '2025-02-19 01:01:54', '1', '2025-03-23 15:59:27', false);
 
 -- ----------------------------
 -- Table structure for eiot_dept_product
@@ -314,9 +312,9 @@ INSERT INTO `eiot_component` (id, name, type, config, status, remark, creator, c
 DROP TABLE IF EXISTS `eiot_dept_product`;
 CREATE TABLE `eiot_dept_product`  (
                                       `id` bigint NOT NULL AUTO_INCREMENT COMMENT '客户产品id',
-                                      `name` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '客户产品名称',
-                                      `propertys` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL COMMENT '产品属性',
-                                      `remark` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '备注',
+                                      `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '客户产品名称',
+                                      `propertys` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '产品属性',
+                                      `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
                                       `dept_id` bigint NULL DEFAULT NULL COMMENT '机构id',
                                       `status` tinyint NOT NULL DEFAULT 0 COMMENT '状态（0正常 1禁用 2未绑定）',
                                       `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
@@ -326,9 +324,9 @@ CREATE TABLE `eiot_dept_product`  (
                                       `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                       `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                       `category_id` bigint NOT NULL COMMENT '分类id',
-                                      `product_key` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '内部产品key',
+                                      `product_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '内部产品key',
                                       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '机构产品信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '机构产品信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_dept_product
@@ -365,9 +363,9 @@ CREATE TABLE `eiot_dept_product_category`  (
 DROP TABLE IF EXISTS `eiot_device_config`;
 CREATE TABLE `eiot_device_config`  (
                                        `id` bigint NOT NULL AUTO_INCREMENT COMMENT '配置id',
-                                       `config` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL COMMENT '配置内容',
-                                       `product_key` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '产品key',
-                                       `dn` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '设备唯一编码',
+                                       `config` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '配置内容',
+                                       `product_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '产品key',
+                                       `dn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备唯一编码',
                                        `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                                        `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                        `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
@@ -375,7 +373,7 @@ CREATE TABLE `eiot_device_config`  (
                                        `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                        `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                        PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_device_config
@@ -387,34 +385,34 @@ CREATE TABLE `eiot_device_config`  (
 DROP TABLE IF EXISTS `eiot_device_info`;
 CREATE TABLE `eiot_device_info`  (
                                      `id` bigint NOT NULL AUTO_INCREMENT COMMENT '设备id',
-                                     `dn` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '设备唯一标识',
-                                     `product_key` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '产品key',
+                                     `dn` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备唯一标识',
+                                     `product_key` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '产品key',
                                      `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
-                                     `properties` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL COMMENT '设备属性',
+                                     `properties` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '设备属性',
                                      `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                                      `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                      `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
                                      `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                      `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                      `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
-                                     `name` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '别名',
+                                     `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '别名',
                                      `state` tinyint NULL DEFAULT NULL COMMENT '(0:否, 1:在线, 2-未激活，3-禁用)设备状态',
                                      `offline_time` bigint NULL DEFAULT NULL COMMENT '离线时间',
                                      `online_time` bigint NULL DEFAULT NULL COMMENT '在线时间',
-                                     `serial_no` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '设备序列号',
-                                     `remark` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '备注',
+                                     `serial_no` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备序列号',
+                                     `remark` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
                                      `lat` double NULL DEFAULT NULL COMMENT '经纬度',
                                      `lon` double NULL DEFAULT NULL COMMENT '经纬度',
-                                     `model` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '类型',
+                                     `model` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '类型',
                                      `parent_id` bigint NULL DEFAULT NULL COMMENT '父id',
                                      `active_time` datetime NULL DEFAULT NULL COMMENT '激活时间',
-                                     `secret` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '设备密钥',
-                                     `firm_version` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT '1.0.0' COMMENT '固件版本',
-                                     `addr` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '位置信息',
+                                     `secret` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '设备密钥',
+                                     `firm_version` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '1.0.0' COMMENT '固件版本',
+                                     `addr` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '位置信息',
                                      `transparent` bit(1) NULL DEFAULT NULL COMMENT '是否透传',
                                      `node_type` int NOT NULL COMMENT '设备类型',
                                      PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1892227827321597953 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '设备主控表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1892227827321597953 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '设备主控表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_device_info
@@ -462,7 +460,7 @@ CREATE TABLE `eiot_iot_device_group`  (
                                           `tenant_id` bigint NULL DEFAULT 0 COMMENT '租户编号',
                                           `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                           PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '设备分组' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '设备分组' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_iot_device_group
@@ -474,11 +472,11 @@ CREATE TABLE `eiot_iot_device_group`  (
 DROP TABLE IF EXISTS `eiot_iot_group`;
 CREATE TABLE `eiot_iot_group`  (
                                    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '分组ID',
-                                   `name` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '分组名称',
+                                   `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '分组名称',
                                    `group_order` tinyint NOT NULL DEFAULT 0 COMMENT '分组排序',
                                    `uid` bigint NOT NULL COMMENT '用户ID',
-                                   `user_name` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT '' COMMENT '用户昵称',
-                                   `remark` varchar(500) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '备注',
+                                   `user_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '用户昵称',
+                                   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
                                    `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                                    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                    `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
@@ -489,7 +487,7 @@ CREATE TABLE `eiot_iot_group`  (
                                    `typ` tinyint NOT NULL DEFAULT 0 COMMENT '分组类型(0系统, 1用户, 字典)',
                                    PRIMARY KEY (`id`) USING BTREE,
                                    INDEX `iot_group_index_user_id`(`uid` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '设备分组' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '设备分组' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_iot_group
@@ -502,13 +500,13 @@ INSERT INTO `eiot_iot_group` VALUES (23, 'qqq', 0, 1, '', 'aa', '1', '2025-02-16
 DROP TABLE IF EXISTS `eiot_product`;
 CREATE TABLE `eiot_product`  (
                                  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '产品id',
-                                 `name` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '产品名称',
+                                 `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '产品名称',
                                  `category_id` bigint NOT NULL COMMENT '产品分类id',
-                                 `product_key` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT 'productKey',
-                                 `mcu_code` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT 'mcu code',
-                                 `remark1` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '功能介绍',
-                                 `img_url` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '图片url',
-                                 `remark` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '备注',
+                                 `product_key` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'productKey',
+                                 `mcu_code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'mcu code',
+                                 `remark1` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '功能介绍',
+                                 `img_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图片url',
+                                 `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
                                  `status` tinyint NOT NULL DEFAULT 0 COMMENT '状态（0启用 1禁用）',
                                  `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                                  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -517,13 +515,13 @@ CREATE TABLE `eiot_product`  (
                                  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                  `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                  `node_type` int NOT NULL DEFAULT 0 COMMENT '设备类型(0 网关设备, 1 网关子设备, 2 直连设备, 3 非联网设备 )',
-                                 `protocol_code` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '协议code',
+                                 `protocol_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '协议code',
                                  `keep_alive_time` bigint NOT NULL DEFAULT 0 COMMENT '保活时间',
-                                 `product_secret` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '产品密钥',
+                                 `product_secret` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '产品密钥',
                                  `transparent` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否透传',
                                  `locate_type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '定位方式(0无定位, 1自动上报 2手动定位)',
                                  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'eiot产品' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'eiot产品' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_product
@@ -541,16 +539,16 @@ INSERT INTO `eiot_product` VALUES (12, '有陪猫砂盆', 97, 'R755G5Wb3jst4tD7'
 DROP TABLE IF EXISTS `eiot_product_config`;
 CREATE TABLE `eiot_product_config`  (
                                         `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-                                        `product_key` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT 'productKey',
-                                        `config_items` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '配置项目',
-                                        `config` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '配置内容',
+                                        `product_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'productKey',
+                                        `config_items` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '配置项目',
+                                        `config` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '配置内容',
                                         `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                                         `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                         `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
                                         `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                         `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                         PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_product_config
@@ -562,13 +560,13 @@ CREATE TABLE `eiot_product_config`  (
 DROP TABLE IF EXISTS `eiot_rule_info`;
 CREATE TABLE `eiot_rule_info`  (
                                    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '规则id',
-                                   `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '规则名称',
-                                   `listeners` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL COMMENT '监听器',
-                                   `filters` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL COMMENT '过滤器',
-                                   `actions` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL COMMENT '动作',
-                                   `typ` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '类型(scene数据流转 flow场景联动)',
+                                   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '规则名称',
+                                   `listeners` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '监听器',
+                                   `filters` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '过滤器',
+                                   `actions` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '动作',
+                                   `typ` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '类型(scene数据流转 flow场景联动)',
                                    `state` tinyint NULL DEFAULT NULL COMMENT '状态(0启用 1禁用)',
-                                   `remark` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '描述',
+                                   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '描述',
                                    `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                                    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                    `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
@@ -577,7 +575,7 @@ CREATE TABLE `eiot_rule_info`  (
                                    `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                    `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '规则引擎' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '规则引擎' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_rule_info
@@ -592,11 +590,11 @@ INSERT INTO `eiot_rule_info` VALUES (17, '联动测试1', '[{\"type\":\"device\"
 DROP TABLE IF EXISTS `eiot_show_model`;
 CREATE TABLE `eiot_show_model`  (
                                     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '显示id',
-                                    `cnf` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '显示内容',
+                                    `cnf` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '显示内容',
                                     `typ` int NOT NULL COMMENT '类型 0:详情页, 1配置页',
-                                    `name` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '配置名称',
-                                    `remark` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '备注',
-                                    `model_code` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '模型code',
+                                    `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '配置名称',
+                                    `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+                                    `model_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '模型code',
                                     `status` tinyint NOT NULL DEFAULT 0 COMMENT '状态（0正常 1禁用）',
                                     `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                                     `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -604,9 +602,9 @@ CREATE TABLE `eiot_show_model`  (
                                     `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                     `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                     `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
-                                    `product_key` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT 'productKey',
+                                    `product_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'productKey',
                                     PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '产品显示模型' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '产品显示模型' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_show_model
@@ -624,10 +622,10 @@ CREATE TABLE `eiot_thing_model`  (
                                      `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                      `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                      `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
-                                     `product_key` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '产品key',
-                                     `model` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL COMMENT '物模型',
+                                     `product_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '产品key',
+                                     `model` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '物模型',
                                      PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '产品物模型' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '产品物模型' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_thing_model
@@ -641,13 +639,13 @@ INSERT INTO `eiot_thing_model` VALUES (8, '1', '2025-02-19 22:58:53', '1', '2025
 DROP TABLE IF EXISTS `eiot_virtual_device`;
 CREATE TABLE `eiot_virtual_device`  (
                                         `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-                                        `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '虚拟设备名称',
-                                        `product_key` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '产品key',
-                                        `type` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '虚拟类型\nthingModel:物模型 protocol: 基于协议',
-                                        `script` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '脚本',
-                                        `trigger` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '触发执行方式\nnone: 手动 cron:定时执行 random:随机执行',
-                                        `trigger_expression` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '触发表达式',
-                                        `state` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '运行状态 running: 运行中 stopped:已暂停',
+                                        `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '虚拟设备名称',
+                                        `product_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '产品key',
+                                        `type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '虚拟类型\nthingModel:物模型 protocol: 基于协议',
+                                        `script` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '脚本',
+                                        `trigger` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '触发执行方式\nnone: 手动 cron:定时执行 random:随机执行',
+                                        `trigger_expression` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '触发表达式',
+                                        `state` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '运行状态 running: 运行中 stopped:已暂停',
                                         `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                                         `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                         `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
@@ -655,7 +653,7 @@ CREATE TABLE `eiot_virtual_device`  (
                                         `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                         `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                         PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1892398879810187267 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '虚拟设备信息' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1892398879810187267 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '虚拟设备信息' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_virtual_device
@@ -675,14 +673,14 @@ CREATE TABLE `eiot_virtual_device_mapping`  (
                                                 `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
                                                 `virtual_device_id` bigint NULL DEFAULT NULL COMMENT '虚拟设备id',
                                                 `device_id` bigint NULL DEFAULT NULL COMMENT '设备id',
-                                                `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建者',
+                                                `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建者',
                                                 `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                                `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '更新者',
+                                                `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
                                                 `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                                 `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                                 `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                                 PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1892610417427156994 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '虚拟设备信息' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1892610417427156994 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '虚拟设备信息' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of eiot_virtual_device_mapping
@@ -1065,9 +1063,9 @@ CREATE TABLE `infra_job_log`  (
 DROP TABLE IF EXISTS `notify_message`;
 CREATE TABLE `notify_message`  (
                                    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-                                   `content` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '内容',
+                                   `content` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '内容',
                                    `status` tinyint NULL DEFAULT NULL COMMENT '状态',
-                                   `messageType` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '消息类型',
+                                   `messageType` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '消息类型',
                                    `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                                    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                    `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
@@ -1076,7 +1074,7 @@ CREATE TABLE `notify_message`  (
                                    `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                    `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
                                    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'iot通知消息' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'iot通知消息' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of notify_message
@@ -1088,18 +1086,18 @@ CREATE TABLE `notify_message`  (
 DROP TABLE IF EXISTS `ota_package`;
 CREATE TABLE `ota_package`  (
                                 `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-                                `product_key` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '产品key',
-                                `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '名称',
-                                `url` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '升级包地址',
-                                `version` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '版本',
+                                `product_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '产品key',
+                                `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
+                                `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '升级包地址',
+                                `version` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '版本',
                                 `size` bigint NOT NULL COMMENT '升级包大小',
-                                `sign_method` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '签名方式',
-                                `sign` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '签名内容',
-                                `remark` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '备注',
-                                `ext_data` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '额外内容',
+                                `sign_method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '签名方式',
+                                `sign` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '签名内容',
+                                `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+                                `ext_data` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '额外内容',
                                 `is_diff` bit(1) NULL DEFAULT NULL COMMENT '是否差分包',
-                                `md5` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT 'md5',
-                                `module` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '模块',
+                                `md5` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'md5',
+                                `module` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '模块',
                                 `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                                 `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                 `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
@@ -1107,7 +1105,7 @@ CREATE TABLE `ota_package`  (
                                 `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                                 `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                                 PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'ota包' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'ota包' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ota_package
@@ -3162,10 +3160,10 @@ INSERT INTO `system_users` VALUES (104, 'test', '$2a$04$KG9vBvKLO5PP9Tfd8ttF0.CD
 DROP TABLE IF EXISTS `task_info`;
 CREATE TABLE `task_info`  (
                               `id` bigint NOT NULL AUTO_INCREMENT COMMENT '任务id',
-                              `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '任务名称',
-                              `actions` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '任务输出',
-                              `state` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '状态',
-                              `type` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '任务类型',
+                              `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '任务名称',
+                              `actions` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '任务输出',
+                              `state` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '状态',
+                              `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '任务类型',
                               `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
                               `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                               `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
@@ -3173,10 +3171,10 @@ CREATE TABLE `task_info`  (
                               `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
                               `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
                               `dept_id` bigint NULL DEFAULT 0 COMMENT '机构id',
-                              `expression` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '表达式',
-                              `remark` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '备注',
+                              `expression` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '表达式',
+                              `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
                               PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'iot任务' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'iot任务' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of task_info
