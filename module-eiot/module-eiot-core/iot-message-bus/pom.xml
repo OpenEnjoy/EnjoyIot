@@ -17,6 +17,7 @@
         <module>iot-message-kafka</module>
         <module>iot-message-spring</module>
         <module>iot-message-rocketmq</module>
+        <module>iot-message-actor</module>
     </modules>
 
 
