@@ -36,6 +36,7 @@
         <opengauss.jdbc.version>5.1.0</opengauss.jdbc.version>
         <!-- 消息队列 -->
         <rocketmq-spring.version>2.3.1</rocketmq-spring.version>
+        <akka.version>2.8.8</akka.version>
         <!-- 服务保障相关 -->
         <lock4j.version>2.2.7</lock4j.version>
         <!-- 监控相关 -->
@@ -315,6 +316,12 @@
                 <groupId>org.apache.rocketmq</groupId>
                 <artifactId>rocketmq-spring-boot-starter</artifactId>
                 <version>${rocketmq-spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.typesafe.akka</groupId>
+                <artifactId>akka-actor-typed_2.13</artifactId>
+                <version>${akka.version}</version>
             </dependency>
 
             <!-- 服务保障相关 -->
