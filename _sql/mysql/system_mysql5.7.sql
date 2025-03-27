@@ -504,6 +504,42 @@ CREATE TABLE `eiot_iot_group`  (
 INSERT INTO `eiot_iot_group` VALUES (23, 'qqq', 0, 1, '', 'aa', '1', '2025-02-16 13:02:23', '1', '2025-02-16 13:02:23', b'0', 1, 0, 0);
 
 -- ----------------------------
+-- Table structure for eiot_modbus_info
+-- ----------------------------
+DROP TABLE IF EXISTS `eiot_modbus_info`;
+CREATE TABLE `eiot_modbus_info`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '产品id',
+  `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '产品名称',
+  `product_key` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'productKey',
+  `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
+  `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'Modbus产品' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for eiot_modbus_thing_model
+-- ----------------------------
+DROP TABLE IF EXISTS `eiot_modbus_thing_model`;
+CREATE TABLE `eiot_modbus_thing_model`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '产品id',
+  `product_key` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'productKey',
+  `model` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '模型内容',
+  `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
+  `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+
+-- ----------------------------
 -- Table structure for eiot_product
 -- ----------------------------
 DROP TABLE IF EXISTS `eiot_product`;
