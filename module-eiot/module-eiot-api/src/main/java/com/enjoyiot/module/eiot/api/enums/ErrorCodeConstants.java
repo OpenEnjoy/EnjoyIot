@@ -58,5 +58,8 @@ public interface ErrorCodeConstants {
 
 
     ErrorCode FILE_NOT_NULL = new ErrorCode(2_006_004_000, "文件不许为空");
+    ErrorCode DATA_NOT_EXIST = new ErrorCode(2_006_004_000, "数据不存在");
 
+    ErrorCode TEMPLATE_NAME_ALREADY = new ErrorCode(2_006_004_000, "模板名称已存在");
+    ErrorCode RELATED_PRODUCTS_EXIST = new ErrorCode(2_006_004_000, "关联产品已存在");
 }
