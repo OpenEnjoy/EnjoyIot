@@ -4,10 +4,11 @@ import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.module.eiot.api.modbus.dto.ModbusInfo;
 import com.enjoyiot.module.eiot.api.modbus.dto.ModbusThingModel;
 import com.enjoyiot.module.eiot.controller.admin.modbus.vo.ModbusInfoVo;
+import com.enjoyiot.module.eiot.controller.admin.modbus.vo.ModbusThingModelImportVo;
 import com.enjoyiot.module.eiot.controller.admin.modbus.vo.ModbusThingModelVo;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 public interface ModbusInfoService {
 
@@ -27,5 +28,5 @@ public interface ModbusInfoService {
 
     boolean syncToProduct(@Valid ModbusThingModelVo data);
 
-    String importData(MultipartFile file, String productKey);
+    String importData(List<ModbusThingModelImportVo> objects, String productKey);
 }

@@ -1,14 +1,23 @@
 package com.enjoyiot.module.eiot.controller.admin.modbus.vo;
 
+
 import cn.idev.excel.annotation.ExcelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
 
 @Schema(description = "ModbusThingModel.Property")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = false) // 设置 chain = false，避免用户导入有问题
 public class ModbusThingModelImportVo implements Serializable {
     private static final long serialVersionUID = -1L;
 

@@ -15,11 +15,6 @@ public class ModbusInfo extends TenantModel {
     private Long id;
 
     /**
-     * 配置所属用户
-     */
-    private String uid;
-
-    /**
      * 产品名称
      */
     private String name;

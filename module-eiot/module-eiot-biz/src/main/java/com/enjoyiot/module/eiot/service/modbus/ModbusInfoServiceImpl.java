@@ -11,6 +11,7 @@ import com.enjoyiot.framework.common.exception.ServiceException;
 import com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil;
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.framework.common.util.json.JsonUtils;
+import com.enjoyiot.framework.excel.core.util.ExcelUtils;
 import com.enjoyiot.module.eiot.api.enums.ErrorCodeConstants;
 import com.enjoyiot.module.eiot.api.modbus.ModbusInfoApi;
 import com.enjoyiot.module.eiot.api.modbus.ModbusThingModelApi;
@@ -105,8 +106,11 @@ public class ModbusInfoServiceImpl implements ModbusInfoService {
          * [{value:0,label:'网关设备',},{value:1,label:'网关子设备',},{value:2,label:'直连设备'},]
          */
         productVo.setNodeType(1);
+        productVo.setCategoryId(0L);
+        productVo.setStatus(1);
         productVo.setTransparent(true);
         productVo.setKeepAliveTime(0L);
+        productVo.setProtocolCode("modbus-tcp");
         productVo.setLocateType(0);
         productService.createProduct(productVo);
 
@@ -118,7 +122,7 @@ public class ModbusInfoServiceImpl implements ModbusInfoService {
         ModbusInfoDO bean = BeanUtil.toBean(data, ModbusInfoDO.class);
         //模板名称不可重复
         ModbusInfoDO old = modbusInfoMapper.selectOne(ModbusInfoDO::getName, bean.getName());
-        if (old != null) {
+        if (old != null && !Objects.equals(old.getId(), data.getId())) {
             throw ServiceExceptionUtil.exception(ErrorCodeConstants.TEMPLATE_NAME_ALREADY);
         }
 
@@ -212,10 +216,9 @@ public class ModbusInfoServiceImpl implements ModbusInfoService {
         return false;
     }
 
-    @SneakyThrows
+
     @Override
-    public String importData(MultipartFile file, String productKey) {
-        List<ModbusThingModelImportVo> objects = EasyExcel.read(file.getInputStream()).head(ModbusThingModelImportVo.class).sheet().doReadSync();
+    public String importData(List<ModbusThingModelImportVo> objects, String productKey) {
         if (CollectionUtil.isEmpty(objects)) {
             throw ServiceExceptionUtil.exception(ErrorCodeConstants.DATA_NOT_EXIST);
         }
@@ -231,6 +234,7 @@ public class ModbusInfoServiceImpl implements ModbusInfoService {
 
         ModbusThingModel modbusThingModel = new ModbusThingModel();
         modbusThingModel.setModel(model);
+        modbusThingModel.setProductKey(productKey);
 
         return this.saveThingModel(productKey, modbusThingModel) ? "导入成功" : "导入失败";
     }

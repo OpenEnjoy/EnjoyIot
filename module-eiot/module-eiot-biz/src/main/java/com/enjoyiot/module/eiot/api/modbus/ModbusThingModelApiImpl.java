@@ -31,7 +31,7 @@ public class ModbusThingModelApiImpl implements ModbusThingModelApi {
     public ModbusThingModel save(ModbusThingModel thingModel) {
         ModbusThingModelDO to = BeanUtil.copyProperties(thingModel, ModbusThingModelDO.class, "model");
         to.setModel(JsonUtils.toJsonString(thingModel.getModel()));
-        modbusThingModelMapper.insert(to);
+        modbusThingModelMapper.insertOrUpdate(to);
         thingModel.setId(to.getId());
         return thingModel;
     }
