@@ -32,6 +32,11 @@
 * 数据管理-提供实时数据存储、历史数据时序数据库存储、数据查询分析、数据推送等
 * 另提供可视化大屏、第三方平台对接、视频接入、无人机接入、AI算法集成等功能
 
+### 商用&授权
+
+开源版：代码完全开源. 可用于个人学习、研究使用，用于商业用途请联系作者申请授权后可免费使用，但仍需保留开源署名等信息。
+
+商业版：测试中
 
 ### 前端仓库
 [![乐联开源/enjoy-web](https://gitee.com/open-enjoy/enjoy-web/widgets/widget_card.svg?colors=393222,ebdfc1,fffae5,d8ca9f,393222,a28b40)](https://gitee.com/open-enjoy/enjoy-web)
@@ -39,6 +44,10 @@
 ### 界面展示
 
 <img alt="wx.png" src=".image/devices.png" width="600"/>
+<img alt="wx.png" src=".image/product.png" width="600"/>
+<img alt="wx.png" src=".image/rule.png" width="600"/>
+<img alt="wx.png" src=".image/rule_action.png" width="600"/>
+<img alt="wx.png" src=".image/alarm_conf.png" width="600"/>
 
 ### 文档
 
@@ -46,11 +55,6 @@
 
 演示系统：见微信群公告
 
-### 商用&授权
-
-开源版：可用于个人学习、研究使用，用于商业用途请联系作者申请授权后可免费使用，但仍需保留开源署名等信息。
-
-商业版：筹划中。。
 
 ### 开源之星活动
 
