@@ -12,7 +12,7 @@
 > 😜 给项目点点 Star 吧，这对我们真的很重要！
 
 ### 平台通用基础功能
-* 基于芋道通用后台管理系统开发
+* 基于若依通用后台管理系统开发
 * 采用 Spring Boot 多模块架构、MySQL + MyBatis Plus、Redis + Redisson
 * 数据库默认使用 MySQL，其它数据库后续进行适配
 * 消息队列可使用 Event、Redis、RabbitMQ、Kafka、RocketMQ 等
