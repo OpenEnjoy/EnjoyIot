@@ -70,7 +70,7 @@ public class VertxTcpClient {
     }
 
     public void sendMessage(Buffer buffer) {
-        log.info("wirte data:{}", buffer.toString());
+        log.info("write data:{}", buffer.toString());
         socket.write(buffer, r -> {
             keepAlive();
             if (r.succeeded()) {

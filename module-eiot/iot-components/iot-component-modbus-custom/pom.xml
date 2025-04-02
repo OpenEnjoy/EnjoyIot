@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.enjoy-iot</groupId>
+        <artifactId>iot-components</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>iot-component-modbus-custom</artifactId>
+    <description>定制化的modbus组件，专门用于指定的产品，虽然不通用，但是具有一定的参考意义</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.enjoy-iot</groupId>
+            <artifactId>iot-component-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enjoy-iot</groupId>
+            <artifactId>module-eiot-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.digitalpetri.modbus</groupId>
+            <artifactId>modbus-master-tcp</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+
+    </dependencies>
+</project>
