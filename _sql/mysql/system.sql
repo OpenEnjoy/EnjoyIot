@@ -313,6 +313,7 @@ INSERT INTO `eiot_component` (`id`, `name`, `type`, `config`, `status`, `remark`
     "sslKey": "",
     "sslCert": ""
 }', 1, NULL, NULL, '2025-02-19 01:01:54', '1', '2025-02-20 11:25:26', b'0');
+INSERT INTO `eiot_component` (`id`, `name`, `type`, `config`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5, '有人云的USR-G770数传终端的modbus-tcp协议组件', 'modbus-custom', '{\n    \"port\":18835,\n    \"timer\": 10,\n    \"productKey\": \"mpDXsY7yihnfBmw5\",\n    \"slaveId\": 6\n}', 0, '产品手册：https://www.usr.cn/wiki/puba/p2xSMaXS4#top', NULL, '2025-02-19 01:01:54', '1', '2025-04-02 10:13:36', b'0');
 
 -- ----------------------------
 -- Table structure for eiot_dept_product
