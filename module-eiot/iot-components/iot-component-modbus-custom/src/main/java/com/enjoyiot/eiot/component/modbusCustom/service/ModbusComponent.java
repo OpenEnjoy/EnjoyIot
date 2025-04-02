@@ -48,6 +48,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledFuture;
 import java.util.function.Consumer;
 
 @Slf4j
@@ -71,6 +72,8 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
     private final ModbusThingModelApi modbusThingModelApi;
 
     private final ThreadPoolTaskScheduler taskScheduler;
+    private ScheduledFuture<?> readTaskFuture;
+    private ScheduledFuture<?> offlineCheckTaskFuture;
 
     private ModbusThingModel thingModel;
 
@@ -144,19 +147,13 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
                     if (data instanceof RegisterDataPackage) {
                         heartbeatDevice.remove(dn);
 
-                        DeviceInfo device = deviceApi.getDeviceByPkDnByCache(modbusConfig.getProductKey(), dn);
-                        if (device == null) {
-                            log.info("设备不存在：{}", dn);
-                            return;
-                        }
-
-                        dnToDevice.put(dn, device);
                         RegisterDevice build = RegisterDevice.builder()
-                                .productKey(device.getProductKey())
+                                .productKey(modbusConfig.getProductKey())
                                 .deviceName(dn)
                                 .build();
 
-                        deviceApi.registerDevice(build);
+                        DeviceInfo device = deviceApi.registerDevice(build);
+                        dnToDevice.put(dn, device);
                         return;
                     }
 
@@ -171,9 +168,6 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
                         online(dn);
                         MbapHeader header = ((ResponseDataPackage) data).getHeader();
                         ModbusPdu pdu = ((ResponseDataPackage) data).getPdu();
-
-
-                        DeviceInfo device = dnToDevice.get(dn);
 
                         short transactionId = header.getTransactionId();
 
@@ -249,6 +243,8 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
 
         //停止组件
         if (!enable) {
+            if (readTaskFuture != null) readTaskFuture.cancel(true);
+            if (offlineCheckTaskFuture != null) offlineCheckTaskFuture.cancel(true);
             modbusVerticle.stopServer();
             return true;
         }
@@ -267,9 +263,9 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
         modbusVerticle.startServer(modbusConfig);
         // 根据时间间隔执行定时任务（上次开始时计算）
         // 属性读取定时任务
-        taskScheduler.scheduleAtFixedRate(this::readTask, Duration.ofSeconds(modbusConfig.getTimer()));
+        readTaskFuture = taskScheduler.scheduleAtFixedRate(this::readTask, Duration.ofSeconds(modbusConfig.getTimer()));
         // 离线设备检测定时任务
-        taskScheduler.scheduleAtFixedRate(this::offlineCheckTask, Duration.ofSeconds(40));
+        offlineCheckTaskFuture = taskScheduler.scheduleAtFixedRate(this::offlineCheckTask, Duration.ofSeconds(40));
         return true;
     }
 
