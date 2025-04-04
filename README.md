@@ -65,6 +65,8 @@ https://y5yrmmjjns.feishu.cn/wiki/PsPEwXms0iJEayk88Wgc4xH1nob?fromScene=spaceOve
 
 ## 联系我们
 
+ 乐联开源商务及技术联系
+
  **添加微信，备注：进群**
 
 <img alt="wx.png" height="300" src=".image/wx.png" width="250"/>
