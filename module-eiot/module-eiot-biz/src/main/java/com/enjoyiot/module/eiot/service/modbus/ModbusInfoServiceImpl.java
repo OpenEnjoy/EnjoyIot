@@ -111,6 +111,7 @@ public class ModbusInfoServiceImpl implements ModbusInfoService {
         productVo.setTransparent(true);
         productVo.setKeepAliveTime(0L);
         productVo.setProtocolCode("modbus-tcp");
+        productVo.setMcuCode("N");
         productVo.setLocateType(0);
         productService.createProduct(productVo);
 
