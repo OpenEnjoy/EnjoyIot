@@ -27,6 +27,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +62,8 @@ public class RuleInfo {
 
 
     private Long tenantId;
+
+    private LocalDateTime createTime;
 
     public List<FilterConfig> getListeners() {
         return listeners == null ? new ArrayList<>() : listeners;
