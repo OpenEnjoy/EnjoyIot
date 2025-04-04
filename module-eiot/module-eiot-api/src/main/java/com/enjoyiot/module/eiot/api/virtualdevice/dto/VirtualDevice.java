@@ -14,6 +14,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,5 +98,10 @@ public class VirtualDevice {
      * 运行状态
      */
     private String state = STATE_STOPPED;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
 
 }

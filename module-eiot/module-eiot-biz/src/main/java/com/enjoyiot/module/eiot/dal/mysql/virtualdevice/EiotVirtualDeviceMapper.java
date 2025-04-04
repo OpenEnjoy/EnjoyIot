@@ -44,6 +44,7 @@ public interface EiotVirtualDeviceMapper extends BaseMapperX<VirtualDeviceDO> {
     default PageResult<VirtualDeviceDO> selectPage(VirtualDevicePageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<VirtualDeviceDO>()
                 .eqIfPresent(VirtualDeviceDO::getState, reqVO.getState())
+                .eqIfPresent(VirtualDeviceDO::getProductKey, reqVO.getProductKey())
                 .orderByDesc(VirtualDeviceDO::getId));
     }
 
