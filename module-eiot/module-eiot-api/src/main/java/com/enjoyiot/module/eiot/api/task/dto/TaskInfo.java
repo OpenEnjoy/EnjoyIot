@@ -28,6 +28,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -81,7 +82,7 @@ public class TaskInfo  {
      */
     private String uid;
 
-    private Long createAt;
+    private LocalDateTime createTime;
 
     /**
      * 操作备注

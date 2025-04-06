@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.enjoyiot.eiot.message.actor.config.AkkaEventAutoConfiguration

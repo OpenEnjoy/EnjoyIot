@@ -55,11 +55,14 @@
             <artifactId>iot-message-notify</artifactId>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>com.enjoy-iot</groupId>-->
+<!--            <artifactId>iot-message-spring</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.enjoy-iot</groupId>
-            <artifactId>iot-message-spring</artifactId>
+            <artifactId>iot-message-actor</artifactId>
         </dependency>
-
             <!--使用rocketmq-->
 <!--         <dependency>-->
 <!--             <groupId>com.enjoy-iot</groupId>-->

@@ -24,8 +24,8 @@
 package com.enjoyiot.module.eiot.controller.admin.rule.vo;
 
 
-import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
-import com.alibaba.excel.annotation.ExcelProperty;
+import cn.idev.excel.annotation.ExcelIgnoreUnannotated;
+import cn.idev.excel.annotation.ExcelProperty;
 import com.enjoyiot.module.eiot.api.task.dto.RuleAction;
 import com.enjoyiot.module.eiot.api.task.dto.TaskInfo;
 import io.swagger.v3.oas.annotations.media.Schema;

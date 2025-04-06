@@ -305,6 +305,17 @@ CREATE TABLE `eiot_component`  (
 -- ----------------------------
 INSERT INTO `eiot_component` VALUES (1, '内置官方mqtt协议组件', 'mqtt', '{\"port\":18831}', 1, NULL, NULL, '2025-02-19 01:01:54', '1', '2025-02-20 11:25:26', b'0');
 INSERT INTO `eiot_component` (`id`, `name`, `type`, `config`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (2, '内置emqx协议组件', 'emqx', '{\n     \"port\": 1883,\n     \"host\": \"127.0.0.1\",\n     \"topics\": \"/sys/#\",\n     \"authPort\": 8104\n}', 0, NULL, NULL, '2025-02-19 01:01:54', '1', '2025-02-28 10:29:51', b'0');
+INSERT INTO enjoyiot.eiot_component (id, name, type, config, status, remark, creator, create_time, updater, update_time, deleted) VALUES (3, '内置TCP协议组件', 'tcp', '{
+     "port": 6666,
+     "host": "127.0.0.1"
+}', 1, null, null, '2025-02-19 01:01:54', '1', '2025-03-23 15:59:27', false);
+INSERT INTO `eiot_component` (`id`, `name`, `type`, `config`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`)  VALUES (4, '内置官方http协议组件', 'http', '{
+    "port":18834,
+    "ssl": false,
+    "sslKey": "",
+    "sslCert": ""
+}', 1, NULL, NULL, '2025-02-19 01:01:54', '1', '2025-02-20 11:25:26', b'0');
+INSERT INTO `eiot_component` (`id`, `name`, `type`, `config`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5, '有人云的USR-G770数传终端的modbus-tcp协议组件', 'modbus-custom', '{\n    \"port\":18835,\n    \"timer\": 10,\n    \"productKey\": \"mpDXsY7yihnfBmw5\",\n    \"slaveId\": 6\n}', 0, '产品手册：https://www.usr.cn/wiki/puba/p2xSMaXS4#top', NULL, '2025-02-19 01:01:54', '1', '2025-04-02 10:13:36', b'0');
 
 -- ----------------------------
 -- Table structure for eiot_dept_product
@@ -493,6 +504,42 @@ CREATE TABLE `eiot_iot_group`  (
 -- Records of eiot_iot_group
 -- ----------------------------
 INSERT INTO `eiot_iot_group` VALUES (23, 'qqq', 0, 1, '', 'aa', '1', '2025-02-16 13:02:23', '1', '2025-02-16 13:02:23', b'0', 1, 0, 0);
+
+-- ----------------------------
+-- Table structure for eiot_modbus_info
+-- ----------------------------
+DROP TABLE IF EXISTS `eiot_modbus_info`;
+CREATE TABLE `eiot_modbus_info`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '产品id',
+  `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '产品名称',
+  `product_key` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'productKey',
+  `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
+  `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'Modbus产品' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for eiot_modbus_thing_model
+-- ----------------------------
+DROP TABLE IF EXISTS `eiot_modbus_thing_model`;
+CREATE TABLE `eiot_modbus_thing_model`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '产品id',
+  `product_key` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'productKey',
+  `model` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '模型内容',
+  `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
+  `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
 
 -- ----------------------------
 -- Table structure for eiot_product
@@ -1644,6 +1691,7 @@ INSERT INTO `system_dict_data` VALUES (1706, 3, '监控设备', '3', 'eiot_node_
 INSERT INTO `system_dict_data` VALUES (1707, 2, '直连设备', '2', 'eiot_node_type', 0, '', '', '', '1', '2024-12-05 12:13:08', '1', '2024-12-05 12:14:18', b'0');
 INSERT INTO `system_dict_data` VALUES (1708, 1, '网关子设备', '1', 'eiot_node_type', 0, '', '', '', '1', '2024-12-05 12:12:52', '1', '2024-12-05 12:14:06', b'0');
 INSERT INTO `system_dict_data` VALUES (1709, 0, '网关', '0', 'eiot_node_type', 0, '', '', '', '1', '2024-12-05 12:12:34', '1', '2024-12-05 12:13:56', b'0');
+INSERT INTO `system_dict_data` VALUES (1710, 1, 'Modbus Tcp', 'modbus-tcp', 'eiot_protocol_code', 0, '', '', '', '1', '2025-03-21 00:23:29', '1', '2025-03-21 00:23:41', b'0');
 
 -- ----------------------------
 -- Table structure for system_dict_type
@@ -2240,6 +2288,12 @@ INSERT INTO `system_menu` VALUES (2949, '删除告警配置', 'iot:alertConfig:r
 INSERT INTO `system_menu` VALUES (2950, '新增OTA', 'iot:ota:add', 3, 2, 2868, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 21:14:28', '1', '2025-02-23 21:14:28', b'0');
 INSERT INTO `system_menu` VALUES (2951, '移除OTA', 'iot:ota:remove', 3, 3, 2868, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 21:14:52', '1', '2025-02-23 21:14:52', b'0');
 INSERT INTO `system_menu` VALUES (2952, '执行ota', 'iot:ota:upgrade', 3, 4, 2868, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-02-23 21:15:31', '1', '2025-02-23 21:15:31', b'0');
+INSERT INTO `system_menu` VALUES (2953, 'Modbus管理', '', 1, 2, 0, '/modbus', 'fa:empire', '', '', 0, b'1', b'1', b'1', '1', '2025-03-28 00:26:55', '1', '2025-03-28 00:27:15', b'0');
+INSERT INTO `system_menu` VALUES (2954, '产品点位', 'iot:modbus:list', 2, 1, 2953, 'modbusinfo', 'fa:bullseye', 'eiot/modbus/index', '', 0, b'1', b'1', b'1', '1', '2025-03-28 00:32:21', '1', '2025-03-28 00:33:56', b'0');
+INSERT INTO `system_menu` VALUES (2955, '新建ModbusInfo', 'iot:modbus:add', 3, 1, 2954, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-03-28 00:35:47', '1', '2025-03-28 00:35:47', b'0');
+INSERT INTO `system_menu` VALUES (2956, '编辑ModbusInfo', 'iot:modbus:edit', 3, 2, 2954, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-03-28 00:36:23', '1', '2025-03-28 00:36:23', b'0');
+INSERT INTO `system_menu` VALUES (2957, '查看ModbusInfo详情', 'iot:modbus:query', 3, 3, 2954, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-03-28 00:36:48', '1', '2025-03-28 00:36:48', b'0');
+INSERT INTO `system_menu` VALUES (2958, '删除ModbusInfo', 'iot:modbus:remove', 3, 4, 2954, '', '', '', '', 0, b'1', b'1', b'1', '1', '2025-03-28 00:37:12', '1', '2025-03-28 00:37:12', b'0');
 
 -- ----------------------------
 -- Table structure for system_notice

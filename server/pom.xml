@@ -55,6 +55,18 @@
             <version>${revision}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.enjoy-iot</groupId>
+            <artifactId>iot-component-http</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enjoy-iot</groupId>
+            <artifactId>iot-component-modbus-custom</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
         <!-- spring boot 配置所需依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -15,6 +15,9 @@
         <module>iot-component-core</module>
         <module>iot-component-mqtt</module>
         <module>iot-component-emqx</module>
+        <module>iot-component-tcp</module>
+        <module>iot-component-http</module>
+        <module>iot-component-modbus-custom</module>
     </modules>
 
     <dependencyManagement>

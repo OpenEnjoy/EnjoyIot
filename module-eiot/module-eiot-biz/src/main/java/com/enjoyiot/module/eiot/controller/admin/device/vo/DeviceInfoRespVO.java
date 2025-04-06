@@ -23,14 +23,14 @@
  */
 package com.enjoyiot.module.eiot.controller.admin.device.vo;
 
+import cn.idev.excel.annotation.ExcelIgnoreUnannotated;
+import cn.idev.excel.annotation.ExcelProperty;
 import com.enjoyiot.module.eiot.controller.admin.sip.vo.SipRelation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.*;
 import java.time.LocalDateTime;
-
-import com.alibaba.excel.annotation.*;
 
 @Schema(description = "管理后台 - 设备信息 Response VO")
 @Data

@@ -327,6 +327,7 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
 
         DeviceInfoSaveReqVO deviceInfo = new DeviceInfoSaveReqVO();
         deviceInfo.setProductKey(productKey);
+        deviceInfo.setName(registerDevice.getDeviceName());
         deviceInfo.setDn(registerDevice.getDeviceName());
         deviceInfo.setModel(registerDevice.getModel());
         deviceInfo.setParentId(registerDevice.getParentId());
