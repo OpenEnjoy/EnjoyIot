@@ -360,7 +360,7 @@ public class DeviceInfoController {
         return success(deviceManagerService.getDeviceInfoWithProperty(bo.getDeviceId()));
     }
 
-    @Operation(summary = "获取区列好")
+    @Operation(summary = "获取序列号")
     @GetMapping("/genSerialNO")
     @Parameter(name = "nodeType", description = "编号", required = true, example = "1024")
     public CommonResult<String> genSerialNO(Integer nodeType) {
