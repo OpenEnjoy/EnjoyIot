@@ -73,6 +73,7 @@ public class DeviceStateCheckTask {
         pageReqVO.setPageSize(pageSize);
         while (true) {
             pageReqVO.setState(1);
+            pageReqVO.setPageNo(pn);
 
             //取出数据库中所有在线设备
             // TODO: 从数据库库中取出到redis比较时,会有一定的时间间隔
