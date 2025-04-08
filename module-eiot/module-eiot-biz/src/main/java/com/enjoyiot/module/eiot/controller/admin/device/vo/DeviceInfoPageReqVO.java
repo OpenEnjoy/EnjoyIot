@@ -53,9 +53,6 @@ public class DeviceInfoPageReqVO extends PageParam {
     @Schema(description = "设备类型", example = "2")
     private Integer nodeType;
 
-    @Schema(description = "设备状态（1-未激活，2-禁用）", example = "2")
-    private Integer status;
-
     @Schema(description = "创建时间")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] createTime;
@@ -63,7 +60,7 @@ public class DeviceInfoPageReqVO extends PageParam {
     @Schema(description = "别名", example = "李四")
     private String name;
 
-    @Schema(description = "在线(0:否, 1:在线)")
+    @Schema(description = "设备状态(0:否, 1:在线, 2-未激活，3-禁用)", example = "2")
     private Integer state;
 
 

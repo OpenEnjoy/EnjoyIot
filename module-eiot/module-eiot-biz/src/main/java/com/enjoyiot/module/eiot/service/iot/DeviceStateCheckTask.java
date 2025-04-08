@@ -69,8 +69,10 @@ public class DeviceStateCheckTask {
         int pn = 1;
         int pageSize = 100;
         DeviceInfoPageReqVO pageReqVO = new DeviceInfoPageReqVO();
+        pageReqVO.setPageNo(pn);
         pageReqVO.setPageSize(pageSize);
         while (true) {
+            pageReqVO.setState(1);
             pageReqVO.setPageNo(pn);
 
             //取出数据库中所有在线设备
