@@ -11,6 +11,8 @@ import com.enjoyiot.eiot.message.actor.actor.MessageBusActor;
 import com.enjoyiot.eiot.message.actor.spring.SpringExtensionProvider;
 import com.enjoyiot.eiot.message.core.MqConsumer;
 import com.enjoyiot.eiot.message.core.MqProducer;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +26,9 @@ public class AkkaEventAutoConfiguration {
 
     @Bean
     public ActorSystem actorSystem() {
-        ActorSystem system = ActorSystem.create("IoTMessageBusSystem");
+        Config dispatcherConfig = ConfigFactory.parseResources("my-dispatcher.conf");
+        Config combinedConfig = dispatcherConfig.withFallback(ConfigFactory.load());
+        ActorSystem system = ActorSystem.create("IoTMessageBusSystem", combinedConfig);
         SpringExtensionProvider.getInstance().get(system).initialize(applicationContext);
         return system;
     }
