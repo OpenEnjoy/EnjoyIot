@@ -29,6 +29,7 @@ import com.enjoyiot.framework.common.exception.ServiceException;
 import com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil;
 import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.framework.common.util.object.BeanUtils;
+import com.enjoyiot.module.eiot.api.device.DeviceApi;
 import com.enjoyiot.module.eiot.api.enums.ErrorCodeConstants;
 import com.enjoyiot.module.eiot.api.thingmodel.dto.ThingModel;
 import com.enjoyiot.module.eiot.controller.admin.product.vo.IotThingModelSaveReqVO;
@@ -60,6 +61,9 @@ public class ThingModelServiceImpl implements ThingModelService {
 
     @Resource
     private IDbStructureData dbStructureData;
+
+    @Resource
+    private DeviceApi deviceApi;
 
 
     @Override
@@ -101,6 +105,8 @@ public class ThingModelServiceImpl implements ThingModelService {
             validateThingModelExists(updateObj.getId());
             // 更新
             thingModelMapper.updateById(BeanUtils.toBean(updateObj, ThingModelDO.class));
+            // 清除该产品下设备的属性缓存
+            deviceApi.clearPropertiesCache(productKey);
         }
 
     }

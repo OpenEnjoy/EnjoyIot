@@ -36,7 +36,10 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @Author: EnjoyIot
@@ -88,6 +91,13 @@ public class EiotRedisDAO {
         }
         return JsonUtils.parseObject(json, new TypeReference<PropertyCacheInfo>() {
         });
+    }
+
+    public void clearProperties(List<Long> deviceIds) {
+        if (deviceIds != null && !deviceIds.isEmpty()) {
+            Set<String> keys = deviceIds.stream().map(this::getPropertyCacheKey).collect(Collectors.toSet());
+            stringRedisTemplate.delete(keys);
+        }
     }
 
     @Data

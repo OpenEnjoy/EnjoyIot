@@ -66,6 +66,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.annotation.Resource;
 import javax.validation.ConstraintViolationException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil.exception;
 
@@ -371,5 +372,14 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
     @Override
     public void savePropertiesCache(Long deviceId, Map<String, DevicePropertyCache> properties) {
         eiotRedisDAO.saveProperties(deviceId, properties);
+    }
+
+    @Override
+    public void clearPropertiesCache(String productKey) {
+        List<EiotDeviceInfoDO> deviceList = deviceInfoMapper.selectList(EiotDeviceInfoDO::getProductKey, productKey);
+        if (deviceList != null && !deviceList.isEmpty()) {
+            List<Long> deviceIds = deviceList.stream().map(EiotDeviceInfoDO::getId).collect(Collectors.toList());
+            eiotRedisDAO.clearProperties(deviceIds);
+        }
     }
 }

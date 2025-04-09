@@ -144,6 +144,11 @@ public class DeviceApiImpl implements DeviceApi {
     }
 
     @Override
+    public void clearPropertiesCache(String productKey) {
+        TenantUtils.executeIgnore(() -> deviceInfoService.clearPropertiesCache(productKey));
+    }
+
+    @Override
     public DeviceConfig getDeviceConfig(Long deviceId) {
         return TenantUtils.executeIgnoreResult(() -> deviceConfigService.findByDeviceId(deviceId));
     }
