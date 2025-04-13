@@ -405,6 +405,7 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
                                     .code(payload.getInteger("code", 0))
                                     .params(params.getMap())
                                     .build());
+
                         }
                 }
 
@@ -475,11 +476,13 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
      */
     private void reply(MqttEndpoint endpoint, String topic, JsonObject payload, int code) {
         Map<String, Object> payloadReply = new HashMap<>();
+        topic = topic.replace("/s/", "/c/") + "_reply";
+
         payloadReply.put("id", payload.getString("id"));
         payloadReply.put("method", payload.getString("method") + "_reply");
         payloadReply.put("code", code);
         payloadReply.put("data", payload.getJsonObject("params"));
 
-        endpoint.publish(topic + "_reply", JsonObject.mapFrom(payloadReply).toBuffer(), MqttQoS.AT_LEAST_ONCE, false, false);
+        endpoint.publish(topic, JsonObject.mapFrom(payloadReply).toBuffer(), MqttQoS.AT_LEAST_ONCE, false, false);
     }
 }
