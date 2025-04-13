@@ -47,6 +47,8 @@ public interface DeviceApi {
 
     void savePropertiesCache(Long deviceId, Map<String, DevicePropertyCache> properties);
 
+    void clearPropertiesCache(String productKey);
+
     DeviceConfig getDeviceConfig(Long deviceId);
 
     /**
