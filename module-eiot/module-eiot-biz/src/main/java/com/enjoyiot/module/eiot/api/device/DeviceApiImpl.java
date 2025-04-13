@@ -37,6 +37,7 @@ import com.enjoyiot.module.eiot.service.device.DeviceCtrlService;
 import com.enjoyiot.module.eiot.service.device.DeviceInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.units.qual.C;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -82,6 +83,13 @@ public class DeviceApiImpl implements DeviceApi {
     @TenantIgnore
     public CommonResult<DeviceInfo> auth(DeviceAuth authDTO) {
 
+        return TenantUtils.executeIgnoreResult(()->{
+            return doAuth(authDTO);
+        });
+    }
+
+    @NotNull
+    private CommonResult<DeviceInfo> doAuth(DeviceAuth authDTO) {
         String clientId = authDTO.getClientId();
         String[] parts = clientId.split("_");
         String productKey = parts[0];
@@ -89,7 +97,7 @@ public class DeviceApiImpl implements DeviceApi {
         String gwModel = parts[2];
         if (!authDTO.getUserName().equals(deviceName)) {
             log.error("username:{}不正确", deviceName);
-            return CommonResult.error(BAD_REQUEST.getCode(),"deviceName不正确");
+            return CommonResult.error(BAD_REQUEST.getCode(), "deviceName不正确");
 
         }
 
@@ -97,16 +105,16 @@ public class DeviceApiImpl implements DeviceApi {
         DeviceInfo device = deviceInfoService.getDeviceByPkDnByCache(productKey, deviceName);
         if (Objects.isNull(device)) {
             if (!authDTO.isCanRegister()) {
-                return CommonResult.error(BAD_REQUEST.getCode(),"设备未注册");
+                return CommonResult.error(BAD_REQUEST.getCode(), "设备未注册");
             }
             Product product = productApi.getProduct(productKey);
             if (Objects.isNull(product)) {
-                return CommonResult.error(BAD_REQUEST.getCode(),"产品信息不存在");
+                return CommonResult.error(BAD_REQUEST.getCode(), "产品信息不存在");
             }
             String validPasswd = CodecUtil.md5Str(product.getProductSecret() + clientId);
             if (!validPasswd.equalsIgnoreCase(authDTO.getPassword())) {
                 log.info("deviceName:{}, validPasswd:{}", deviceName, validPasswd);
-                return CommonResult.error(BAD_REQUEST.getCode(),"密码验证识别");
+                return CommonResult.error(BAD_REQUEST.getCode(), "密码验证识别");
             }
 
             RegisterDevice registerDeviceDTO = RegisterDevice.builder().deviceName(deviceName).productKey(productKey)
@@ -114,7 +122,7 @@ public class DeviceApiImpl implements DeviceApi {
 
             DeviceInfo registerDevice =   this.registerDevice(registerDeviceDTO);
             if(ObjectUtil.isNull(registerDevice)){
-                return CommonResult.error(BAD_REQUEST.getCode(),"设备注册失败");
+                return CommonResult.error(BAD_REQUEST.getCode(), "设备注册失败");
             }
             return CommonResult.success(registerDevice);
         }
@@ -122,7 +130,6 @@ public class DeviceApiImpl implements DeviceApi {
 
         return CommonResult.success(device);
     }
-
     @Override
     public Map<String, DevicePropertyCache> getPropertiesFromCache(Long deviceId) {
         return TenantUtils.executeIgnoreResult(() -> deviceInfoService.getPropertiesFromCache(deviceId));
@@ -155,6 +162,9 @@ public class DeviceApiImpl implements DeviceApi {
 
     @Override
     public void invoke(ThingService<?> service) {
-//        deviceCtrlService.invokeService(service.getProductKey());
+        TenantUtils.executeIgnore(()->{
+            DeviceInfo device = deviceInfoService.getDeviceByPkDnByCache(service.getProductKey(), service.getDn());
+            deviceCtrlService.invokeService(device.getId(),service.getIdentifier(), (Map<String, Object>) service.getParams());
+        });
     }
 }
