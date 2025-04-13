@@ -57,19 +57,20 @@ public class VertxModbusClient {
             this.socket = socket
                     .exceptionHandler(Throwable::printStackTrace)
                     .closeHandler(v -> {
-                        log.debug("modbus client [{}] close", socket.remoteAddress());
+                        log.debug("modbus client[{}] [{}] close", dn, socket.remoteAddress());
                         shutdown();
                     })
                     .handler(buffer -> {
                         if (log.isDebugEnabled()) {
-                            log.debug("handle modbus client[{}] payload:[{}]",
+                            log.debug("handle modbus client[{}] [{}] payload:[{}]",
+                                    dn,
                                     socket.remoteAddress(),
                                     HexUtil.toFormattedHexString(buffer.getBytes()));
                         }
                         keepAlive();
                         consumer.accept(buffer);
                         if (this.socket != socket) {
-                            log.warn("modbus client [{}] memory leak ", socket.remoteAddress());
+                            log.warn("modbus client[{}] [{}] memory leak ", dn, socket.remoteAddress());
                             socket.close();
                         }
                     });
@@ -77,7 +78,7 @@ public class VertxModbusClient {
     }
 
     public void shutdown() {
-        log.debug("modbus client [{}] disconnect", getId());
+        log.debug("modbus client[{}] disconnect", dn);
         synchronized (this) {
             if (null != socket) {
                 execute(socket::close);
@@ -87,13 +88,13 @@ public class VertxModbusClient {
     }
 
     public void sendMessage(Buffer buffer) {
-        log.info("write data:{}", HexUtil.toFormattedHexString(buffer.getBytes()));
+        log.debug("write data:{}", HexUtil.toFormattedHexString(buffer.getBytes()));
         socket.write(buffer, r -> {
             keepAlive();
             if (r.succeeded()) {
-                log.info("client msg send success:{}", HexUtil.toFormattedHexString(buffer.getBytes()));
+                log.info("client[{}] msg send success:{}", dn, HexUtil.toFormattedHexString(buffer.getBytes()));
             } else {
-                log.error("client msg send failed", r.cause());
+                log.error("client[{}] msg send failed", dn, r.cause());
             }
         });
     }

@@ -2,6 +2,7 @@
 package com.enjoyiot.eiot.component.modbusCustom.service;
 
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.IdUtil;
 import com.digitalpetri.modbus.ModbusPdu;
 import com.digitalpetri.modbus.codec.MbapHeader;
@@ -43,10 +44,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.function.Consumer;
@@ -128,6 +126,7 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
         // 客户端连接处理
         String clientId = IdUtil.simpleUUID() + "_" + socket.remoteAddress();
         VertxModbusClient client = new VertxModbusClient(clientId);
+        client.setDn(clientId); // 先初始化dn,避免报错
         try {
             // 这个地方是在TCP服务初始化的时候设置的 parserSupplier
             client.setKeepAliveTimeoutMs(keepAliveTimeout);
@@ -174,43 +173,45 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
                         ModbusThingModel.Property property = client.getTransactionMap().remove(transactionId);
                         if (property == null) return;
 
-                        String sort = property.getSort();
-
                         switch (pdu.getFunctionCode()) {
                             case ReadCoils:
                                 ByteBuf coilStatus = ((ReadCoilsResponse) pdu).getCoilStatus();
-
+                                byte[] coilBytes = Arrays.copyOfRange(coilStatus.array(), 2, coilStatus.array().length);
+                                Object coilValue = property.parse(coilBytes);
                                 report(PropertyReport.builder()
-                                    .productKey(modbusConfig.getProductKey())
-                                    .deviceName(dn)
-                                    .params(Dict.create().set(property.getIdentifier(), coilStatus.readBoolean()))
-                                    .build());
+                                        .productKey(modbusConfig.getProductKey())
+                                        .deviceName(dn)
+                                        .params(Dict.create().set(property.getIdentifier(), coilValue))
+                                        .build());
                                 break;
                             case ReadDiscreteInputs:
                                 ByteBuf inputStatus = ((ReadDiscreteInputsResponse) pdu).getInputStatus();
-
+                                byte[] inputBytes = Arrays.copyOfRange(inputStatus.array(), 2, inputStatus.array().length);
+                                Object inputValue = property.parse(inputBytes);
                                 report(PropertyReport.builder()
                                         .productKey(modbusConfig.getProductKey())
                                         .deviceName(dn)
-                                        .params(Dict.create().set(property.getIdentifier(), inputStatus.readBoolean()))
+                                        .params(Dict.create().set(property.getIdentifier(), inputValue))
                                         .build());
                                 break;
                             case ReadHoldingRegisters:
-                                ByteBuf registers = ((ReadHoldingRegistersResponse) pdu).getRegisters();
-
+                                ByteBuf holdingRegisters = ((ReadHoldingRegistersResponse) pdu).getRegisters();
+                                byte[] holdingRegistersBytes = Arrays.copyOfRange(holdingRegisters.array(), 2, holdingRegisters.array().length);
+                                Object holdingRegistersValue = property.parse(holdingRegistersBytes);
                                 report(PropertyReport.builder()
                                         .productKey(modbusConfig.getProductKey())
                                         .deviceName(dn)
-                                        .params(Dict.create().set(property.getIdentifier(), sort.equals("AB CD") ? registers.readFloat() : registers.readFloatLE()))
+                                        .params(Dict.create().set(property.getIdentifier(), holdingRegistersValue))
                                         .build());
                                 break;
                             case ReadInputRegisters:
-                                ByteBuf registers1 = ((ReadInputRegistersResponse) pdu).getRegisters();
-
+                                ByteBuf inputRegisters = ((ReadInputRegistersResponse) pdu).getRegisters();
+                                byte[] inputRegistersBytes = Arrays.copyOfRange(inputRegisters.array(), 2, inputRegisters.array().length);
+                                Object inputRegistersValue = property.parse(inputRegistersBytes);
                                 report(PropertyReport.builder()
                                         .productKey(modbusConfig.getProductKey())
                                         .deviceName(dn)
-                                        .params(Dict.create().set(property.getIdentifier(), sort.equals("AB CD") ? registers1.readFloat() : registers1.readFloatLE()))
+                                        .params(Dict.create().set(property.getIdentifier(), inputRegistersValue))
                                         .build());
                                 break;
                             default:
@@ -245,6 +246,10 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
         if (!enable) {
             if (readTaskFuture != null) readTaskFuture.cancel(true);
             if (offlineCheckTaskFuture != null) offlineCheckTaskFuture.cancel(true);
+            clientMap.values().forEach(VertxModbusClient::shutdown);
+            clientMap.clear();
+            dnToDevice.clear();
+
             modbusVerticle.stopServer();
             return true;
         }
@@ -275,29 +280,34 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
      */
     private void readTask() {
         for (VertxModbusClient client : clientMap.values()) {
-            try {
-                DeviceInfo device = dnToDevice.get(client.getDn());
-                if (device == null) continue;
+            DeviceInfo device = dnToDevice.get(client.getDn());
+            if (device == null) continue;
+            // 采用线程池异步执行
+            ThreadUtil.execAsync(() -> {
+                try {
+                    //遍历物模型属性，读取属性值
+                    for (ModbusThingModel.Property property : this.thingModel.getModel().getProperties()) {
+                        RequestDataPackage requestData = RequestDataPackage.builder()
+                                .transactionId(client.getTransactionId())
+                                .slaveId(modbusConfig.getSlaveId())
+                                .functionCode(Byte.parseByte(property.getRegType()))
+                                .address(property.getRegAddr().shortValue())
+                                .quantity(property.getRegNum().shortValue())
+                                .build();
+                        // 将属性与请求数据关联起来，以便后续读取响应值的时候能知道读的是哪个属性
+                        client.getTransactionMap().put(requestData.getTransactionId(), property);
 
-                //遍历物模型属性，读取属性值
-                for (ModbusThingModel.Property property : this.thingModel.getModel().getProperties()) {
-                    RequestDataPackage requestData = RequestDataPackage.builder()
-                            .transactionId(client.getTransactionId())
-                            .slaveId(modbusConfig.getSlaveId())
-                            .functionCode(Byte.parseByte(property.getRegType()))
-                            .address(property.getRegAddr().shortValue())
-                            .quantity(property.getRegNum().shortValue())
-                            .build();
-                    // 将属性与请求数据关联起来，以便后续读取响应值的时候能知道读的是哪个属性
-                    client.getTransactionMap().put(requestData.getTransactionId(), property);
-
-                    Buffer buffer = DataEncoder.encode(requestData);
-                    //log.info("发送MODBUS数据: {}", HexUtil.toHexString(buffer.getBytes()));
-                    client.sendMessage(buffer);
+                        Buffer buffer = DataEncoder.encode(requestData);
+                        //log.info("发送MODBUS数据: {}", HexUtil.toHexString(buffer.getBytes()));
+                        client.sendMessage(buffer);
+                        // modbus设备不支持并发，所以极短时间内发送多个读取命令，只会响应第一个命令。
+                        // 所以这里需要休眠，避免设备处理不过来
+                        ThreadUtil.safeSleep(1000);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            });
         }
     }
 

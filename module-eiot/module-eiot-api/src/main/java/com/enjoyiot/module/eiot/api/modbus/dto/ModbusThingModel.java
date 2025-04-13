@@ -1,5 +1,10 @@
 package com.enjoyiot.module.eiot.api.modbus.dto;
 
+
+
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.enjoyiot.module.eiot.api.TenantModel;
 import com.enjoyiot.module.eiot.api.thingmodel.dto.ThingModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -8,9 +13,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
@@ -47,6 +52,7 @@ public class ModbusThingModel extends TenantModel {
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Property {
+        public static final String[] SORT_ENUM = {"AB", "BA", "AB CD", "CD AB", "DC BA", "BA DC"};
         private String name;
         private String identifier;
         // 描述
@@ -84,6 +90,49 @@ public class ModbusThingModel extends TenantModel {
 
         // 单位
         private String unit;
+
+        public Object parse(byte[] bytes) {
+            if (bytes == null || bytes.length == 0) {
+                return null;
+            }
+
+            // 设置默认数据顺序
+            String sort1 = "AB";
+            if (Arrays.stream(SORT_ENUM).anyMatch(s -> s.equals(sort))){
+                sort1 = sort.replace(" ", "");
+            }
+
+            byte[] sortedBytes = new byte[bytes.length];
+            // 按照数据顺序重排序bytes
+            if (sort1.equals("ABCD") || sort1.equals("AB")) {
+                sortedBytes = bytes;
+            } else {
+                // 将sort1中的ABCD的索引放到一个数组中
+                int[] index = new int[sort1.length()];
+                for (int i = 0; i < sort1.length(); i++) {
+                    index[i] = sort1.indexOf(i + 'A');
+                }
+
+                int len = bytes.length / index.length;
+                int remainder = bytes.length % index.length;
+
+                if (remainder != 0 || len == 0) {
+                    // 长度匹配不上的，一律按照原样处理
+                    sortedBytes = bytes;
+                } else {
+                    for (int i = 0; i < len; i++) {
+                        int start = i * index.length;
+                        for (int j = 0; j < index.length; j++) {
+                            sortedBytes[start + j] = bytes[start + index[j]];
+                        }
+                    }
+                }
+
+
+            }
+            // 解析已经排好顺序的数据
+            return dataType.parse(sortedBytes);
+        }
     }
 
 
@@ -146,21 +195,60 @@ public class ModbusThingModel extends TenantModel {
         private String type;
         private Object specs;
 
-        public <T> Object parse(T value) {
-            if (value == null) {
-                return null;
+        public Object parse(byte[] bytes) {
+            type = type.toLowerCase();
+            JSONObject specsMap = specs != null ? JSONUtil.parseObj(specs) : new JSONObject();
+
+            int value;
+            if (bytes.length >= 4) {
+                value = (bytes[3] & 255) | ((bytes[2] & 255) << 8) | ((bytes[1] & 255) << 16) | ((bytes[0] & 255) << 24);
+            } else if (bytes.length >= 2) {
+                value = (bytes[1] & 255) | ((bytes[0] & 255) << 8);
+            } else {
+                value = (bytes[0] & 255);
             }
 
-            String val = value.toString();
-            type = type.toLowerCase();
             switch (type) {
                 case "bool":
+                    String _false = specsMap.getStr("0", "false");
+                    String _true = specsMap.getStr("1", "true");
+                    return value == 0 ? _false : _true;
                 case "enum":
-                    return val;
+                    return specsMap.getStr(String.valueOf(value), String.valueOf(value));
                 case "int":
-                    return Integer.parseInt(val);
+                case "int32":
+                    return value;
+                case "float":
+                    float val = Float.intBitsToFloat(value);
+                    // 保留小数位数
+                    Integer precision = specsMap.getInt("precision", -1);
+                    if (NumberUtil.isValid(val)) {
+                        if (precision >= 0) {
+                            BigDecimal bigDecimal = NumberUtil.roundHalfEven(val, precision);
+                            return bigDecimal.floatValue();
+                        } else {
+                            return val;
+                        }
+                    }
+                    return null;
+                case "date":
+                    // String类型的UTC时间戳（毫秒）
+                    String dateStr = new String(bytes, StandardCharsets.US_ASCII);
+                    if (NumberUtil.isLong(dateStr)) {
+                        return new Date(Long.parseLong(dateStr));
+                    }
+                    return null;
+                case "text":
+                    return new String(bytes, StandardCharsets.US_ASCII);
+                case "position":
+                    // TODO: 还未规定具体的格式，先按照浮点数处理
+                    float position = Float.intBitsToFloat(value);
+                    if (NumberUtil.isValid(position)) {
+                        return position;
+                    }
+                    return null;
                 default:
-                    return val;
+                    return new String(bytes, StandardCharsets.US_ASCII);
             }
 
         }
