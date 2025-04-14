@@ -246,9 +246,6 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
         if (!enable) {
             if (readTaskFuture != null) readTaskFuture.cancel(true);
             if (offlineCheckTaskFuture != null) offlineCheckTaskFuture.cancel(true);
-            clientMap.values().forEach(VertxModbusClient::shutdown);
-            clientMap.clear();
-            dnToDevice.clear();
 
             modbusVerticle.stopServer();
             return true;
