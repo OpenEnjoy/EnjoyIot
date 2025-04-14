@@ -263,3 +263,7 @@ platform:
     end-code: 9999 # 这里配置 9999 的原因是，测试方便。
 
 debug: false
+
+init:
+  data:
+    flag: true # 初次使用时,初始化时序数据库表结构需要开启
