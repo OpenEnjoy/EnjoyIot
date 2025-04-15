@@ -28,6 +28,8 @@ import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.eiot.message.event.MessageEvent;
 import com.enjoyiot.eiot.message.model.EmailConfig;
 import com.enjoyiot.module.eiot.api.alert.dto.Message;
+import com.sun.mail.util.MailSSLSocketFactory;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -46,6 +48,7 @@ import java.util.Properties;
 @Component
 public class EmailEventListener implements MessageEventListener {
 
+    @SneakyThrows
     @Override
     @EventListener(classes = MessageEvent.class, condition = "#event.message.channelCode=='Email'")
     public void doEvent(MessageEvent event) {
@@ -60,6 +63,11 @@ public class EmailEventListener implements MessageEventListener {
         jms.setDefaultEncoding("utf-8");
         Properties p = new Properties();
         p.setProperty("mail.smtp.auth", String.valueOf(null == emailConfig.getSmtpAuth() || emailConfig.getSmtpAuth()));
+        //这里开启ssl加密
+        MailSSLSocketFactory sf = new MailSSLSocketFactory();
+        sf.setTrustAllHosts(true);
+        p.put("mail.smtp.ssl.enable","true");
+        p.put("mail.smtp.ssl.socketFactory",sf);
         jms.setJavaMailProperties(p);
         MimeMessage mimeMessage = jms.createMimeMessage();
         try {
