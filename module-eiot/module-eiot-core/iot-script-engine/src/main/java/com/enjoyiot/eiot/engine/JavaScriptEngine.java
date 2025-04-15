@@ -118,7 +118,7 @@ public class JavaScriptEngine implements IScriptEngine {
     private Context getContext() {
         Context context = contextThreadLocal.get();
         if (context == null) {
-            context = Context.newBuilder("js").allowHostAccess(HostAccess.ALL).build();
+            context = Context.newBuilder("js").option("engine.WarnInterpreterOnly", "false").allowHostAccess(HostAccess.ALL).build();
             contextThreadLocal.set(context);
         }
         return context;
