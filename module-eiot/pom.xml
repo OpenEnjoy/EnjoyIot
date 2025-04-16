@@ -19,7 +19,6 @@
         <module>module-eiot-task</module>
         <module>module-eiot-temporal</module>
         <module>iot-components</module>
-        <module>iot-virtual-device</module>
     </modules>
 
     <properties>
