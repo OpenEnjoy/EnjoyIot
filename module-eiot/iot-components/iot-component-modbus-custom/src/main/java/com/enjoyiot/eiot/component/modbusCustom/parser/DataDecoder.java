@@ -17,10 +17,10 @@ public class DataDecoder {
 
     public static DataPackage decode(Buffer buffer) {
         /**
-         * 其完整包格式为：
+         * 需要调整设备的协议包格式为：
          * 1.注册包：r+设备序列号后5位
          * 2.心跳包：设备序列号后5位
-         * 3.响应包：r+设备序列号后5位+modbus-tcp协议包
+         * 3.响应包：注册包+modbus-tcp协议包
          * 这样保证每个数据包都携带设备序列号，便于后续数据处理
          */
         //首先判断第一个字节是不是字母r
