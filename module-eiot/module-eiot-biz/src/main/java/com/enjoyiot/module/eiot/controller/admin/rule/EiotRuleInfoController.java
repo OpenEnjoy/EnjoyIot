@@ -115,7 +115,7 @@ public class EiotRuleInfoController {
     @PreAuthorize("@ss.hasPermission('iot:rule-info:remove')")
     @PostMapping("/ruleLog/clear")
     public CommonResult<Boolean> clearRuleLogs(@Validated @RequestBody RuleIdReq request) {
-        Long ruleId = request.getRuleId();
+        Long ruleId = request.getId();
         return CommonResult.success(ruleEngineService.clearRuleLogByRuleId(ruleId));
     }
 
@@ -177,6 +177,6 @@ public class EiotRuleInfoController {
     @PreAuthorize("@ss.hasPermission('iot:task:remove')")
     @PostMapping("/taskLogs/clear")
     public CommonResult<Boolean> clearTaskLogs(@Validated @RequestBody TaskIdReq req) {
-        return success(ruleEngineService.clearTaskLogs(req.getTaskId()));
+        return success(ruleEngineService.clearTaskLogs(req.getId()));
     }
 }
