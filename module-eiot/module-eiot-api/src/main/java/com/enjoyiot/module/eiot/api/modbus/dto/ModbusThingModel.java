@@ -1,7 +1,7 @@
 package com.enjoyiot.module.eiot.api.modbus.dto;
 
 
-
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -199,35 +200,36 @@ public class ModbusThingModel extends TenantModel {
             type = type.toLowerCase();
             JSONObject specsMap = specs != null ? JSONUtil.parseObj(specs) : new JSONObject();
 
-            int value;
+
+            int intValue;
             if (bytes.length >= 4) {
-                value = (bytes[3] & 255) | ((bytes[2] & 255) << 8) | ((bytes[1] & 255) << 16) | ((bytes[0] & 255) << 24);
+                intValue = ByteUtil.bytesToInt(bytes, ByteOrder.BIG_ENDIAN);
             } else if (bytes.length >= 2) {
-                value = (bytes[1] & 255) | ((bytes[0] & 255) << 8);
+                intValue = ByteUtil.bytesToShort(bytes, ByteOrder.BIG_ENDIAN);
             } else {
-                value = (bytes[0] & 255);
+                intValue = (bytes[0] & 255);
             }
 
             switch (type) {
                 case "bool":
                     String _false = specsMap.getStr("0", "false");
                     String _true = specsMap.getStr("1", "true");
-                    return value == 0 ? _false : _true;
+                    return intValue == 0 ? _false : _true;
                 case "enum":
-                    return specsMap.getStr(String.valueOf(value), String.valueOf(value));
+                    return specsMap.getStr(String.valueOf(intValue), String.valueOf(intValue));
                 case "int":
                 case "int32":
-                    return value;
+                    return intValue;
                 case "float":
-                    float val = Float.intBitsToFloat(value);
+                    float floatVal = Float.intBitsToFloat(intValue);
                     // 保留小数位数
                     Integer precision = specsMap.getInt("precision", -1);
-                    if (NumberUtil.isValid(val)) {
+                    if (NumberUtil.isValid(floatVal)) {
                         if (precision >= 0) {
-                            BigDecimal bigDecimal = NumberUtil.roundHalfEven(val, precision);
+                            BigDecimal bigDecimal = NumberUtil.roundHalfEven(floatVal, precision);
                             return bigDecimal.floatValue();
                         } else {
-                            return val;
+                            return floatVal;
                         }
                     }
                     return null;
@@ -242,7 +244,7 @@ public class ModbusThingModel extends TenantModel {
                     return new String(bytes, StandardCharsets.US_ASCII);
                 case "position":
                     // TODO: 还未规定具体的格式，先按照浮点数处理
-                    float position = Float.intBitsToFloat(value);
+                    float position = Float.intBitsToFloat(intValue);
                     if (NumberUtil.isValid(position)) {
                         return position;
                     }

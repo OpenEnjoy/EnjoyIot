@@ -24,6 +24,20 @@ public class VertxModbusClient {
     @Getter
     @Setter
     private String dn;
+    /**
+     * 产品key
+     */
+    @Getter
+    @Setter
+    private String productKey;
+
+    /**
+     * modbus 从机id
+     */
+    @Getter
+    @Setter
+    private Byte slaveId;
+
     public NetSocket socket;
     @Setter
     private long keepAliveTimeoutMs = Duration.ofSeconds(60).toMillis();

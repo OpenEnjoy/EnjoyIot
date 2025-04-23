@@ -15,7 +15,4 @@ public class ModbusConfig {
 
     private Integer timer;
 
-    private String productKey;
-
-    private Byte slaveId;
 }
