@@ -58,26 +58,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.graalvm.sdk</groupId>
-            <artifactId>graal-sdk</artifactId>
-            <!--            <version>22.3.3</version>-->
-            <!--            jdk8-->
-            <version>19.3.6</version>
-        </dependency>
-        <!-- Truffle API -->
-        <dependency>
-            <groupId>org.graalvm.truffle</groupId>
-            <artifactId>truffle-api</artifactId>
-            <version>19.3.6</version>
-
-        </dependency>
-        <!-- JavaScript Language -->
-        <dependency>
-            <groupId>org.graalvm.js</groupId>
-            <artifactId>js</artifactId>
-            <version>19.3.6</version>
-        </dependency>
-        <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
         </dependency>

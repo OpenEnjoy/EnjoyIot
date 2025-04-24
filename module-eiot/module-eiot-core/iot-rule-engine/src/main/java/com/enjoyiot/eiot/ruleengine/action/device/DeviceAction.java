@@ -42,7 +42,7 @@ public class DeviceAction implements Action<Service> {
 
     private String type;
 
-    private List<DeviceActionService.Service> services;
+    private List<Service> services;
 
     private DeviceActionService deviceActionService;
 
@@ -54,7 +54,7 @@ public class DeviceAction implements Action<Service> {
     @Override
     public List<String> execute(ThingModelMessage msg) {
         List<String> results = new ArrayList<>();
-        for (DeviceActionService.Service service : services) {
+        for (Service service : services) {
             deviceActionService.invoke(service);
             results.add(JsonUtils.toJsonString(service));
         }
