@@ -164,12 +164,33 @@ public class TcpComponent extends ThingComponent implements Handler<NetSocket> {
 
                     if (code == DataPackage.CODE_DATA_UP) {
                         //设备数据上报
-                        online(addr);
+//                        online(addr);
 
                         JSONObject object = JSONUtil.parseObj(data.getPayload());
                         report(PropertyReport.builder()
                                 .productKey(dnToPk.get(addr))
                                 .deviceName(addr)
+                                .params(object.getRaw())
+                                .build());
+
+                        sendMsg(addr, DataEncoder.encode(
+                                DataPackage.builder()
+                                        .addr(addr)
+                                        .code(DataPackage.CODE_DATA_UP)
+                                        .mid(data.getMid())
+                                        .payload(Buffer.buffer().appendInt(0).toString())
+                                        .build()
+                        ));
+                    }
+                    if (code == DataPackage.CODE_EVENT_UP) {
+                        //设备事件上报
+//                        online(addr);
+
+                        JSONObject object = JSONUtil.parseObj(data.getPayload());
+                        report(EventReport.builder()
+                                .productKey(dnToPk.get(addr))
+                                .deviceName(addr)
+                                .name("up_param")
                                 .params(object.getRaw())
                                 .build());
 

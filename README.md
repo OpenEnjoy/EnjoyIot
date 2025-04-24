@@ -12,7 +12,7 @@
 > 😜 给项目点点 Star 吧，这对我们真的很重要！
 
 ### 平台通用基础功能
-* 基于芋道通用后台管理系统开发
+* 基于若依通用后台管理系统开发
 * 采用 Spring Boot 多模块架构、MySQL + MyBatis Plus、Redis + Redisson
 * 数据库默认使用 MySQL，其它数据库后续进行适配
 * 消息队列可使用 Event、Redis、RabbitMQ、Kafka、RocketMQ 等
@@ -32,6 +32,11 @@
 * 数据管理-提供实时数据存储、历史数据时序数据库存储、数据查询分析、数据推送等
 * 另提供可视化大屏、第三方平台对接、视频接入、无人机接入、AI算法集成等功能
 
+### 商用&授权
+
+开源版：代码完全开源. 可用于个人学习、研究使用，用于商业用途请联系作者申请授权后可免费使用，但仍需保留开源署名等信息。
+
+商业版：测试中
 
 ### 前端仓库
 [![乐联开源/enjoy-web](https://gitee.com/open-enjoy/enjoy-web/widgets/widget_card.svg?colors=393222,ebdfc1,fffae5,d8ca9f,393222,a28b40)](https://gitee.com/open-enjoy/enjoy-web)
@@ -39,6 +44,10 @@
 ### 界面展示
 
 <img alt="wx.png" src=".image/devices.png" width="600"/>
+<img alt="wx.png" src=".image/product.png" width="600"/>
+<img alt="wx.png" src=".image/rule.png" width="600"/>
+<img alt="wx.png" src=".image/rule_action.png" width="600"/>
+<img alt="wx.png" src=".image/alarm_conf.png" width="600"/>
 
 ### 文档
 
@@ -46,11 +55,6 @@
 
 演示系统：见微信群公告
 
-### 商用&授权
-
-开源版：可用于个人学习、研究使用，用于商业用途请联系作者申请授权后可免费使用，但仍需保留开源署名等信息。
-
-商业版：筹划中。。
 
 ### 开源之星活动
 
@@ -61,7 +65,20 @@ https://y5yrmmjjns.feishu.cn/wiki/PsPEwXms0iJEayk88Wgc4xH1nob?fromScene=spaceOve
 
 ## 联系我们
 
+ 乐联开源商务及技术联系
+
  **添加微信，备注：进群**
 
 <img alt="wx.png" height="300" src=".image/wx.png" width="250"/>
+
+商务咨询
+
+<img alt="wx.png" height="300" src=".image/WechatIMG578.jpg" width="250"/>
+
+
+## :fa-chain-broken: 友情链接
+
+  :fa-star:    **MyEMS能源管理系统** ([https://gitee.com/myems/myems](https://gitee.com/myems/myems))
+
+
 

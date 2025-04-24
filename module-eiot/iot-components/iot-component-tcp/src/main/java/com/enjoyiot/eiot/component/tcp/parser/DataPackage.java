@@ -27,7 +27,8 @@ public class DataPackage {
     public static final short CODE_REGISTER_REPLY = 11;
     public static final short CODE_HEARTBEAT = 20;
     public static final short CODE_DATA_UP = 30;
-    public static final short CODE_DATA_DOWN = 40;
+    public static final short CODE_EVENT_UP = 40;
+    public static final short CODE_DATA_DOWN = 50;
 
     /**
      * 设备地址长度
