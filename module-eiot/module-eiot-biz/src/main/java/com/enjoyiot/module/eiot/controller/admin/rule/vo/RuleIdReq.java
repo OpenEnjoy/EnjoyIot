@@ -40,7 +40,7 @@ public class RuleIdReq {
 
     @Schema(description = "规则id")
     @NotNull(message = "规则id不许为空")
-    private Long ruleId;
+    private Long id;
 
 
 }

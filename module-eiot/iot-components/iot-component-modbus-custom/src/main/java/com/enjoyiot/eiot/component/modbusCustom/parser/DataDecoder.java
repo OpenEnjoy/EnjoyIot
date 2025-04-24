@@ -17,38 +17,43 @@ public class DataDecoder {
 
     public static DataPackage decode(Buffer buffer) {
         /**
-         * 需要调整设备的协议包格式为：
-         * 1.注册包：r+设备序列号后5位
-         * 2.心跳包：设备序列号后5位
-         * 3.响应包：注册包+modbus-tcp协议包
-         * 这样保证每个数据包都携带设备序列号，便于后续数据处理
+         * 其完整包格式为：
+         * 1.注册包：r_{productKey}_{dn}_{slaveId}
+         * 2.心跳包：dn
+         * 3.响应包：modbus-tcp协议包
+         * dn为设备序列号后5位
          */
-        //首先判断第一个字节是不是字母r
-        byte first = buffer.getByte(0);
-        if (buffer.length() == 6 && first == 'r') {
-            //是字母r，则认为是注册包
+        String asciiStr = buffer.toString("US-ASCII");
+        //首先判断是不是字母r_开头的数据包
+        if (asciiStr.startsWith("r_")) {
+            //是，则认为是注册包
+            String[] split = asciiStr.split("_");
+            if (split.length != 4) {
+                return null;
+            }
             RegisterDataPackage registerData = new RegisterDataPackage();
-            registerData.setDn(buffer.getString(1, buffer.length(), "US-ASCII"));
+            registerData.setProductKey(split[1]);
+            registerData.setDn(split[2]);
+            registerData.setSlaveId(Byte.parseByte(split[3]));
             return registerData;
         }
 
         if (buffer.length() == 5) {
             //等于5个字节，认为是心跳包
             HeartbeatDataPackage heartbeatData = new HeartbeatDataPackage();
-            heartbeatData.setDn(buffer.toString("US-ASCII"));
+            heartbeatData.setDn(asciiStr);
             return heartbeatData;
         }
 
-        if (buffer.length() > 13) {
-            //大于13个字节，认为是响应包
+        if (buffer.length() > 7) {
+            //大于7个字节，认为是响应包
             ResponseDataPackage responseData = new ResponseDataPackage();
-            responseData.setDn(buffer.getString(1, 6));
             try {
 
-                MbapHeader header = MbapHeader.decode(buffer.getBuffer(6, 13).getByteBuf());
+                MbapHeader header = MbapHeader.decode(buffer.getBuffer(0, 7).getByteBuf());
                 responseData.setHeader(header);
 
-                ModbusPdu pdu = decoder.decode(buffer.getBuffer(13, buffer.length()).getByteBuf());
+                ModbusPdu pdu = decoder.decode(buffer.getBuffer(7, buffer.length()).getByteBuf());
                 responseData.setPdu(pdu);
             } catch (Exception e) {
                 log.error("解码失败", e);

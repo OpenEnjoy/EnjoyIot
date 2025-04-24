@@ -4,4 +4,5 @@ import lombok.Data;
 
 @Data
 public class HeartbeatDataPackage extends DataPackage{
+    private String dn;
 }

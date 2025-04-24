@@ -40,7 +40,7 @@ public class TaskIdReq {
 
     @Schema(description = "任务ID")
     @NotNull(message = "任务ID不许为空")
-    private Long taskId;
+    private Long id;
 
 
 }

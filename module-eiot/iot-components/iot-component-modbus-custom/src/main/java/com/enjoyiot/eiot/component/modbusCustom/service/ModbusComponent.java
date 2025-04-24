@@ -59,6 +59,8 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
 
     private final Map<String, Long> heartbeatDevice = new HashMap<>();
 
+    private final Map<String, ModbusThingModel> pkToThingModel = new HashMap<>();
+
     private final ModbusVerticle modbusVerticle;
 
     private final ProductApi productApi;
@@ -73,7 +75,6 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
     private ScheduledFuture<?> readTaskFuture;
     private ScheduledFuture<?> offlineCheckTaskFuture;
 
-    private ModbusThingModel thingModel;
 
     /**
      * 服务
@@ -113,7 +114,6 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
     public void setModbusServer(NetServer server, Vertx vertx){
         this.vertx = vertx;
         this.server = server;
-        this.thingModel = modbusThingModelApi.findByProductKey(modbusConfig.getProductKey());
         // 处理新的连接
         server.connectHandler(this);
     }
@@ -139,31 +139,51 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
 
                     DataPackage data = DataDecoder.decode(buffer);
                     if (data == null) return;
-                    String dn = data.getDn();
-                    client.setDn(dn);
+
                     //设备注册
-                    clientMap.put(dn, client);
                     if (data instanceof RegisterDataPackage) {
+                        String dn = ((RegisterDataPackage) data).getDn();
+                        client.setDn(dn);
+
                         heartbeatDevice.remove(dn);
+                        clientMap.put(dn, client);
+
+                        String productKey = ((RegisterDataPackage) data).getProductKey();
+                        Byte slaveId = ((RegisterDataPackage) data).getSlaveId();
+
+                        client.setProductKey(productKey);
+                        client.setSlaveId(slaveId);
 
                         RegisterDevice build = RegisterDevice.builder()
-                                .productKey(modbusConfig.getProductKey())
+                                .productKey(productKey)
                                 .deviceName(dn)
                                 .build();
 
                         DeviceInfo device = deviceApi.registerDevice(build);
                         dnToDevice.put(dn, device);
+
+                        ModbusThingModel thingModel = pkToThingModel.get(device.getProductKey());
+                        if (thingModel == null) {
+                            thingModel = modbusThingModelApi.findByProductKey(device.getProductKey());
+                            if (thingModel == null) {
+                                log.warn("thingModel not found for productKey: {}", device.getProductKey());
+                                return;
+                            }
+                            pkToThingModel.put(device.getProductKey(), thingModel);
+                        }
                         return;
                     }
 
                     if (data instanceof HeartbeatDataPackage) {
                         //心跳
+                        String dn = ((HeartbeatDataPackage) data).getDn();
                         online(dn);
                         return;
                     }
 
                     if (data instanceof ResponseDataPackage) {
                         //设备数据上报
+                        String dn = client.getDn();
                         online(dn);
                         MbapHeader header = ((ResponseDataPackage) data).getHeader();
                         ModbusPdu pdu = ((ResponseDataPackage) data).getPdu();
@@ -179,7 +199,7 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
                                 byte[] coilBytes = Arrays.copyOfRange(coilStatus.array(), 2, coilStatus.array().length);
                                 Object coilValue = property.parse(coilBytes);
                                 report(PropertyReport.builder()
-                                        .productKey(modbusConfig.getProductKey())
+                                    .productKey(client.getProductKey())
                                         .deviceName(dn)
                                         .params(Dict.create().set(property.getIdentifier(), coilValue))
                                         .build());
@@ -189,7 +209,7 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
                                 byte[] inputBytes = Arrays.copyOfRange(inputStatus.array(), 2, inputStatus.array().length);
                                 Object inputValue = property.parse(inputBytes);
                                 report(PropertyReport.builder()
-                                        .productKey(modbusConfig.getProductKey())
+                                        .productKey(client.getProductKey())
                                         .deviceName(dn)
                                         .params(Dict.create().set(property.getIdentifier(), inputValue))
                                         .build());
@@ -199,7 +219,7 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
                                 byte[] holdingRegistersBytes = Arrays.copyOfRange(holdingRegisters.array(), 2, holdingRegisters.array().length);
                                 Object holdingRegistersValue = property.parse(holdingRegistersBytes);
                                 report(PropertyReport.builder()
-                                        .productKey(modbusConfig.getProductKey())
+                                        .productKey(client.getProductKey())
                                         .deviceName(dn)
                                         .params(Dict.create().set(property.getIdentifier(), holdingRegistersValue))
                                         .build());
@@ -209,7 +229,7 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
                                 byte[] inputRegistersBytes = Arrays.copyOfRange(inputRegisters.array(), 2, inputRegisters.array().length);
                                 Object inputRegistersValue = property.parse(inputRegistersBytes);
                                 report(PropertyReport.builder()
-                                        .productKey(modbusConfig.getProductKey())
+                                        .productKey(client.getProductKey())
                                         .deviceName(dn)
                                         .params(Dict.create().set(property.getIdentifier(), inputRegistersValue))
                                         .build());
@@ -221,7 +241,7 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
                     }
 
                     //未注册断开连接
-                    if (!clientMap.containsKey(data.getDn())) {
+                    if (!clientMap.containsKey(client.getDn())) {
                         socket.close();
                     }
 
@@ -248,6 +268,9 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
             if (offlineCheckTaskFuture != null) offlineCheckTaskFuture.cancel(true);
 
             modbusVerticle.stopServer();
+
+            dnToDevice.clear();
+            pkToThingModel.clear();
             return true;
         }
 
@@ -282,11 +305,21 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
             // 采用线程池异步执行
             ThreadUtil.execAsync(() -> {
                 try {
+                    ModbusThingModel thingModel = pkToThingModel.get(device.getProductKey());
+                    if (thingModel == null) {
+                        thingModel = modbusThingModelApi.findByProductKey(device.getProductKey());
+                        if (thingModel == null) {
+                            log.warn("thingModel not found for productKey: {}", device.getProductKey());
+                            return;
+                        }
+                        pkToThingModel.put(device.getProductKey(), thingModel);
+                    }
+
                     //遍历物模型属性，读取属性值
-                    for (ModbusThingModel.Property property : this.thingModel.getModel().getProperties()) {
+                    for (ModbusThingModel.Property property : thingModel.getModel().getProperties()) {
                         RequestDataPackage requestData = RequestDataPackage.builder()
                                 .transactionId(client.getTransactionId())
-                                .slaveId(modbusConfig.getSlaveId())
+                                .slaveId(client.getSlaveId())
                                 .functionCode(Byte.parseByte(property.getRegType()))
                                 .address(property.getRegAddr().shortValue())
                                 .quantity(property.getRegNum().shortValue())
@@ -331,25 +364,30 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
     private void offlineCheckTask() {
         log.info("keepClientTask");
         Set<String> clients = new HashSet<>(clientMap.keySet());
-        for (String key : clients) {
-            VertxModbusClient client = clientMap.get(key);
+
+        for (String dn : clients) {
+            VertxModbusClient client = clientMap.get(dn);
             if (!client.isOnline()) {
                 client.shutdown();
             }
         }
 
-        heartbeatDevice.keySet().iterator().forEachRemaining(addr -> {
-            Long time = heartbeatDevice.get(addr);
+        heartbeatDevice.keySet().iterator().forEachRemaining(dn -> {
+            Long time = heartbeatDevice.get(dn);
+
             //心跳超时，判定为离线
             if (System.currentTimeMillis() - time > keepAliveTimeout * 2) {
-                heartbeatDevice.remove(addr);
-                //离线上报
-                report(DeviceStateChange.builder()
-                        .productKey(modbusConfig.getProductKey())
-                        .deviceName(addr)
-                        .state(DeviceState.OFFLINE)
-                        .time(System.currentTimeMillis())
-                        .build());
+                heartbeatDevice.remove(dn);
+                VertxModbusClient client = clientMap.get(dn);
+                if (client != null) {
+                    //离线上报
+                    report(DeviceStateChange.builder()
+                            .productKey(client.getProductKey())
+                            .deviceName(dn)
+                            .state(DeviceState.OFFLINE)
+                            .time(System.currentTimeMillis())
+                            .build());
+                }
             }
         });
     }
@@ -363,13 +401,15 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
 
     public void online(String dn) {
         heartbeatDevice.put(dn, System.currentTimeMillis());
-
-        //上线
-        report(DeviceStateChange.builder()
-                .deviceName(dn)
-                .productKey(modbusConfig.getProductKey())
-                .state(DeviceState.ONLINE)
-                .build());
+        VertxModbusClient client = clientMap.get(dn);
+        if (client != null) {
+            //上线
+            report(DeviceStateChange.builder()
+                    .deviceName(dn)
+                    .productKey(client.getProductKey())
+                    .state(DeviceState.ONLINE)
+                    .build());
+        }
     }
 
 
