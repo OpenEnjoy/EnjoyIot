@@ -71,20 +71,19 @@ public class VertxModbusClient {
             this.socket = socket
                     .exceptionHandler(Throwable::printStackTrace)
                     .closeHandler(v -> {
-                        log.debug("modbus client[{}] [{}] close", dn, socket.remoteAddress());
+                        log.debug("modbus client[{}] close", dn);
                         shutdown();
                     })
                     .handler(buffer -> {
                         if (log.isDebugEnabled()) {
-                            log.debug("handle modbus client[{}] [{}] payload:[{}]",
+                            log.debug("handle modbus client[{}] payload:[{}]",
                                     dn,
-                                    socket.remoteAddress(),
                                     HexUtil.toFormattedHexString(buffer.getBytes()));
                         }
                         keepAlive();
                         consumer.accept(buffer);
                         if (this.socket != socket) {
-                            log.warn("modbus client[{}] [{}] memory leak ", dn, socket.remoteAddress());
+                            log.warn("modbus client[{}] memory leak ", dn);
                             socket.close();
                         }
                     });
@@ -102,6 +101,13 @@ public class VertxModbusClient {
     }
 
     public void sendMessage(Buffer buffer) {
+        NetSocket socket;
+        synchronized (this) {
+            socket = this.socket;
+            if (socket == null) {
+                return;
+            }
+        }
         log.debug("write data:{}", HexUtil.toFormattedHexString(buffer.getBytes()));
         socket.write(buffer, r -> {
             keepAlive();
@@ -123,10 +129,6 @@ public class VertxModbusClient {
 
     public short getTransactionId() {
         // 1-999
-        if (transactionId.get() == 999) {
-            transactionId.set(0);
-        }
-
-        return (short) transactionId.addAndGet(1);
+        return (short) transactionId.updateAndGet(i -> (i % 999) + 1);
     }
 }
