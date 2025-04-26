@@ -55,11 +55,11 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
 
     private final Map<String, VertxModbusClient> clientMap = new ConcurrentHashMap<>();
 
-    private final Map<String, DeviceInfo> dnToDevice = new HashMap<>();
+    private final Map<String, DeviceInfo> dnToDevice = new ConcurrentHashMap<>();
 
-    private final Map<String, Long> heartbeatDevice = new HashMap<>();
+    private final Map<String, Long> heartbeatDevice = new ConcurrentHashMap<>();
 
-    private final Map<String, ModbusThingModel> pkToThingModel = new HashMap<>();
+    private final Map<String, ModbusThingModel> pkToThingModel = new ConcurrentHashMap<>();
 
     private final ModbusVerticle modbusVerticle;
 
@@ -134,8 +134,7 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
 
             Consumer<Buffer> bufferConsumer = buffer -> {
                 try {
-                    log.info("解析数据:{}", HexUtil.toHexString(buffer.getBytes()));
-                    log.info("数据ASCII:{}", buffer.toString("US-ASCII"));
+                    log.info("[{}]解析数据:{} ASCII:{}", client.getDn(), HexUtil.toHexString(buffer.getBytes()), buffer.toString("US-ASCII"));
 
                     DataPackage data = DataDecoder.decode(buffer);
                     if (data == null) return;
@@ -162,14 +161,10 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
                         DeviceInfo device = deviceApi.registerDevice(build);
                         dnToDevice.put(dn, device);
 
-                        ModbusThingModel thingModel = pkToThingModel.get(device.getProductKey());
+                        ModbusThingModel thingModel = pkToThingModel.computeIfAbsent(device.getProductKey(), modbusThingModelApi::findByProductKey);
                         if (thingModel == null) {
-                            thingModel = modbusThingModelApi.findByProductKey(device.getProductKey());
-                            if (thingModel == null) {
-                                log.warn("thingModel not found for productKey: {}", device.getProductKey());
-                                return;
-                            }
-                            pkToThingModel.put(device.getProductKey(), thingModel);
+                            log.warn("thingModel not found for productKey: {}", device.getProductKey());
+                            return;
                         }
                         return;
                     }
@@ -299,20 +294,18 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
      * 读取所有已连接设备的属性值
      */
     private void readTask() {
-        for (VertxModbusClient client : clientMap.values()) {
+        ArrayList<VertxModbusClient> clients = new ArrayList<>(clientMap.values());
+        for (VertxModbusClient client : clients) {
             DeviceInfo device = dnToDevice.get(client.getDn());
             if (device == null) continue;
             // 采用线程池异步执行
             ThreadUtil.execAsync(() -> {
+                if (!clientMap.containsKey(client.getDn())) return;
                 try {
-                    ModbusThingModel thingModel = pkToThingModel.get(device.getProductKey());
+                    ModbusThingModel thingModel = pkToThingModel.computeIfAbsent(device.getProductKey(), modbusThingModelApi::findByProductKey);
                     if (thingModel == null) {
-                        thingModel = modbusThingModelApi.findByProductKey(device.getProductKey());
-                        if (thingModel == null) {
-                            log.warn("thingModel not found for productKey: {}", device.getProductKey());
-                            return;
-                        }
-                        pkToThingModel.put(device.getProductKey(), thingModel);
+                        log.warn("thingModel not found for productKey: {}", device.getProductKey());
+                        return;
                     }
 
                     //遍历物模型属性，读取属性值
@@ -332,7 +325,7 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
                         client.sendMessage(buffer);
                         // modbus设备不支持并发，所以极短时间内发送多个读取命令，只会响应第一个命令。
                         // 所以这里需要休眠，避免设备处理不过来
-                        ThreadUtil.safeSleep(1000);
+                        ThreadUtil.safeSleep(2000);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -363,21 +356,22 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
 
     private void offlineCheckTask() {
         log.info("keepClientTask");
-        Set<String> clients = new HashSet<>(clientMap.keySet());
-
-        for (String dn : clients) {
-            VertxModbusClient client = clientMap.get(dn);
+        //新建列表，防止并发时被修改
+        ArrayList<VertxModbusClient> clients = new ArrayList<>(clientMap.values());
+        for (VertxModbusClient client : clients) {
             if (!client.isOnline()) {
                 client.shutdown();
             }
         }
 
-        heartbeatDevice.keySet().iterator().forEachRemaining(dn -> {
-            Long time = heartbeatDevice.get(dn);
-
+        Iterator<Map.Entry<String, Long>> iterator = heartbeatDevice.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Long> entry = iterator.next();
+            String dn = entry.getKey();
+            Long time = entry.getValue();
             //心跳超时，判定为离线
             if (System.currentTimeMillis() - time > keepAliveTimeout * 2) {
-                heartbeatDevice.remove(dn);
+                iterator.remove();
                 VertxModbusClient client = clientMap.get(dn);
                 if (client != null) {
                     //离线上报
@@ -389,7 +383,7 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
                             .build());
                 }
             }
-        });
+        }
     }
 
     public void sendMsg(String dn, Buffer msg) {
