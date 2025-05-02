@@ -36,7 +36,7 @@
 
 开源版：代码完全开源. 可用于个人学习、研究使用，用于商业用途请联系作者申请授权后可免费使用，但仍需保留开源署名等信息。
 
-商业版：测试中
+商业版：https://y5yrmmjjns.feishu.cn/wiki/FlxmwXzQJiEKCJkGuIhcLsyjnwh?fromScene=spaceOverview 联系商务 
 
 ### 前端仓库
 [![乐联开源/enjoy-web](https://gitee.com/open-enjoy/enjoy-web/widgets/widget_card.svg?colors=393222,ebdfc1,fffae5,d8ca9f,393222,a28b40)](https://gitee.com/open-enjoy/enjoy-web)
