@@ -48,7 +48,7 @@ REDIS_HOST=host.docker.internal
 ```
 3.启动服务
 ```shell
-docker compose --env-file docker.env up -d
+docker-compose --env-file docker.env up -d
 ```
 
 首次运行会自动构建容器。可以通过`docker compose build [service]`来手动构建所有或某个docker镜像
