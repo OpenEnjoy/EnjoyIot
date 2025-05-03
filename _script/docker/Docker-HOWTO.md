@@ -48,10 +48,10 @@ REDIS_HOST=host.docker.internal
 ```
 3.启动服务
 ```shell
-docker-compose --env-file docker.env up -d
+docker compose --env-file docker.env up -d
 ```
 
-首次运行会自动构建容器。可以通过`docker-compose build [service]`来手动构建所有或某个docker镜像
+首次运行会自动构建容器。可以通过`docker compose build [service]`来手动构建所有或某个docker镜像
 
 `--env-file docker.env`为可选参数，只是展示了通过`.env`文件配置容器启动的环境变量，`docker-compose.yml`本身已经提供足够的默认参数来正常运行系统。
 
