@@ -13,24 +13,9 @@
 ├── iot-server                      
 │   └── Dockerfile 
 │   └── server.jar                  <-- 需要手动拷贝后端jar包到此路径
-└── iot-web
-    ├── .dockerignore
-    ├── Dockerfile
-    └── nginx.conf                  <-- 提供基础配置，gzip压缩、api转发
 ```
 
-## 构建 jar 包
-手动打包的jar包,忽略此步骤
-```shell
-# 创建maven缓存volume
-docker volume create --name iot-maven-repo
 
-docker run -it --rm --name iot-maven \
-    -v iot-maven-repo:/root/.m2 \
-    -v $PWD:/usr/src/mymaven \
-    -w /usr/src/mymaven \
-    maven mvn clean install package '-Dmaven.test.skip=true'
-```
 ## 拷贝jar包
 拷贝主程序jar包到docker/iot-server目录下,并命名为server.jar
 
@@ -57,11 +42,13 @@ docker compose --env-file docker.env up -d
 
 ## 服务器的宿主机端口映射
 
-- admin ui: http://localhost:8080
 - api server: http://localhost:48080
 - mysql: root/123456, port: 3306
 - redis: port: 6379
 
+如果是云服务器-比如阿里云之类的,需要在安全策略里面放行后端的端口. 
+
+注意redis和mysql容易被攻击,放行前先设置复杂的密码和修改端口,防止被挖矿被攻击
 
 ## 查看后台日志
 ```aiignore
