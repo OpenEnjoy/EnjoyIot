@@ -83,14 +83,14 @@ public class HttpComponent extends ThingComponent implements Handler<RoutingCont
             return false;
         }
 
-        HttpConfig mqttConfig = JsonUtils.parseObject(config, HttpConfig.class);
-        if (mqttConfig == null) {
+        HttpConfig httpConfig = JsonUtils.parseObject(config, HttpConfig.class);
+        if (httpConfig == null) {
             log.error("parse json http config failed.");
             return false;
         }
 
         httpVerticle.stopServer();
-        httpVerticle.startServer(mqttConfig);
+        httpVerticle.startServer(httpConfig);
         return true;
     }
 
