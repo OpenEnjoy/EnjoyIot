@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 兼容 Java 8 的 UDP 组件优化版
+ * UdpComponent
  */
 @Component
 public class UdpComponent extends ThingComponent {
