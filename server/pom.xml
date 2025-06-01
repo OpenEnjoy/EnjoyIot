@@ -60,7 +60,11 @@
             <artifactId>iot-component-http</artifactId>
             <version>${revision}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.enjoy-iot</groupId>
+            <artifactId>iot-component-udp</artifactId>
+            <version>${revision}</version>
+        </dependency>
         <dependency>
             <groupId>com.enjoy-iot</groupId>
             <artifactId>iot-component-modbus-custom</artifactId>

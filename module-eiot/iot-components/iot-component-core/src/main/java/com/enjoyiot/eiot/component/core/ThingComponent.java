@@ -35,6 +35,8 @@ import com.enjoyiot.eiot.component.core.model.up.*;
 import com.enjoyiot.module.eiot.api.component.dto.ComponentInfo;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -183,11 +185,15 @@ public abstract class ThingComponent extends AbstractComponent {
                 throw exception(PARAMS_EXCEPTION);
         }
 
-        if (action.getId() == null) {
+        if (!StringUtils.hasText(action.getId())) {
             message.setId(IdUtil.fastSimpleUUID());
+        }else {
+            message.setId(action.getId());
         }
-        if (action.getTime() == null) {
+        if (ObjectUtils.isEmpty(action.getTime())) {
             message.setTime(System.currentTimeMillis());
+        }else {
+            message.setTime(action.getTime());
         }
         message.setMid(message.getId());
         message.setDn(action.getDeviceName());
