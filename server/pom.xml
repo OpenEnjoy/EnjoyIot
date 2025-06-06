@@ -71,6 +71,13 @@
             <version>${revision}</version>
         </dependency>
 
+        <!--需要添加tcp组件依赖，否则tcp组件模块中的Component不能被Spring管理-->
+        <dependency>
+            <groupId>com.enjoy-iot</groupId>
+            <artifactId>iot-component-tcp</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
         <!-- spring boot 配置所需依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
