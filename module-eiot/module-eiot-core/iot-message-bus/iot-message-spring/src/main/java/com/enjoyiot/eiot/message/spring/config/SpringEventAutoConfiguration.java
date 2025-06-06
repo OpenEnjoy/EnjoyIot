@@ -30,6 +30,7 @@ import com.enjoyiot.eiot.message.core.MqProducer;
 import com.enjoyiot.eiot.message.spring.SpringEventConsumer;
 import com.enjoyiot.eiot.message.spring.SpringEventProducer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,6 +38,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @EnableAsync
 @Configuration
+@ConditionalOnProperty(name = "eiot.message.producer-type", havingValue = "spring-event", matchIfMissing = true)
 public class SpringEventAutoConfiguration {
 
 //    @ConditionalOnMissingBean

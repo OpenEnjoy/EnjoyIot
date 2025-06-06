@@ -10,6 +10,7 @@ import com.enjoyiot.eiot.common.thing.ThingModelMessage;
 import com.enjoyiot.eiot.message.core.MqConsumer;
 import com.enjoyiot.eiot.message.core.MqProducer;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
  * @author yitian
  */
 @Configuration
+@ConditionalOnProperty(prefix = "eiot.message", name = "producer-type", havingValue = "rocketmq")
 public class RocketMqAutoConfiguration {
 
     @Value("${rocketmq.name-server}")
