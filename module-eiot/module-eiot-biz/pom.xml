@@ -69,7 +69,10 @@
 <!--             <artifactId>iot-message-rocketmq</artifactId>-->
 <!--         </dependency>-->
 
-
+        <dependency>
+            <groupId>com.enjoy-iot</groupId>
+            <artifactId>iot-message-rocketmq</artifactId>
+        </dependency>
 
 
         <dependency>
