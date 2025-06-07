@@ -267,3 +267,7 @@ debug: false
 init:
   data:
     flag: true # 初次使用时,初始化时序数据库表结构需要开启
+
+eiot:
+  message:
+    producer-type: spring-event # 可选值：spring-event, rocketmq
