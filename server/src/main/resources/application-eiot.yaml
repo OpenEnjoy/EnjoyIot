@@ -112,6 +112,14 @@ spring:
     #  密码
     password: taosdata
     driverClassName: com.taosdata.jdbc.rs.RestfulDriver
+
+  #<<===========iotdb时序数据库配置开始============
+  iotdb-datasource:
+    url: iotdb-server-ip:10806
+    username:
+    password:
+    baseDb: root.eiot
+
   #<<================es时序数据配置开始===============
 #  注意缩进
   elasticsearch:
