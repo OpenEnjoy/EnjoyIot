@@ -26,8 +26,8 @@ public class DataReader {
                 log.info("解析数据{}",buffer.toString());
                 //-1表示当前还没有长度信息，需要从收到的数据中取出长度
                 if (-1 == size) {
-                    //取出长度
-                    size = Integer.parseInt( buffer.getString(0,4));
+                    // 取出长度
+                    size = buffer.getInt(0);
                     //动态修改长度
                     parser.fixedSizeMode(size);
                 } else {
