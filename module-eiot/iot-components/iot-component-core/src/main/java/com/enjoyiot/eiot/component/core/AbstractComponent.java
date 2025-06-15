@@ -70,6 +70,10 @@ public abstract class AbstractComponent implements Component, ConsumerHandler<Th
                         return;
                     }
                 });
+
+        // 消费者订阅&&处理消息：订阅设备属性设置参数，并发送给设备
+        componentServices.getConsumer().consume(Constants.getSendToDeviceTopic(getRouter()), this);
+
         //发布组件发现消息
         publishDiscover();
         Executors.newSingleThreadExecutor().submit(this::publishDiscover);
@@ -94,6 +98,10 @@ public abstract class AbstractComponent implements Component, ConsumerHandler<Th
         return this.componentId;
     }
 
+    /**
+     *  消费处理消息
+     * @param msg
+     */
     public void handler(ThingModelMessage msg) {
 
         String routerKey = getRouterKey(msg);
@@ -121,7 +129,7 @@ public abstract class AbstractComponent implements Component, ConsumerHandler<Th
     }
 
     private String getRouter() {
-        return String.format("%s/%s", getType(), getId());
+        return String.format("%s_%s", getType(), getId());
     }
 
 

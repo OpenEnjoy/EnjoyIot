@@ -91,7 +91,7 @@ public class ComponentManager implements ConsumerHandler<ComponentMessage> {
 //        String[] split = router.split("/");
 //        String componentType = split[0];
         //发给指定组件
-        producer.publish(getSendToDeviceTopic(router), msg);
+        producer.publish(Constants.getSendToDeviceTopic(router), msg);
     }
 
     @NotNull

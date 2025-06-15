@@ -83,5 +83,14 @@ public interface Constants {
     static String getRedisDeviceRouter(String pk, String dn) {
         return String.format(REDIS_DEVICE_ROUTER, pk, dn);
     }
+
+    /**
+     * 发送到设备消息的topic
+     * @param componentType
+     * @return
+     */
+    static String getSendToDeviceTopic(String componentType) {
+        return String.format("%s_%s", componentType, THING_MODEL_MESSAGE_TOPIC);
+    }
 }
 
