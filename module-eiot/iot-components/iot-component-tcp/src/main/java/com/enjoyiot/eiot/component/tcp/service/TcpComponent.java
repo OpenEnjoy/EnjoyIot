@@ -5,6 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import com.enjoyiot.eiot.component.core.ComponentServices;
 import com.enjoyiot.eiot.component.core.ThingComponent;
 import com.enjoyiot.eiot.common.enums.DeviceState;
@@ -153,6 +154,10 @@ public class TcpComponent extends ThingComponent implements Handler<NetSocket> {
                                             .build()
                             ));
                         }
+
+                        // 缓存设备对应的组件信息(用于下发控制指令时查询设备对应的组件信息从而拼接topic)
+                        cacheDeviceComponentInfo(pk, addr);
+
                         return;
                     }
 
@@ -256,9 +261,32 @@ public class TcpComponent extends ThingComponent implements Handler<NetSocket> {
 
     }
 
+    /**
+     * 属性设置指令发送给设备
+     * @param action
+     */
     @Override
     protected void propertySet(PropertySet action) {
+        log.info("属性设置action:{}", action);
 
+        // 消息体
+        String payload = new JsonObject()
+                .put("id", action.getId())
+                .put("method", "thing.service.property.set")
+                .put("params", action.getParams())
+                .toString();
+
+        DataPackage dataPackage =  DataPackage.builder()
+                // 设备标识
+                .addr(action.getDeviceName())
+                .code(DataPackage.CODE_DATA_DOWN)
+                // 消息序号
+                .mid((short)IdUtil.getSnowflakeNextId())
+                // 消息体
+                .payload(payload)
+                .build();
+        log.info("下发属性设置数据包dataPackage:{}", JSON.toJSONString(dataPackage));
+        sendMsg(action.getDeviceName(), DataEncoder.encode(dataPackage));
     }
 
     @Override

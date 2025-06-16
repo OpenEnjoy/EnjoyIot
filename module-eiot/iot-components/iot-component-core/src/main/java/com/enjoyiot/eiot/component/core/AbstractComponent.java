@@ -128,13 +128,25 @@ public abstract class AbstractComponent implements Component, ConsumerHandler<Th
         return Constants.getRedisDeviceRouter(message.getProductKey(), message.getDn());
     }
 
-    private String getRouter() {
+    protected String getRouter() {
         return String.format("%s_%s", getType(), getId());
     }
 
 
     private String getSendToDeviceTopic() {
         return String.format("%s/%s", getRouter(), THING_MODEL_MESSAGE_TOPIC);
+    }
+
+    /**
+     * 缓存设备对应的组件信息
+     * @param pk 产品key
+     * @param dn 设备标识
+     */
+    protected void cacheDeviceComponentInfo(String pk, String dn) {
+        // 缓存设备对应的组件信息(用于下发控制指令时查询设备对应的组件信息从而拼接topic)
+        String key = Constants.getRedisDeviceRouter(pk, dn);
+        String router = getRouter();
+        componentServices.getStringRedisTemplate().opsForValue().set(key, router);
     }
 
 }
