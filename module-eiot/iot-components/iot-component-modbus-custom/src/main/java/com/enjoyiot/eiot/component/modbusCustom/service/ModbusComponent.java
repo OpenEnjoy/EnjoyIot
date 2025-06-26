@@ -259,13 +259,12 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
 
         //停止组件
         if (!enable) {
-            if (readTaskFuture != null) readTaskFuture.cancel(true);
-            if (offlineCheckTaskFuture != null) offlineCheckTaskFuture.cancel(true);
-
+            // 停止定时任务
+            cancelTasks();
+            // 关闭所有客户端连接
+            closeAllClients();
+            // 停止服务
             modbusVerticle.stopServer();
-
-            dnToDevice.clear();
-            pkToThingModel.clear();
             return true;
         }
 
@@ -279,7 +278,11 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
             return false;
         }
         this.modbusConfig = modbusConfig;
+        // 先停止旧服务
+        cancelTasks();
+        closeAllClients();
         modbusVerticle.stopServer();
+        // 再启动新配置
         modbusVerticle.startServer(modbusConfig);
         // 根据时间间隔执行定时任务（上次开始时计算）
         // 属性读取定时任务
@@ -287,6 +290,27 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
         // 离线设备检测定时任务
         offlineCheckTaskFuture = taskScheduler.scheduleAtFixedRate(this::offlineCheckTask, Duration.ofSeconds(40));
         return true;
+    }
+
+    private void cancelTasks() {
+        if (readTaskFuture != null) {
+            readTaskFuture.cancel(true);
+            readTaskFuture = null;
+        }
+        if (offlineCheckTaskFuture != null) {
+            offlineCheckTaskFuture.cancel(true);
+            offlineCheckTaskFuture = null;
+        }
+    }
+
+
+    private void closeAllClients() {
+        clientMap.values().forEach(VertxModbusClient::shutdown);
+        clientMap.clear();
+        heartbeatDevice.clear();
+
+        dnToDevice.clear();
+        pkToThingModel.clear();
     }
 
     /**
