@@ -395,6 +395,8 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
                             //事件上报
                             report(EventReport.builder()
                                     .name(method.replace("thing.event.", ""))
+                                    .productKey(subPk)
+                                    .deviceName(subDn)
                                     .params(params.getMap())
                                     .build());
                             reply(endpoint, topic, payload);
@@ -402,6 +404,8 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
                             //服务回复
                             report(ServiceReply.builder()
                                     .name(method.replaceAll("thing\\.service\\.(.*)_reply", "$1"))
+                                    .productKey(subPk)
+                                    .deviceName(subDn)
                                     .code(payload.getInteger("code", 0))
                                     .params(params.getMap())
                                     .build());

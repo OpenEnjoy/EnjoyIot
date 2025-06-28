@@ -31,7 +31,6 @@ import com.enjoyiot.eiot.message.core.MqProducer;
 import com.enjoyiot.eiot.ruleengine.handler.DeviceMessageHandler;
 import com.enjoyiot.module.eiot.api.device.DeviceApi;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
-import com.enjoyiot.module.eiot.api.device.dto.DeviceShortInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,8 +93,8 @@ public class DeviceStateCheckHandler implements DeviceMessageHandler {
         }
 
         Boolean b = deviceApi.updateDeviceState(device.getId(), state.isOnline());
-        if(b){
-            sendDeviceOfflineMessage(device, state.isOnline() ,time);
+        if(b && !ThingModelMessage.TYPE_STATE.equals(type)){
+            sendDeviceStateChangeMessage(device, state.isOnline() ,time);
         }
 
 
@@ -107,7 +106,7 @@ public class DeviceStateCheckHandler implements DeviceMessageHandler {
 
     }
 
-    private void sendDeviceOfflineMessage(DeviceInfo device, Boolean online, Long time) {
+    private void sendDeviceStateChangeMessage(DeviceInfo device, Boolean online, Long time) {
         // TODO: 提却到某个公共类中
         String stateId =   (online) ? ThingModelMessage.ID_ONLINE : ThingModelMessage.ID_OFFLINE;
         ThingModelMessage msg = ThingModelMessage.builder()

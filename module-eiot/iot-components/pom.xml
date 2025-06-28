@@ -19,6 +19,7 @@
         <module>iot-component-http</module>
         <module>iot-component-udp</module>
         <module>iot-component-modbus-custom</module>
+        <module>iot-component-coap</module>
     </modules>
 
     <dependencyManagement>
