@@ -63,6 +63,27 @@ https://y5yrmmjjns.feishu.cn/wiki/PsPEwXms0iJEayk88Wgc4xH1nob?fromScene=spaceOve
 
 <img alt="wx.png" src=".image/image.png" width="600"/>
 
+#### 提交pr
+请提交到dev分支
+
+####  git 提交规范
+示例: 
+feat(xiot):新增jt808协议支持
+```angular2html
+feat：新功能（feature）
+fix：修补bug
+docs：文档（documentation）
+style： 格式（不影响代码运行的变动）
+refactor：重构（即不是新增功能，也不是修改bug的代码变动）
+test：增加测试
+chore：杂项,构建过程或辅助工具的变动,如更新依赖库
+perf: 性能优化
+test: 添加或修改测试
+build: 构建系统或外部依赖项的变更
+ci: 持续集成配置的变更
+revert: 回滚
+```
+
 ## 联系我们
 
  乐联开源商务及技术联系
