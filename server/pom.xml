@@ -112,6 +112,13 @@
             <version>${revision}</version>
         </dependency>
 
+        <!--打开注释 启用timescaledb数据库-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.enjoy-iot</groupId>-->
+        <!--            <artifactId>iot-temporal-serviceimpl-timescaledb</artifactId>-->
+        <!--            <version>${revision}</version>-->
+        <!--        </dependency>-->
+
         <!--打开注释 启用iotdb数据库-->
 <!--        <dependency>-->
 <!--            <groupId>com.enjoy-iot</groupId>-->
