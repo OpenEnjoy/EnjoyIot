@@ -27,15 +27,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @TableName("task_log")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class PgTaskLog {
 
-    private Long time;
+    private Timestamp time;
 
-    private String taskId;
+    private Long taskId;
 
     private String content;
 

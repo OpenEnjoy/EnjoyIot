@@ -31,6 +31,7 @@ import com.enjoyiot.framework.common.pojo.PageParam;
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.framework.common.util.object.BeanUtils;
 import com.enjoyiot.module.eiot.api.task.dto.TaskLog;
+import org.postgresql.util.PGTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,14 +58,14 @@ public class TaskLogDataImpl implements ITaskLogData {
         );
         return new PageResult<>(result.getList().stream().map(r ->
                         new TaskLog(r.getTime().toString(), taskId,
-                                r.getContent(), r.getSuccess(), r.getTime()))
+                                r.getContent(), r.getSuccess(), r.getTime().getTime()))
                 .collect(Collectors.toList()), result.getTotal());
     }
 
     @Override
     public void add(TaskLog log) {
         PgTaskLog taskLog = BeanUtils.toBean(log, PgTaskLog.class);
-        taskLog.setTime(System.currentTimeMillis());
+        taskLog.setTime(new PGTimestamp(System.currentTimeMillis()));
         taskLogMapper.insert(taskLog);
     }
 

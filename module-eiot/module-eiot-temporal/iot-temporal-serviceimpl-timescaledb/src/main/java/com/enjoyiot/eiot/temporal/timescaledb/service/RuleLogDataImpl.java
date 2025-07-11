@@ -30,6 +30,7 @@ import com.enjoyiot.framework.common.pojo.PageParam;
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.framework.common.util.object.BeanUtils;
 import com.enjoyiot.module.eiot.api.rule.dto.RuleLog;
+import org.postgresql.util.PGTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,8 +56,8 @@ public class RuleLogDataImpl implements IRuleLogData {
                 Wrappers.lambdaQuery(PgRuleLog.class).eq(PgRuleLog::getRuleId, ruleId).orderByDesc(PgRuleLog::getTime)
         );
         return new PageResult<>(result.getList().stream().map(r ->
-                        new RuleLog(r.getTime(), ruleId, r.getState1(),
-                                r.getContent(), r.getSuccess(), r.getTime()))
+                        new RuleLog(r.getTime().getTime(), ruleId, r.getState1(),
+                                r.getContent(), r.getSuccess(), r.getTime().getTime()))
                 .collect(Collectors.toList()), result.getTotal());
     }
 
@@ -64,7 +65,7 @@ public class RuleLogDataImpl implements IRuleLogData {
     public void add(RuleLog log) {
         PgRuleLog ruleLog = BeanUtils.toBean(log, PgRuleLog.class);
         ruleLog.setState1(log.getState());
-        ruleLog.setTime(System.currentTimeMillis());
+        ruleLog.setTime(new PGTimestamp(System.currentTimeMillis()));
         ruleLogMapper.insert(ruleLog);
     }
 }

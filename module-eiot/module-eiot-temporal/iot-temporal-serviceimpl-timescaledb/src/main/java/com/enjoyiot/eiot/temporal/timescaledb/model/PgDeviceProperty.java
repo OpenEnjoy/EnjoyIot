@@ -26,14 +26,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class PgDeviceProperty {
 
-    private Long time;
+    private Timestamp time;
 
-    private String deviceId;
+    private Long deviceId;
 
     private String name;
 

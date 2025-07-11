@@ -46,14 +46,14 @@ public class FieldParser {
         put("bool", "BOOLEAN");
         put("enum", "SMALLINT");
         put("text", "VARCHAR");
-        put("date", "TIMESTAMPTZ");
+        put("date", "VARCHAR");
         put("position", "VARCHAR");
     }});
 
     /**
      * 将物模型字段转换为td字段
      */
-    public static TdField parse(ThingModel.Property property) {
+    public static PgField parse(ThingModel.Property property) {
         String filedName = property.getIdentifier().toLowerCase();
         ThingModel.DataType dataType = property.getDataType();
         String type = dataType.getType();
@@ -76,20 +76,20 @@ public class FieldParser {
             }
         }
 
-        return new TdField(filedName, fType, len);
+        return new PgField(filedName, fType, len);
     }
 
     /**
      * 获取物模型中的字段列表
      */
-    public static List<TdField> parse(ThingModel thingModel) {
+    public static List<PgField> parse(ThingModel thingModel) {
         return thingModel.getModel().getProperties().stream().map(FieldParser::parse).collect(Collectors.toList());
     }
 
     /**
      * 获取字段字义
      */
-    public static String getFieldDefine(TdField field) {
+    public static String getFieldDefine(PgField field) {
         return field.getName() + " " + (field.getLength() > 0 ?
                 String.format("%s(%d)", field.getType(), field.getLength())
                 : field.getType());

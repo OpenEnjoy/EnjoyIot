@@ -31,6 +31,7 @@ import com.enjoyiot.framework.common.pojo.PageParam;
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.framework.common.util.object.BeanUtils;
 import com.enjoyiot.module.eiot.api.virtualdevice.dto.VirtualDeviceLog;
+import org.postgresql.util.PGTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,16 +55,16 @@ public class VirtualDeviceLogDataImpl implements IVirtualDeviceLogData {
         );
 
         return new PageResult<>(result.getList().stream().map(r ->
-                        new VirtualDeviceLog(r.getTime(), virtualDeviceId,
+                        new VirtualDeviceLog(r.getTime().getTime(), virtualDeviceId,
                                 r.getVirtualDeviceName(),
-                                r.getDeviceTotal(), r.getResult(), r.getTime()))
+                                r.getDeviceTotal(), r.getResult(), r.getTime().getTime()))
                 .collect(Collectors.toList()), result.getTotal());
     }
 
     @Override
     public void add(VirtualDeviceLog log) {
         PgVirtualDeviceLog deviceLog = BeanUtils.toBean(log, PgVirtualDeviceLog.class);
-        deviceLog.setTime(System.currentTimeMillis());
+        deviceLog.setTime(new PGTimestamp(System.currentTimeMillis()));
         virtualDeviceLogMapper.insert(deviceLog);
     }
 }

@@ -60,7 +60,7 @@ public class TableManager {
     /**
      * 获取创建表sql
      */
-    public static String getCreateSTableSql(String tbName, List<TdField> fields, TdField... tags) {
+    public static String getCreateSTableSql(String tbName, List<PgField> fields, PgField... tags) {
         if (fields.isEmpty()) {
             return null;
         }
@@ -68,14 +68,14 @@ public class TableManager {
         //生成字段片段
         StringBuilder sbField = new StringBuilder("time TIMESTAMPTZ,");
 
-        for (TdField field : fields) {
+        for (PgField field : fields) {
             sbField.append(FieldParser.getFieldDefine(field));
             sbField.append(",");
         }
 
         //生成tag
         StringBuilder sbIndex = new StringBuilder();
-        for (TdField tag : tags) {
+        for (PgField tag : tags) {
             sbField.append(FieldParser.getFieldDefine(tag))
                     .append(",");
             sbIndex.append(tag.getName()).append(",");
@@ -106,9 +106,9 @@ public class TableManager {
     /**
      * 获取添加字段sql
      */
-    public static String getAddSTableColumnSql(String tbName, List<TdField> fields) {
+    public static String getAddSTableColumnSql(String tbName, List<PgField> fields) {
         StringBuilder sbAdd = new StringBuilder();
-        for (TdField field : fields) {
+        for (PgField field : fields) {
             sbAdd.append(String.format(ALTER_STABLE_ADD_COL_TPL,
                     tbName,
                     FieldParser.getFieldDefine(field)
@@ -120,9 +120,9 @@ public class TableManager {
     /**
      * 获取修改字段sql
      */
-    public static String getModifySTableColumnSql(String tbName, List<TdField> fields) {
+    public static String getModifySTableColumnSql(String tbName, List<PgField> fields) {
         StringBuilder sbModify = new StringBuilder();
-        for (TdField field : fields) {
+        for (PgField field : fields) {
             sbModify.append(String.format(ALTER_STABLE_MODIFY_COL_TPL,
                     tbName,
                     FieldParser.getFieldDefine(field)
@@ -134,9 +134,9 @@ public class TableManager {
     /**
      * 获取删除字段sql
      */
-    public static String getDropSTableColumnSql(String tbName, List<TdField> fields) {
+    public static String getDropSTableColumnSql(String tbName, List<PgField> fields) {
         StringBuilder sbDrop = new StringBuilder();
-        for (TdField field : fields) {
+        for (PgField field : fields) {
             sbDrop.append(String.format(ALTER_STABLE_DROP_COL_TPL,
                     tbName,
                     field.getName()

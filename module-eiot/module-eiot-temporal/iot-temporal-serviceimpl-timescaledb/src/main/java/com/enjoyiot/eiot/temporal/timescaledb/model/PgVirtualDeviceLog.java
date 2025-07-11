@@ -27,15 +27,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @TableName("virtual_device_log")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class PgVirtualDeviceLog {
 
-    private Long time;
+    private Timestamp time;
 
-    private String virtualDeviceId;
+    private Long virtualDeviceId;
 
     private String virtualDeviceName;
 

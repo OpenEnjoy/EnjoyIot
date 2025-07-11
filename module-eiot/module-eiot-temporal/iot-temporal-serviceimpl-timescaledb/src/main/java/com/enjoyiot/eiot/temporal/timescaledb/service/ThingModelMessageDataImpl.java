@@ -23,6 +23,7 @@
 package com.enjoyiot.eiot.temporal.timescaledb.service;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.enjoyiot.eiot.IThingModelMessageData;
@@ -34,8 +35,8 @@ import com.enjoyiot.eiot.temporal.timescaledb.model.PgThingModelMessage;
 import com.enjoyiot.framework.common.pojo.PageParam;
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.framework.common.util.json.JsonUtils;
-import com.enjoyiot.framework.common.util.object.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.postgresql.util.PGTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
@@ -75,7 +76,7 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
                                 deviceId, r.getProductKey(), r.getDeviceName(),
                                 r.getUid(), r.getType(), r.getIdentifier(), r.getCode(),
                                 JsonUtils.parseObject(r.getData(), Map.class),
-                                r.getTime(), r.getReportTime(), null))
+                                r.getTime().getTime(), r.getReportTime(), null))
                 .collect(Collectors.toList()), result.getTotal());
     }
 
@@ -100,7 +101,7 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
                                 r.getDeviceId(), r.getProductKey(), r.getDeviceName(),
                                 r.getUid(), r.getType(), r.getIdentifier(), r.getCode(),
                                 JsonUtils.parseObject(r.getData(), Map.class),
-                                r.getTime(), r.getReportTime(), null))
+                                r.getTime().getTime(), r.getReportTime(), null))
                 .collect(Collectors.toList()), result.getTotal());
     }
 
@@ -173,10 +174,10 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
 
     @Override
     public void add(ThingModelMessage msg) {
-        PgThingModelMessage message = BeanUtils.toBean(msg, PgThingModelMessage.class);
+        PgThingModelMessage message = BeanUtil.copyProperties(msg, PgThingModelMessage.class, "time", "data", "reportTime", "deviceName");
         message.setData(msg.getData() == null ? "{}" : JsonUtils.toJsonString(msg.getData()));
         message.setDeviceName(msg.getDn());
-        message.setTime(msg.getOccurred());
+        message.setTime(new PGTimestamp(msg.getOccurred()));
         message.setReportTime(msg.getTime());
         thingModelMessageMapper.insert(message);
     }

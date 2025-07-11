@@ -27,13 +27,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @TableName("thing_model_message")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class PgThingModelMessage {
 
-    private Long time;
+    private Timestamp time;
 
     private String mid;
 

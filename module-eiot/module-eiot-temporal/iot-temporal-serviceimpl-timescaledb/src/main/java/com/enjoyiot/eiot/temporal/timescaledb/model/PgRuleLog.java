@@ -27,15 +27,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @TableName("rule_log")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class PgRuleLog {
 
-    private Long time;
+    private Timestamp time;
 
-    private String ruleId;
+    private Long ruleId;
 
     private String state1;
 
