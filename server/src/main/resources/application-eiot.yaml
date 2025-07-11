@@ -128,7 +128,7 @@ spring:
     #username: ${spring.datasource.dynamic.datasource.master.username}
     #password: ${spring.datasource.dynamic.datasource.master.password}
     url: jdbc:postgresql://eiot-server-db:5432/enjoyiot?useUnicode=true&characterEncoding=utf8&useSSL=true&autoReconnect=true&reWriteBatchedInserts=true
-    username: root
+    username: postgres
     password: postgres
 
 
