@@ -305,16 +305,8 @@ CREATE TABLE `eiot_component`  (
 -- ----------------------------
 INSERT INTO `eiot_component` VALUES (1, '内置官方mqtt协议组件', 'mqtt', '{\"port\":18831}', 1, NULL, NULL, '2025-02-19 01:01:54', '1', '2025-02-20 11:25:26', b'0');
 INSERT INTO `eiot_component` (`id`, `name`, `type`, `config`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (2, '内置emqx协议组件', 'emqx', '{\n     \"port\": 1883,\n     \"host\": \"127.0.0.1\",\n     \"topics\": \"/sys/#\",\n     \"authPort\": 8104\n}', 0, NULL, NULL, '2025-02-19 01:01:54', '1', '2025-02-28 10:29:51', b'0');
-INSERT INTO enjoyiot.eiot_component (id, name, type, config, status, remark, creator, create_time, updater, update_time, deleted) VALUES (3, '内置TCP协议组件', 'tcp', '{
-     "port": 6666,
-     "host": "127.0.0.1"
-}', 1, null, null, '2025-02-19 01:01:54', '1', '2025-03-23 15:59:27', false);
-INSERT INTO `eiot_component` (`id`, `name`, `type`, `config`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`)  VALUES (4, '内置官方http协议组件', 'http', '{
-    "port":18834,
-    "ssl": false,
-    "sslKey": "",
-    "sslCert": ""
-}', 1, NULL, NULL, '2025-02-19 01:01:54', '1', '2025-02-20 11:25:26', b'0');
+INSERT INTO `eiot_component` (`id`, `name`, `type`, `config`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3, '内置TCP协议组件', 'tcp', '{\n     \"port\": 6666,\n     \"host\": \"127.0.0.1\"\n     \}', 1, null, null, '2025-02-19 01:01:54', '1', '2025-03-23 15:59:27', b'0');
+INSERT INTO `eiot_component` (`id`, `name`, `type`, `config`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`)  VALUES (4, '内置官方http协议组件', 'http', '{\n     \"port\":18834,\n     \"ssl\": false,\n     \"sslKey\": \"\",\n     \"sslCert": \"\"\n     \}', 1, NULL, NULL, '2025-02-19 01:01:54', '1', '2025-02-20 11:25:26', b'0');
 INSERT INTO `eiot_component` (`id`, `name`, `type`, `config`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5, '有人云的USR-G770数传终端的modbus-tcp协议组件', 'modbus-custom', '{\n    \"port\":18835,\n    \"timer\": 10\n}', 0, '产品手册：https://www.usr.cn/wiki/puba/p2xSMaXS4#top', NULL, '2025-02-19 01:01:54', '1', '2025-04-02 10:13:36', b'0');
 
 -- ----------------------------
