@@ -25,13 +25,10 @@
 package com.enjoyiot.eiot.component.emqx.service;
 
 
-
-import cn.hutool.core.util.ObjectUtil;
 import com.enjoyiot.framework.common.pojo.CommonResult;
 import com.enjoyiot.module.eiot.api.device.DeviceApi;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceAuth;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
-import com.enjoyiot.module.eiot.api.device.dto.RegisterDevice;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
@@ -42,10 +39,11 @@ import io.vertx.ext.web.handler.BodyHandler;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -85,7 +83,7 @@ public class AuthVerticle extends AbstractVerticle {
 
                 //服务端插件连接
                 if (clientId.equals("server") && serverPassword.equals(password)) {
-                    httpResult(rc.response(), 200);
+                    httpResult(rc.response(), true);
                     return;
                 }
 
@@ -93,7 +91,7 @@ public class AuthVerticle extends AbstractVerticle {
                 String[] parts = clientId.split("_");
                 if (parts.length < 3) {
                     log.error("clientid:{}不正确", clientId);
-                    httpResult(rc.response(), 400);
+                    httpResult(rc.response(), false);
                     return;
                 }
 
@@ -105,7 +103,7 @@ public class AuthVerticle extends AbstractVerticle {
                 String gwModel = parts[2];
                 if (!username.equals(deviceName)) {
                     log.error("username:{}不正确", deviceName);
-                    httpResult(rc.response(), 403);
+                    httpResult(rc.response(), false);
                     return;
                 }
 
@@ -113,31 +111,51 @@ public class AuthVerticle extends AbstractVerticle {
                 CommonResult<DeviceInfo> authResult = deviceApi.auth(DeviceAuth.builder().canRegister(true).clientId(clientId)
                         .userName(username).password(password).authType(DeviceAuth.AUTH_TYPE_MQTT).build());
 
-                if(authResult.isError()){
+                if (authResult.isError()) {
                     log.error("设备认证失败:{}", authResult.getMsg());
-                    httpResult(rc.response(), 403);
+                    httpResult(rc.response(), false);
                     return;
                 }
-
 
 
                 Set<String> devices = new HashSet<>();
                 devices.add(productKey + "," + deviceName);
                 EmqxVerticle.CLIENT_DEVICE_MAP.putIfAbsent(productKey + deviceName, devices);
 
-                httpResult(rc.response(), 200);
+                httpResult(rc.response(), true);
             } catch (Throwable e) {
-                httpResult(rc.response(), 500);
+                httpResult(rc.response(), false);
                 log.error("mqtt auth failed", e);
             }
         });
         backendRouter.route(HttpMethod.POST, "/mqtt/acl").handler(rc -> {
-            String json = rc.getBodyAsString();
+            JsonObject json = rc.getBodyAsJson();
             log.info("mqtt acl:{}", json);
             try {
-                httpResult(rc.response(), 200);
+                String clientId = json.getString("clientid");
+                if ("server".equals(clientId)) {
+                    httpResult(rc.response(), true);
+                    return;
+                }
+
+                //设备端
+                String[] parts = clientId.split("_");
+                if (parts.length < 3) {
+                    log.error("设备端cilentid格式异常");
+                    httpResult(rc.response(), false);
+                    return;
+                }
+
+                String topic = json.getString("topic");
+                List<String> topicParts = Arrays.asList(topic.split("/"));
+                if (!topicParts.contains(parts[0]) || !topicParts.contains(parts[1])) {
+                    log.error("设备端cilentid和topic不一致");
+                    httpResult(rc.response(), false);
+                    return;
+                }
+                httpResult(rc.response(), true);
             } catch (Throwable e) {
-                httpResult(rc.response(), 500);
+                httpResult(rc.response(), false);
                 log.error("mqtt acl failed", e);
             }
         });
@@ -152,12 +170,12 @@ public class AuthVerticle extends AbstractVerticle {
         ;
     }
 
-    private void httpResult(HttpServerResponse response, int code) {
+    private void httpResult(HttpServerResponse response, boolean allow) {
         response.putHeader("Content-Type", "application/json");
         response
-                .setStatusCode(code);
+                .setStatusCode(200);
         response
-                .end("{\"result\": \"" + (code == 200 ? "allow" : "deny") + "\"}");
+                .end("{\"result\": \"" + (allow ? "allow" : "deny") + "\"}");
     }
 
     @Override
