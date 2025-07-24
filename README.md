@@ -25,18 +25,14 @@
 * 品类管理-树型结构品类管理，内置常见物联网设备品类
 * 产品管理-提供产品基本信息设置、物模型定义、产品发布管理、数据解析等
 * 设备管理-基础管理功能（注册、分组、标签等）、运行监控、远程控制、安全管理、数据管理等
-* 设备接入-提供mqtt/http/modbus等常见协议接入、设备认证、接入配置、连接管理、OTA等
+* 设备接入-提供mqtt/http/modbus/udp/coap等常见协议接入、设备认证、接入配置、连接管理、OTA等
 * 组件中心-基于Spring Boot的设备协议接入模块，可实现动态配置、多实例独立部署
 * 规则引擎-数据处理规则、触发条件、执行动作、规则配置、运行管理、场景应用等
 * 告警中心-告警规则配置、告警通知、告警处理、告警监控、告警联动等
 * 数据管理-提供实时数据存储、历史数据时序数据库存储、数据查询分析、数据推送等
 * 另提供可视化大屏、第三方平台对接、视频接入、无人机接入、AI算法集成等功能
 
-### 商用&授权
 
-开源版：代码完全开源. 可用于个人学习、研究使用，用于商业用途请联系作者申请授权后可免费使用，但仍需保留开源署名等信息。
-
-商业版：https://y5yrmmjjns.feishu.cn/wiki/FlxmwXzQJiEKCJkGuIhcLsyjnwh?fromScene=spaceOverview 联系商务 
 
 ### 前端仓库
 [![乐联开源/enjoy-web](https://gitee.com/open-enjoy/enjoy-web/widgets/widget_card.svg?colors=393222,ebdfc1,fffae5,d8ca9f,393222,a28b40)](https://gitee.com/open-enjoy/enjoy-web)
@@ -96,6 +92,12 @@ revert: 回滚
 
 <img alt="wx.png" height="300" src=".image/WechatIMG578.jpg" width="250"/>
 
+### 商用&授权
+
+开源版：代码完全开源，可商业使用,在你分发的衍生作品的源代码中，你必须保留本作品源码中的所有版权、专利、商标和归属声明,保留作者署名；
+
+商业版：可移除作者署名 
+https://y5yrmmjjns.feishu.cn/wiki/FlxmwXzQJiEKCJkGuIhcLsyjnwh?fromScene=spaceOverview 
 
 ## :fa-chain-broken: 友情链接
 
