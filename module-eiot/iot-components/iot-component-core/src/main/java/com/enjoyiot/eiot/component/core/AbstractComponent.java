@@ -61,8 +61,8 @@ public abstract class AbstractComponent implements Component, ConsumerHandler<Th
                             //订阅组件消息
                             // TODO: 没必要重复订阅
                             if(!isSubDiscoverReply){
-                                componentServices.getConsumer().consume(
-                                        getSendToDeviceTopic(), this);
+                                // 消费者订阅&&处理消息：订阅设备属性设置参数，并发送给设备
+                                componentServices.getConsumer().consume(Constants.getSendToDeviceTopic(getRouter()), this);
                                 isSubDiscoverReply = true;
                             }
 
@@ -70,9 +70,6 @@ public abstract class AbstractComponent implements Component, ConsumerHandler<Th
                         return;
                     }
                 });
-
-        // 消费者订阅&&处理消息：订阅设备属性设置参数，并发送给设备
-        componentServices.getConsumer().consume(Constants.getSendToDeviceTopic(getRouter()), this);
 
         //发布组件发现消息
         publishDiscover();
@@ -133,9 +130,6 @@ public abstract class AbstractComponent implements Component, ConsumerHandler<Th
     }
 
 
-    private String getSendToDeviceTopic() {
-        return String.format("%s/%s", getRouter(), THING_MODEL_MESSAGE_TOPIC);
-    }
 
     /**
      * 缓存设备对应的组件信息
