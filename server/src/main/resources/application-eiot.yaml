@@ -48,7 +48,7 @@ spring:
         master:
           url: jdbc:mysql://eiot-server-db:3306/enjoyiot?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&rewriteBatchedStatements=true # MySQL Connector/J 8.X 连接的示例
           #          url: jdbc:mysql://eiot-server-db:3306/enjoyiot?useSSL=true&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true # MySQL Connector/J 5.X 连接的示例
-          #          url: jdbc:postgresql://eiot-server-db:5432/enjoyiot # PostgreSQL 连接的示例
+          #          url: jdbc:postgresql://eiot-server-db:5432/enjoyiot?useUnicode=true&characterEncoding=utf8&useSSL=true&autoReconnect=true&reWriteBatchedInserts=true # PostgreSQL 连接的示例
           #          url: jdbc:oracle:thin:@eiot-server-db:1521:enjoyiot # Oracle 连接的示例
           #          url: jdbc:sqlserver://eiot-server-db:1433;DatabaseName=enjoyiot;SelectMethod=cursor;encrypt=false;rewriteBatchedStatements=true;useUnicode=true;characterEncoding=utf-8 # SQLServer 连接的示例
           #          url: jdbc:dm://eiot-server-db:5236?schema=enjoyiot # DM 连接的示例
@@ -119,6 +119,18 @@ spring:
     username:
     password:
     baseDb: root.eiot
+
+  #<<===========postgres时序数据库配置开始============
+  postgres:
+    driverClassName: org.postgresql.Driver
+    # 若master数据源为postgres时，则直接使用master的配置
+    #url: ${spring.datasource.dynamic.datasource.master.url}
+    #username: ${spring.datasource.dynamic.datasource.master.username}
+    #password: ${spring.datasource.dynamic.datasource.master.password}
+    url: jdbc:postgresql://eiot-server-db:5432/enjoyiot?useUnicode=true&characterEncoding=utf8&useSSL=true&autoReconnect=true&reWriteBatchedInserts=true
+    username: postgres
+    password: postgres
+
 
   #<<================es时序数据配置开始===============
 #  注意缩进

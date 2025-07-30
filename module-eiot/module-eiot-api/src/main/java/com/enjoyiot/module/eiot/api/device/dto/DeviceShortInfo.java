@@ -161,6 +161,8 @@ public class DeviceShortInfo extends BaseModel {
 
     private String firmVersion;
 
+    private Integer nodeType;
+
     private Long tenantId;
 
     private String productName;
