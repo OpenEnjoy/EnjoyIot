@@ -92,11 +92,14 @@ revert: 回滚
 
 <img alt="wx.png" height="300" src=".image/WechatIMG578.jpg" width="250"/>
 
-### 商用&授权
+开源版：代码完全开源；
+> 如果您将此项目用于商业用途，请遵守 Apache2.0 协议并保留作者技术支持声明。
+>
+> 二次开发如用于商业性质或开源竞品请不要删除和修改源码头部的版权与作者声明及出处
+>
+> 允许进行商用，但是不允许二次开源出来并进行收费
 
-开源版：代码完全开源，可商业使用,在你分发的衍生作品的源代码中，你必须保留本作品源码中的所有版权、专利、商标和归属声明,保留作者署名；
-
-商业版：可移除作者署名 
+商业版：可移除作者署名
 https://y5yrmmjjns.feishu.cn/wiki/FlxmwXzQJiEKCJkGuIhcLsyjnwh?fromScene=spaceOverview 
 
 ## :fa-chain-broken: 友情链接
