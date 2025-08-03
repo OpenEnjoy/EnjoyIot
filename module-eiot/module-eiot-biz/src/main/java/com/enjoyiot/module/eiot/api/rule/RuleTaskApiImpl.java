@@ -32,7 +32,7 @@ import com.enjoyiot.module.eiot.convert.TaskInfoConvert;
 import com.enjoyiot.module.eiot.service.rule.EiotRuleInfoService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.stream.Collectors;
 
 @Service

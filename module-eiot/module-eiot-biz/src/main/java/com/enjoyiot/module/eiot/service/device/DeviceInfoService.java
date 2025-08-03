@@ -35,7 +35,7 @@ import com.enjoyiot.module.eiot.controller.admin.device.vo.DeviceInfoPageReqVO;
 import com.enjoyiot.module.eiot.controller.admin.device.vo.DeviceInfoSaveReqVO;
 import com.enjoyiot.module.eiot.controller.admin.device.vo.devicegroup.DeviceImportRespVO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 

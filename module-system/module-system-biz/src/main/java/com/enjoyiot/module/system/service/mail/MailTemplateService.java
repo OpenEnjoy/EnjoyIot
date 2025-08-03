@@ -28,7 +28,7 @@ import com.enjoyiot.module.system.controller.admin.mail.vo.template.MailTemplate
 import com.enjoyiot.module.system.controller.admin.mail.vo.template.MailTemplateSaveReqVO;
 import com.enjoyiot.module.system.dal.dataobject.mail.MailTemplateDO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 

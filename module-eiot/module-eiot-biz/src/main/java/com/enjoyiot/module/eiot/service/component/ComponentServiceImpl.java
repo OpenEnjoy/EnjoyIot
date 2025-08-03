@@ -34,7 +34,7 @@ import com.enjoyiot.module.eiot.dal.mysql.component.ComponentMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import static com.enjoyiot.eiot.common.enums.ErrorCodeConstants.COMPONENT_NOT_EXISTS;
 import static com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil.exception;

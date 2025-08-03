@@ -27,7 +27,7 @@ import com.enjoyiot.module.eiot.api.virtualdevice.dto.VirtualDevice;
 import com.enjoyiot.module.eiot.service.virtualdevice.VirtualDeviceService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 @Service

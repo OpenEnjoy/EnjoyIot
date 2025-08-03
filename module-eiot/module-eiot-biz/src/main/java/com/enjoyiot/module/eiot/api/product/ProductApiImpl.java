@@ -28,7 +28,7 @@ import com.enjoyiot.module.eiot.api.product.dto.Product;
 import com.enjoyiot.module.eiot.service.product.ProductService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @Service
 public class ProductApiImpl implements ProductApi {

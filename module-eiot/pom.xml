@@ -188,11 +188,11 @@
                 <version>${revision}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.enjoy-iot</groupId>
-                <artifactId>iot-temporal-serviceImpl-es</artifactId>
-                <version>${revision}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.enjoy-iot</groupId>-->
+<!--                <artifactId>iot-temporal-serviceImpl-es</artifactId>-->
+<!--                <version>${revision}</version>-->
+<!--            </dependency>-->
 
             <dependency>
                 <groupId>com.enjoy-iot</groupId>

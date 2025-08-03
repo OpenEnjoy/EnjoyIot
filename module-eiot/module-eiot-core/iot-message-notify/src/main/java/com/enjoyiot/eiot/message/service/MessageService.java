@@ -28,7 +28,7 @@ import com.enjoyiot.module.eiot.api.alert.dto.Message;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * author: EnjoyIot

@@ -28,7 +28,7 @@ import com.enjoyiot.module.eiot.controller.admin.channeltemplate.vo.ChannelTempl
 import com.enjoyiot.module.eiot.controller.admin.channeltemplate.vo.ChannelTemplatePageReqVO;
 import com.enjoyiot.module.eiot.controller.admin.channeltemplate.vo.ChannelTemplateSaveReqVO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * 通道模板 Service 接口

@@ -31,7 +31,7 @@ import com.enjoyiot.module.eiot.dal.dataobject.ChannelDO;
 import com.enjoyiot.module.eiot.dal.mysql.ChannelMapper;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

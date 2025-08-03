@@ -31,14 +31,14 @@ import com.enjoyiot.module.eiot.api.task.dto.TaskLog;
 import com.enjoyiot.module.eiot.service.rule.EiotRuleInfoService;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.security.access.prepost.PreAuthorize;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 
-import javax.validation.*;
+import jakarta.validation.*;
 
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.framework.common.pojo.CommonResult;

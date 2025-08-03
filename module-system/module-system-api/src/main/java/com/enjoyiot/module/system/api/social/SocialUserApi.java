@@ -28,7 +28,7 @@ import com.enjoyiot.module.system.api.social.dto.SocialUserBindReqDTO;
 import com.enjoyiot.module.system.api.social.dto.SocialUserRespDTO;
 import com.enjoyiot.module.system.api.social.dto.SocialUserUnbindReqDTO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * 社交用户的 API 接口

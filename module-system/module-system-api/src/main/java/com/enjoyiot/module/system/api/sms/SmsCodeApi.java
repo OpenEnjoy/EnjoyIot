@@ -28,7 +28,7 @@ import com.enjoyiot.module.system.api.sms.dto.code.SmsCodeValidateReqDTO;
 import com.enjoyiot.module.system.api.sms.dto.code.SmsCodeSendReqDTO;
 import com.enjoyiot.module.system.api.sms.dto.code.SmsCodeUseReqDTO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * 短信验证码 API 接口

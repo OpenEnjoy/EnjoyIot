@@ -28,7 +28,7 @@ import com.enjoyiot.module.system.service.mail.MailSendService;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * 邮件发送 API 实现类

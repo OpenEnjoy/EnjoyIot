@@ -35,7 +35,7 @@ import com.enjoyiot.module.eiot.api.thingmodel.dto.ThingModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;

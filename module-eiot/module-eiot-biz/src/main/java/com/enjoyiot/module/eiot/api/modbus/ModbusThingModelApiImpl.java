@@ -9,7 +9,7 @@ import com.enjoyiot.module.eiot.dal.dataobject.modbus.ModbusThingModelDO;
 import com.enjoyiot.module.eiot.dal.mysql.modbus.ModbusThingModelMapper;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @Service
 public class ModbusThingModelApiImpl implements ModbusThingModelApi {

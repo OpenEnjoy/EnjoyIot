@@ -28,7 +28,7 @@ import com.enjoyiot.module.eiot.controller.admin.channelconfig.vo.ChannelConfig;
 import com.enjoyiot.module.eiot.controller.admin.channelconfig.vo.ChannelConfigPageReqVO;
 import com.enjoyiot.module.eiot.controller.admin.channelconfig.vo.ChannelConfigReqVO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

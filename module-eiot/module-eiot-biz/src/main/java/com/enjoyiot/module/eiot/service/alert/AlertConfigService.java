@@ -28,7 +28,7 @@ import com.enjoyiot.module.eiot.api.alert.dto.AlertConfig;
 import com.enjoyiot.module.eiot.api.alert.dto.AlertConfigPageReqVO;
 import com.enjoyiot.module.eiot.controller.admin.alertconfig.vo.AlertConfigSaveReqVO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * 报警配置 Service 接口

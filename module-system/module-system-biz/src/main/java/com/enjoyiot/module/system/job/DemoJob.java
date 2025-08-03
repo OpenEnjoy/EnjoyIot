@@ -30,7 +30,7 @@ import com.enjoyiot.module.system.dal.dataobject.user.AdminUserDO;
 import com.enjoyiot.module.system.dal.mysql.user.AdminUserMapper;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 @Component

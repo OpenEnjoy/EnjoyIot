@@ -29,9 +29,9 @@ import com.enjoyiot.framework.common.util.servlet.ServletUtils;
 import com.enjoyiot.framework.web.core.util.WebFrameworkUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import static com.enjoyiot.framework.common.exception.enums.GlobalErrorCodeConstants.DEMO_DENY;
 

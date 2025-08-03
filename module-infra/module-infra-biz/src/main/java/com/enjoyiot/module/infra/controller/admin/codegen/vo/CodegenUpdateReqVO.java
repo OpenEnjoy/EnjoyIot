@@ -28,8 +28,8 @@ import com.enjoyiot.module.infra.controller.admin.codegen.vo.table.CodegenTableS
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 @Schema(description = "管理后台 - 代码生成表和字段的修改 Request VO")

@@ -40,8 +40,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 
 import static com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.enjoyiot.module.eiot.api.enums.ErrorCodeConstants.FILE_NOT_NULL;

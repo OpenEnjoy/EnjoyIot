@@ -28,7 +28,7 @@ import com.enjoyiot.module.system.controller.admin.oauth2.vo.client.OAuth2Client
 import com.enjoyiot.module.system.controller.admin.oauth2.vo.client.OAuth2ClientSaveReqVO;
 import com.enjoyiot.module.system.dal.dataobject.oauth2.OAuth2ClientDO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Collection;
 
 /**

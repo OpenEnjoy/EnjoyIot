@@ -29,7 +29,7 @@ import com.enjoyiot.module.infra.controller.admin.file.vo.config.FileConfigPageR
 import com.enjoyiot.module.infra.controller.admin.file.vo.config.FileConfigSaveReqVO;
 import com.enjoyiot.module.infra.dal.dataobject.file.FileConfigDO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * 文件配置 Service 接口

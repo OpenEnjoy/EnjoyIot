@@ -26,8 +26,8 @@ package com.enjoyiot.framework.common.validation;
 import cn.hutool.core.collection.CollUtil;
 import com.enjoyiot.framework.common.core.ArrayValuable;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;

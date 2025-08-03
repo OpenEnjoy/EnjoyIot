@@ -26,7 +26,7 @@ package com.enjoyiot.module.infra.service.db;
 import com.enjoyiot.module.infra.controller.admin.db.vo.DataSourceConfigSaveReqVO;
 import com.enjoyiot.module.infra.dal.dataobject.db.DataSourceConfigDO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

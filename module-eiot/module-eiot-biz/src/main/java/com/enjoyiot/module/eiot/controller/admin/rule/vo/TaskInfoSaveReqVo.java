@@ -29,7 +29,7 @@ import com.enjoyiot.module.eiot.api.task.dto.TaskInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 
 

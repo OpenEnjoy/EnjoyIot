@@ -13,16 +13,15 @@
     <description>基础 bom 文件，管理整个项目的依赖版本</description>
 
     <properties>
-        <revision>0.2.0</revision>
+        <revision>0.2.0-xiaozhi</revision>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
         <!-- 统一依赖管理 -->
-        <spring.framework.version>5.3.39</spring.framework.version>
-        <spring.security.version>5.8.14</spring.security.version>
-        <spring.boot.version>2.7.18</spring.boot.version>
+        <spring.framework.version>6.2.1</spring.framework.version>
+        <spring.security.version>6.4.2</spring.security.version>
+        <spring.boot.version>3.4.1</spring.boot.version>
         <!-- Web 相关 -->
-        <springdoc.version>1.7.0</springdoc.version>
-        <knife4j.version>4.5.0</knife4j.version>
-        <servlet.versoin>2.5</servlet.versoin>
+        <springdoc.version>2.7.0</springdoc.version>
+        <knife4j.version>4.6.0</knife4j.version>
         <!-- DB 相关 -->
         <druid.version>1.2.24</druid.version>
         <mybatis.version>3.5.17</mybatis.version>
@@ -50,7 +49,7 @@
         <!-- Bpm 工作流相关 -->
         <flowable.version>6.8.0</flowable.version>
         <!-- 工具类相关 -->
-        <captcha-plus.version>1.0.10</captcha-plus.version>
+        <captcha-plus.version>2.0.3</captcha-plus.version>
         <jsoup.version>1.18.3</jsoup.version>
         <lombok.version>1.18.36</lombok.version>
         <mapstruct.version>1.6.3</mapstruct.version>
@@ -71,7 +70,7 @@
         <commons-io.version>2.17.0</commons-io.version>
         <commons-compress.version>1.27.1</commons-compress.version>
         <aws-java-sdk-s3.version>2.20.0</aws-java-sdk-s3.version>
-        <justauth.version>1.0.8</justauth.version>
+        <justauth.version>2.0.5</justauth.version>
         <jimureport.version>1.7.8</jimureport.version>
         <weixin-java.version>4.6.0</weixin-java.version>
         <!-- 专属于 JDK8 安全漏洞升级 -->
@@ -178,21 +177,27 @@
                 <version>${revision}</version>
             </dependency>
 
+            <!--            <dependency>-->
+            <!--                <groupId>com.github.xiaoymin</groupId>-->
+            <!--                <artifactId>knife4j-openapi3-spring-boot-starter</artifactId>-->
+            <!--                <version>${knife4j.version}</version>-->
+            <!--            </dependency>-->
+            <!--17下有兼容问题，请看https://github.com/xiaoymin/knife4j/issues/874-->
             <dependency>
-                <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-openapi3-spring-boot-starter</artifactId>
+                <groupId>com.github.xingfudeshi</groupId>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
                 <version>${knife4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-ui</artifactId>
+                <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
                 <version>${springdoc.version}</version>
             </dependency>
             <!--            es相关-->
             <dependency>
                 <groupId>co.elastic.clients</groupId>
                 <artifactId>elasticsearch-java</artifactId>
-                <version>7.17.9</version>
+                <version>8.11.4</version>
             </dependency>
 
             <dependency>
@@ -232,12 +237,12 @@
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-jsqlparser-4.9</artifactId>
+                <artifactId>mybatis-plus-jsqlparser</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
             <dependency>
@@ -247,7 +252,7 @@
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>dynamic-datasource-spring-boot-starter</artifactId> <!-- 多数据源 -->
+                <artifactId>dynamic-datasource-spring-boot3-starter</artifactId> <!-- 多数据源 -->
                 <version>${dynamic-datasource.version}</version>
             </dependency>
             <dependency>
@@ -297,18 +302,18 @@
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-starter-actuator</artifactId>
                     </exclusion>
-                    <exclusion>
-                        <groupId>org.redisson</groupId>
-                        <!-- 使用 redisson-spring-data-27 替代，解决 Tuple NoClassDefFoundError 报错 -->
-                        <artifactId>redisson-spring-data-34</artifactId>
-                    </exclusion>
+<!--                    <exclusion>-->
+<!--                        <groupId>org.redisson</groupId>-->
+<!--                        &lt;!&ndash; 使用 redisson-spring-data-27 替代，解决 Tuple NoClassDefFoundError 报错 &ndash;&gt;-->
+<!--                        <artifactId>redisson-spring-data-34</artifactId>-->
+<!--                    </exclusion>-->
                 </exclusions>
             </dependency>
-            <dependency>
-                <groupId>org.redisson</groupId>
-                <artifactId>redisson-spring-data-27</artifactId>
-                <version>${redisson.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.redisson</groupId>-->
+<!--                <artifactId>redisson-spring-data-27</artifactId>-->
+<!--                <version>${redisson.version}</version>-->
+<!--            </dependency>-->
 
             <dependency>
                 <groupId>com.dameng</groupId>
@@ -699,16 +704,16 @@
             </dependency>
 
             <!-- 专属于 JDK8 安全漏洞升级 -->
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>${logback.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>ch.qos.logback</groupId>-->
+<!--                <artifactId>logback-core</artifactId>-->
+<!--                <version>${logback.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>ch.qos.logback</groupId>-->
+<!--                <artifactId>logback-classic</artifactId>-->
+<!--                <version>${logback.version}</version>-->
+<!--            </dependency>-->
 
 
             <dependency>

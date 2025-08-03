@@ -28,7 +28,7 @@ import com.enjoyiot.module.system.controller.admin.notify.vo.template.NotifyTemp
 import com.enjoyiot.module.system.controller.admin.notify.vo.template.NotifyTemplateSaveReqVO;
 import com.enjoyiot.module.system.dal.dataobject.notify.NotifyTemplateDO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Map;
 
 /**

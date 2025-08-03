@@ -29,7 +29,7 @@ import com.enjoyiot.module.system.dal.dataobject.dept.PostDO;
 import com.enjoyiot.module.system.service.dept.PostService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
 

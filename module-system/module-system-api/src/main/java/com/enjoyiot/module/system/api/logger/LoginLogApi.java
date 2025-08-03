@@ -25,7 +25,7 @@ package com.enjoyiot.module.system.api.logger;
 
 import com.enjoyiot.module.system.api.logger.dto.LoginLogCreateReqDTO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * 登录日志的 API 接口

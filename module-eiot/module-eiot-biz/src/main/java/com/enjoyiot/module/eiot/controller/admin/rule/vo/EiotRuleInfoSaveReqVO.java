@@ -28,7 +28,7 @@ import com.enjoyiot.module.eiot.api.task.dto.RuleAction;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Schema(description = "管理后台 - 规则引擎新增/修改 Request VO")

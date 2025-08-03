@@ -26,7 +26,7 @@ package com.enjoyiot.module.eiot.controller.admin.thingmodel.vo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 @Schema(description = "管理后台 - 产品物模型新增/修改 Request VO")
 @Data

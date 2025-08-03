@@ -26,7 +26,7 @@ package com.enjoyiot.module.system.api.sms.dto.send;
 import com.enjoyiot.framework.common.validation.Mobile;
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.Map;
 
 /**

@@ -39,7 +39,7 @@ import com.enjoyiot.module.infra.dal.mysql.file.FileMapper;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import static com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.enjoyiot.module.infra.enums.ErrorCodeConstants.FILE_NOT_EXISTS;

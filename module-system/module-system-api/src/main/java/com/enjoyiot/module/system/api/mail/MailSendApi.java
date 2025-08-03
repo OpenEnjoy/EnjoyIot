@@ -25,7 +25,7 @@ package com.enjoyiot.module.system.api.mail;
 
 import com.enjoyiot.module.system.api.mail.dto.MailSendSingleToUserReqDTO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * 邮箱发送 API 接口

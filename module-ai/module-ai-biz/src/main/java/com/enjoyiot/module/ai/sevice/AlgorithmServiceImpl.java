@@ -34,7 +34,7 @@ import com.enjoyiot.module.ai.sevice.AlgorithmService;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import static com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.enjoyiot.module.ai.enums.ErrorCodeConstants.ALGORITHM_NOT_EXISTS;

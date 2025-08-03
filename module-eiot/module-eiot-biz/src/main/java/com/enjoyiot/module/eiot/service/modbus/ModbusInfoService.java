@@ -7,7 +7,7 @@ import com.enjoyiot.module.eiot.controller.admin.modbus.vo.ModbusInfoVo;
 import com.enjoyiot.module.eiot.controller.admin.modbus.vo.ModbusThingModelImportVo;
 import com.enjoyiot.module.eiot.controller.admin.modbus.vo.ModbusThingModelVo;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 public interface ModbusInfoService {

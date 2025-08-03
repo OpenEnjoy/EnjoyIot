@@ -26,7 +26,7 @@ package com.enjoyiot.module.system.api.social;
 import com.enjoyiot.module.system.api.social.dto.*;
 import com.enjoyiot.module.system.enums.social.SocialTypeEnum;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import java.util.List;
 

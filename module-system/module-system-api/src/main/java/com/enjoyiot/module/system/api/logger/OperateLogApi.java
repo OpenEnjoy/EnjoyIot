@@ -29,7 +29,7 @@ import com.enjoyiot.module.system.api.logger.dto.OperateLogPageReqDTO;
 import com.enjoyiot.module.system.api.logger.dto.OperateLogRespDTO;
 import org.springframework.scheduling.annotation.Async;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * 操作日志 API 接口

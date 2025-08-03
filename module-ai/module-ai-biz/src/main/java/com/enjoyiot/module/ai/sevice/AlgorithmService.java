@@ -29,7 +29,7 @@ import com.enjoyiot.module.ai.controller.admin.vo.AlgorithmPageReqVO;
 import com.enjoyiot.module.ai.controller.admin.vo.AlgorithmUpdateReqVO;
 import com.enjoyiot.module.ai.dal.dataobject.AlgorithmDO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 public interface AlgorithmService {

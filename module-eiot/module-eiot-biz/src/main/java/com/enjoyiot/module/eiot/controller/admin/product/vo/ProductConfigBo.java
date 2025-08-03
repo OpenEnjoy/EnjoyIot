@@ -29,7 +29,7 @@ import com.enjoyiot.eiot.common.validate.EditGroup;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * 产品配置业务对象 product_config

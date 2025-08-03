@@ -30,7 +30,7 @@ import com.enjoyiot.module.eiot.controller.admin.product.vo.ProductPageReqVO;
 import com.enjoyiot.module.eiot.controller.admin.product.vo.ProductSaveReqVO;
 import com.enjoyiot.module.eiot.controller.admin.product.vo.ProductUpdateReqVO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * 物联网产品 Service 接口

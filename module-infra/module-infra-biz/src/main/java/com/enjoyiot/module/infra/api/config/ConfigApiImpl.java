@@ -28,7 +28,7 @@ import com.enjoyiot.module.infra.service.config.ConfigService;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * 参数配置 API 实现类

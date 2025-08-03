@@ -27,7 +27,7 @@ import com.enjoyiot.module.eiot.controller.admin.category.vo.Category;
 import com.enjoyiot.module.eiot.controller.admin.category.vo.CategoryListReqVO;
 import com.enjoyiot.module.eiot.controller.admin.category.vo.CategorySaveReqVO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

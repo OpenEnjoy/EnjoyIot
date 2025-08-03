@@ -27,7 +27,7 @@ import com.enjoyiot.module.eiot.api.component.dto.ComponentInfo;
 import com.enjoyiot.module.eiot.service.component.ComponentService;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @Component
 public class ComponentApiImpl implements ComponentApi {

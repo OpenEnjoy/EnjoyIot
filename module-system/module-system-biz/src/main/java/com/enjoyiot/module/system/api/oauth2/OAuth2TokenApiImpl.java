@@ -31,7 +31,7 @@ import com.enjoyiot.module.system.dal.dataobject.oauth2.OAuth2AccessTokenDO;
 import com.enjoyiot.module.system.service.oauth2.OAuth2TokenService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * OAuth2.0 Token API 实现类

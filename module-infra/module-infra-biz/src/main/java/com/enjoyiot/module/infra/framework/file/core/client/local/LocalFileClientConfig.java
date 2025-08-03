@@ -27,7 +27,7 @@ import com.enjoyiot.module.infra.framework.file.core.client.FileClientConfig;
 import lombok.Data;
 import org.hibernate.validator.constraints.URL;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 /**
  * 本地文件客户端的配置类

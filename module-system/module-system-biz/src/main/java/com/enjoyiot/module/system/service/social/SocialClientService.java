@@ -37,7 +37,7 @@ import me.chanjar.weixin.common.bean.subscribemsg.TemplateInfo;
 
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * 社交应用 Service 接口

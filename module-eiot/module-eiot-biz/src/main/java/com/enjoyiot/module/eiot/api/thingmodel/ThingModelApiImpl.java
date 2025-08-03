@@ -27,7 +27,7 @@ import com.enjoyiot.module.eiot.api.thingmodel.dto.ThingModel;
 import com.enjoyiot.module.eiot.service.product.ThingModelService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @Service
 public class ThingModelApiImpl implements ThingModelApi {

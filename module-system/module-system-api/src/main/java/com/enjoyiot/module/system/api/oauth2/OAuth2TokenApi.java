@@ -27,7 +27,7 @@ import com.enjoyiot.module.system.api.oauth2.dto.OAuth2AccessTokenCheckRespDTO;
 import com.enjoyiot.module.system.api.oauth2.dto.OAuth2AccessTokenCreateReqDTO;
 import com.enjoyiot.module.system.api.oauth2.dto.OAuth2AccessTokenRespDTO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * OAuth2.0 Token API 接口

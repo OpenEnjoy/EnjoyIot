@@ -27,7 +27,7 @@ import com.enjoyiot.module.system.api.permission.dto.DeptDataPermissionRespDTO;
 import com.enjoyiot.module.system.service.permission.PermissionService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.Set;
 

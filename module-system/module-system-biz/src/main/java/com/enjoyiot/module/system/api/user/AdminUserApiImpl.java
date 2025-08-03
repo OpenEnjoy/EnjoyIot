@@ -34,7 +34,7 @@ import com.enjoyiot.module.system.service.dept.DeptService;
 import com.enjoyiot.module.system.service.user.AdminUserService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;

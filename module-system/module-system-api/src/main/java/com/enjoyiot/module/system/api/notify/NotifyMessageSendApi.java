@@ -25,7 +25,7 @@ package com.enjoyiot.module.system.api.notify;
 
 import com.enjoyiot.module.system.api.notify.dto.NotifySendSingleToUserReqDTO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * 站内信发送 API 接口

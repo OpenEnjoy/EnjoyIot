@@ -26,7 +26,7 @@ package com.enjoyiot.module.system.api.tenant;
 import com.enjoyiot.module.system.service.tenant.TenantService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

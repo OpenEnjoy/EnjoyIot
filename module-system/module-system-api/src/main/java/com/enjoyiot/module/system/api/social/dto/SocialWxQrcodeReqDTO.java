@@ -25,7 +25,7 @@ package com.enjoyiot.module.system.api.social.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 /**
  * 获取小程序码 Request DTO

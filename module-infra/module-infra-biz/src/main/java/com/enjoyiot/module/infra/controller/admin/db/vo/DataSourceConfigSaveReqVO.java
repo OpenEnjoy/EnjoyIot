@@ -25,7 +25,7 @@ package com.enjoyiot.module.infra.controller.admin.db.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 @Schema(description = "管理后台 - 数据源配置创建/修改 Request VO")
 @Data

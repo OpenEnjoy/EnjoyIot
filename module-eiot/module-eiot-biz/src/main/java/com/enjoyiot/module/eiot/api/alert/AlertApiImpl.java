@@ -35,7 +35,7 @@ import com.enjoyiot.module.eiot.service.alert.ChannelTemplateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Objects;
 
 @Slf4j

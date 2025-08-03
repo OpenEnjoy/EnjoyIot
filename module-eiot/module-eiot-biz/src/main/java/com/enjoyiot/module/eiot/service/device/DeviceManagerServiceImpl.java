@@ -58,8 +58,8 @@ import com.enjoyiot.module.eiot.service.product.ThingModelService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import javax.validation.ConstraintViolationException;
+import jakarta.annotation.Resource;
+import jakarta.validation.ConstraintViolationException;
 import java.util.*;
 
 /**

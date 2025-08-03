@@ -7,7 +7,7 @@ import com.enjoyiot.module.eiot.dal.dataobject.modbus.ModbusInfoDO;
 import com.enjoyiot.module.eiot.dal.mysql.modbus.ModbusInfoMapper;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 
 @Service

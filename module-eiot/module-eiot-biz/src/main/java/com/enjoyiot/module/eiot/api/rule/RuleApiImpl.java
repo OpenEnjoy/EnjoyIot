@@ -29,7 +29,7 @@ import com.enjoyiot.module.eiot.api.rule.dto.RuleInfoPageReqVO;
 import com.enjoyiot.module.eiot.service.rule.EiotRuleInfoService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @Service
 public class RuleApiImpl implements RuleApi {

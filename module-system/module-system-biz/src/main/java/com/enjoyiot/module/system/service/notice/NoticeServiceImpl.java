@@ -32,7 +32,7 @@ import com.enjoyiot.module.system.dal.mysql.notice.NoticeMapper;
 import com.google.common.annotations.VisibleForTesting;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import static com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.enjoyiot.module.system.enums.ErrorCodeConstants.NOTICE_NOT_FOUND;

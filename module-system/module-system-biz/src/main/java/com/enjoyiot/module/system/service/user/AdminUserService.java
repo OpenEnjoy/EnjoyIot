@@ -35,7 +35,7 @@ import com.enjoyiot.module.system.controller.admin.user.vo.user.UserPageReqVO;
 import com.enjoyiot.module.system.controller.admin.user.vo.user.UserSaveReqVO;
 import com.enjoyiot.module.system.dal.dataobject.user.AdminUserDO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;

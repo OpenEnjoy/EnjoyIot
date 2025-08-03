@@ -38,7 +38,7 @@ import me.chanjar.weixin.common.bean.subscribemsg.TemplateInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 import static cn.hutool.core.collection.CollUtil.findOne;

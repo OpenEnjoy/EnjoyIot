@@ -27,7 +27,7 @@ package com.enjoyiot.module.eiot.service.product;
 import com.enjoyiot.module.eiot.controller.admin.showmodel.vo.ShowModelRespVO;
 import com.enjoyiot.module.eiot.controller.admin.showmodel.vo.ShowModelSaveReqVO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

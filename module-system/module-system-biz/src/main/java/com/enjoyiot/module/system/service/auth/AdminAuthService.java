@@ -26,7 +26,7 @@ package com.enjoyiot.module.system.service.auth;
 import com.enjoyiot.module.system.controller.admin.auth.vo.*;
 import com.enjoyiot.module.system.dal.dataobject.user.AdminUserDO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * 管理后台的认证 Service 接口

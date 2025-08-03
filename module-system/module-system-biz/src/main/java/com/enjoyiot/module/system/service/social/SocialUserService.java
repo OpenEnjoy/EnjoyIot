@@ -32,7 +32,7 @@ import com.enjoyiot.module.system.controller.admin.socail.vo.user.SocialUserPage
 import com.enjoyiot.module.system.dal.dataobject.social.SocialUserDO;
 import com.enjoyiot.module.system.enums.social.SocialTypeEnum;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

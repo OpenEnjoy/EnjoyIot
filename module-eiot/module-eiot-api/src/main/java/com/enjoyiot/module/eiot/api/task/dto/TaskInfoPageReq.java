@@ -28,7 +28,7 @@ import com.enjoyiot.framework.common.pojo.PageParam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
 
 @Schema(description = "TaskInfoPageReq")
 @Data

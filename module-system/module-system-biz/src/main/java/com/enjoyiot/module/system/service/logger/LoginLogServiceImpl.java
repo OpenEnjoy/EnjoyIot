@@ -32,7 +32,7 @@ import com.enjoyiot.module.system.dal.mysql.logger.LoginLogMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * 登录日志 Service 实现

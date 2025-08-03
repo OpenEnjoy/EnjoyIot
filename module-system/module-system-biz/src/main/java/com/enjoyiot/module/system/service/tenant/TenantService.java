@@ -31,7 +31,7 @@ import com.enjoyiot.module.system.dal.dataobject.tenant.TenantDO;
 import com.enjoyiot.module.system.service.tenant.handler.TenantInfoHandler;
 import com.enjoyiot.module.system.service.tenant.handler.TenantMenuHandler;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Set;
 

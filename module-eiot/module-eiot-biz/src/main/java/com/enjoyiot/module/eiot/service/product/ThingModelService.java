@@ -26,7 +26,7 @@ package com.enjoyiot.module.eiot.service.product;
 import com.enjoyiot.module.eiot.api.thingmodel.dto.ThingModel;
 import com.enjoyiot.module.eiot.controller.admin.thingmodel.vo.ThingModelSaveReqVO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * 产品物模型 Service 接口

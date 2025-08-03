@@ -32,7 +32,7 @@ import com.enjoyiot.module.infra.websocket.message.DemoSendMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * WebSocket 示例：单发消息

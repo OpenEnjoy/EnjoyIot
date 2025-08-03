@@ -29,7 +29,7 @@ import com.enjoyiot.module.system.dal.dataobject.dict.DictDataDO;
 import com.enjoyiot.module.system.service.dict.DictDataService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
 

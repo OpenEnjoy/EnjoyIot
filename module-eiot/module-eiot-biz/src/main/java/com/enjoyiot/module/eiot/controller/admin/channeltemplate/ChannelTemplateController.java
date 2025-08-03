@@ -25,15 +25,15 @@ package com.enjoyiot.module.eiot.controller.admin.channeltemplate;
 
 import com.enjoyiot.module.eiot.service.alert.ChannelTemplateService;
 import org.springframework.web.bind.annotation.*;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.security.access.prepost.PreAuthorize;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Operation;
 
-import javax.validation.*;
-import javax.servlet.http.*;
+import jakarta.validation.*;
+import jakarta.servlet.http.*;
 import java.util.*;
 import java.io.IOException;
 

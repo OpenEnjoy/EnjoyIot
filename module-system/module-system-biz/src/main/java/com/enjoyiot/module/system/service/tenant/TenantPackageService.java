@@ -28,7 +28,7 @@ import com.enjoyiot.module.system.controller.admin.tenant.vo.packages.TenantPack
 import com.enjoyiot.module.system.controller.admin.tenant.vo.packages.TenantPackageSaveReqVO;
 import com.enjoyiot.module.system.dal.dataobject.tenant.TenantPackageDO;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

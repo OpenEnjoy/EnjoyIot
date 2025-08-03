@@ -30,7 +30,7 @@ import com.enjoyiot.module.eiot.controller.admin.component.vo.ComponentPageReqVO
 import com.enjoyiot.module.eiot.dal.dataobject.component.ComponentDO;
 import com.enjoyiot.framework.common.pojo.PageResult;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 public interface ComponentService {
 
