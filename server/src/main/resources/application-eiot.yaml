@@ -39,6 +39,7 @@ spring:
         time-between-eviction-runs-millis: 60000 # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位：毫秒
         min-evictable-idle-time-millis: 300000 # 配置一个连接在池中最小生存的时间，单位：毫秒
         max-evictable-idle-time-millis: 900000 # 配置一个连接在池中最大生存的时间，单位：毫秒
+        #        validation-query: SELECT 1 # 配置检测连接是否有效
         validation-query: SELECT 1 FROM DUAL # 配置检测连接是否有效
         test-while-idle: true
         test-on-borrow: false
@@ -54,8 +55,10 @@ spring:
           #          url: jdbc:dm://eiot-server-db:5236?schema=enjoyiot # DM 连接的示例
           #          url: jdbc:kingbase8://eiot-server-db:54321/enjoyiot  # 人大金仓 KingbaseES 连接的示例
           #          url: jdbc:postgresql://eiot-server-db:5432/enjoyiot # OpenGauss 连接的示例
+          #          url: jdbc:kaiwudb://127.0.0.1:26257/enjoyiot # KaiwuDB 连接的示例
           username: root
           password: 123456
+          #          driverClassName: com.kaiwudb.Driver # KaiwuDB 驱动
         slave: # 模拟从库，可根据自己需要修改
           lazy: true # 开启懒加载，保证启动速度
           url: jdbc:mysql://eiot-server-db:3306/enjoyiot?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&nullCatalogMeansCurrent=true
@@ -132,6 +135,14 @@ spring:
     password: postgres
 
 
+
+  #<<===========kwdb时序数据库配置开始============
+  #  注意缩进
+  kw-datasource:
+    driverClassName: com.kaiwudb.Driver
+    url: jdbc:kaiwudb://127.0.0.1:26257/ts_enjoyiot
+    username: root
+    password:
   #<<================es时序数据配置开始===============
 #  注意缩进
   elasticsearch:
