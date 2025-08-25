@@ -106,11 +106,11 @@
         <!--        </dependency>-->
 
         <!--打开注释 启用td数据库, 同时注意yml配置-->
-<!--        <dependency>-->
-<!--            <groupId>com.enjoy-iot</groupId>-->
-<!--            <artifactId>iot-temporal-serviceimpl-td</artifactId>-->
-<!--            <version>${revision}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.enjoy-iot</groupId>
+            <artifactId>iot-temporal-serviceimpl-td</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
         <!--打开注释 启用timescaledb数据库-->
         <!--        <dependency>-->
@@ -126,11 +126,11 @@
 <!--            <version>${revision}</version>-->
 <!--        </dependency>-->
         <!--打开注释 启用kw数据库, 同时注意yml配置-->
-        <dependency>
+        <!--<dependency>
             <groupId>com.enjoy-iot</groupId>
             <artifactId>iot-temporal-serviceimpl-kw</artifactId>
             <version>${revision}</version>
-        </dependency>
+        </dependency>-->
         <!--        设备日志依赖 end #####################-->
 
 
