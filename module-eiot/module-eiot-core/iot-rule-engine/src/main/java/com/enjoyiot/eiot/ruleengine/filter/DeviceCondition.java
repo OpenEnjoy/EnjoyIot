@@ -40,7 +40,7 @@ public class DeviceCondition {
 
     private String identifier;
 
-    private Object value;
+    private String value;
 
     private String comparator;
 
@@ -93,6 +93,6 @@ public class DeviceCondition {
                 }
             }
         }
-        return Expression.eval(comparator, left, value);
+        return Expression.eval(comparator, String.valueOf(left), value);
     }
 }
