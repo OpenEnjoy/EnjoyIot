@@ -62,7 +62,7 @@ public class DeviceCondition {
     @Data
     public static class Parameter {
         private String identifier;
-        private Object value;
+        private String value;
         private String comparator;
 
         public boolean matches(Map<?, ?> parameter) {
@@ -81,7 +81,7 @@ public class DeviceCondition {
             if (left == null) {
                 return false;
             }
-            return Expression.eval(comparator, left, value);
+            return Expression.eval(comparator, String.valueOf(left), value);
         }
     }
 }

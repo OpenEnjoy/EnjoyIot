@@ -30,7 +30,6 @@ import com.enjoyiot.module.ai.controller.admin.vo.AlgorithmPageReqVO;
 import com.enjoyiot.module.ai.controller.admin.vo.AlgorithmUpdateReqVO;
 import com.enjoyiot.module.ai.dal.dataobject.AlgorithmDO;
 import com.enjoyiot.module.ai.dal.mysql.AlgorithmMapper;
-import com.enjoyiot.module.ai.sevice.AlgorithmService;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 

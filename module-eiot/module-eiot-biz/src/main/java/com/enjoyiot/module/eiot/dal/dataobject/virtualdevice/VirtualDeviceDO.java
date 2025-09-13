@@ -71,7 +71,7 @@ public class VirtualDeviceDO extends TenantBaseDO {
     /**
      * 触发方式执行方式
      */
-    @TableField("`trigger`") //TODO 启用 PostgreSQL 需要注释掉这个注解
+    @TableField("`trigger`") //TODO 启用 PostgreSQL、KaiwuDB 需要注释掉这个注解
     private String trigger;
 
     /**
