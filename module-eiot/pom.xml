@@ -123,6 +123,12 @@
 
             <dependency>
                 <groupId>com.enjoy-iot</groupId>
+                <artifactId>iot-message-vertx</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.enjoy-iot</groupId>
                 <artifactId>iot-message-rocketmq</artifactId>
                 <version>${revision}</version>
             </dependency>
