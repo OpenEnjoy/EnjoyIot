@@ -137,11 +137,19 @@ public class DbStructureDataImpl implements IDbStructureData {
                                     //字段名不是time且没有相同字段名的
                                     .noneMatch(n -> n.getName().equals(f.getName())))
                     .collect(Collectors.toList());
-            if (!dropFields.isEmpty()) {
-                sql = TableManager.getDropSTableColumnSql(tbName, dropFields);
+            if (newFields.isEmpty()) {
+                sql = TableManager.getDropStableSql(tbName);
                 response = tdRestApi.execSql(sql);
                 if (response.getCode() != TdResponse.CODE_SUCCESS) {
-                    throw exception(COLUMN_DEL,"drop table column error:" + JsonUtils.toJsonString(response));
+                    throw exception(TABLE_DELETE,"drop table error:" + JsonUtils.toJsonString(response));
+                }
+            }else{
+                if (!dropFields.isEmpty()) {
+                    sql = TableManager.getDropSTableColumnSql(tbName, dropFields);
+                    response = tdRestApi.execSql(sql);
+                    if (response.getCode() != TdResponse.CODE_SUCCESS) {
+                        throw exception(COLUMN_DEL,"drop table column error:" + JsonUtils.toJsonString(response));
+                    }
                 }
             }
         } catch (Throwable e) {
