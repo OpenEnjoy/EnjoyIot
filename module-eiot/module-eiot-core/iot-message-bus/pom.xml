@@ -18,6 +18,7 @@
         <module>iot-message-spring</module>
         <module>iot-message-rocketmq</module>
         <module>iot-message-actor</module>
+        <module>iot-message-vertx</module>
     </modules>
 
 
