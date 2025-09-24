@@ -32,6 +32,7 @@ import com.enjoyiot.eiot.message.kafka.KafkaConsumer;
 import com.enjoyiot.framework.common.util.json.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +40,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableConfigurationProperties(KafkaProperties.class)
 @Slf4j
+// 暂时还没测试,所以未开启
+//@ConditionalOnProperty(name = "eiot.message.producer-type", havingValue = "kafka-event")
 public class KafkaAutoConfiguration {
 
     private final KafkaProperties properties;

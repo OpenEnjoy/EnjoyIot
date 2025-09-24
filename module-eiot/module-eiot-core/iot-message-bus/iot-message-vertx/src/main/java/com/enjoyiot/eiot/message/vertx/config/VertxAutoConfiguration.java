@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+// 暂时还没测试,所以未开启
+//@ConditionalOnProperty(name = "eiot.message.producer-type", havingValue = "vertx-event")
 public class VertxAutoConfiguration {
 
     @Bean
