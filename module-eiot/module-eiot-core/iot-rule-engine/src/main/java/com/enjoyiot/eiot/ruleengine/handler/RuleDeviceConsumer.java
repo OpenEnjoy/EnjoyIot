@@ -40,6 +40,7 @@ import org.springframework.core.annotation.Order;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class RuleDeviceConsumer implements ConsumerHandler<ThingModelMessage>, ApplicationContextAware {
@@ -64,7 +65,7 @@ public class RuleDeviceConsumer implements ConsumerHandler<ThingModelMessage>, A
                 return Integer.MAX_VALUE;
             }
             return o.value();
-        })).toList();
+        })).collect(Collectors.toList());
         handlers.addAll(handlerList);
     }
 
