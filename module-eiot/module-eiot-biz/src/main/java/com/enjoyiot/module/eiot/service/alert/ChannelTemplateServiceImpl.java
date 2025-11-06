@@ -34,6 +34,7 @@ import com.enjoyiot.module.eiot.convert.ChannelTemplateConvert;
 import com.enjoyiot.module.eiot.dal.dataobject.channeltemplate.ChannelTemplateDO;
 import com.enjoyiot.module.eiot.dal.mysql.alertconfig.AlertConfigMapper;
 import com.enjoyiot.module.eiot.dal.mysql.channeltemplate.ChannelTemplateMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -45,6 +46,7 @@ import javax.annotation.Resource;
  *
  * @author EnjoyIot
  */
+@Slf4j
 @Service
 @Validated
 public class ChannelTemplateServiceImpl implements ChannelTemplateService {
@@ -55,11 +57,20 @@ public class ChannelTemplateServiceImpl implements ChannelTemplateService {
     @Resource
     private AlertConfigMapper alertConfigMapper;
 
+    @Resource
+    private ChannelConfigService channelConfigService;
+
+    @Resource
+    private ChannelSmsService ChannelSmsTemplateService;
 
     @Override
     public Long createChannelTemplate(ChannelTemplateSaveReqVO createReqVO) {
-        // 插入
         ChannelTemplateDO channelTemplate = BeanUtils.toBean(createReqVO, ChannelTemplateDO.class);
+
+        // 短信需要单独处理
+        ChannelSmsTemplateService.createTemplate(createReqVO, channelTemplate);
+
+        // 插入
         channelTemplateMapper.insert(channelTemplate);
         // 返回
         return channelTemplate.getId();
@@ -71,6 +82,10 @@ public class ChannelTemplateServiceImpl implements ChannelTemplateService {
         validateChannelTemplateExists(updateReqVO.getId());
         // 更新
         ChannelTemplateDO updateObj = BeanUtils.toBean(updateReqVO, ChannelTemplateDO.class);
+
+        // 短信需要单独处理
+        ChannelSmsTemplateService.updateTemplate(updateReqVO, updateObj);
+
         channelTemplateMapper.updateById(updateObj);
     }
 
@@ -82,6 +97,11 @@ public class ChannelTemplateServiceImpl implements ChannelTemplateService {
         if(alertConfigMapper.selectCountByChannelTemplateId(id)>0){
             throw ServiceExceptionUtil.exception(ErrorCodeConstants.CHANNEL_TEMPLATE_USED);
         }
+
+        // 短信需要单独处理
+        ChannelTemplateDO channelTemplateDO = channelTemplateMapper.selectById(id);
+        ChannelSmsTemplateService.deleteTemplate(channelTemplateDO);
+
         // 删除
         channelTemplateMapper.deleteById(id);
     }

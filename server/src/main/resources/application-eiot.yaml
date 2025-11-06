@@ -313,3 +313,6 @@ iot:
     kafka:
       boostrap-servers: eiot-kafka:9092
 
+config:
+  alert:
+    sms-provider: aliyun
