@@ -114,6 +114,12 @@
             <artifactId>iot-virtual-device</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>dysmsapi20170525</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+
     </dependencies>
 
 </project>

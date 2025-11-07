@@ -21,42 +21,21 @@
  * /
  */
 
-package com.enjoyiot.module.eiot.controller.admin.channeltemplate.vo;
+package com.enjoyiot.module.eiot.api.alert.dto;
 
-
-import com.enjoyiot.module.eiot.api.TenantModel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 /**
  * author: EnjoyIot
- * date: 2023-05-11 16:30
+ * date: 2023-05-08 15:58
  * description:
  **/
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class ChannelTemplate extends TenantModel {
-
-    private Long id;
-
-    private Long channelConfigId;
-
-    private String title;
-
-    private String content;
-
-    /**
-     * Template status: 0-pending, 1-approved, 2-rejected
-     */
-    private Integer status;
-
-    /**
-     * Template code from cloud provider (e.g., Alibaba Cloud SMS template code)
-     */
-    private String templateCode;
-
+public class SmsConfig implements Serializable {
+    private String accessKeyId;
+    private String accessKeySecret;
+    private String signName;
+    private String phoneNumbers;
 }
