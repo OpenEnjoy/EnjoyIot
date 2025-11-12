@@ -28,6 +28,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.enjoyiot.eiot.common.utils.CodecUtil;
 import com.alibaba.fastjson.JSON;
 import com.enjoyiot.framework.common.pojo.PageResult;
+import com.enjoyiot.framework.tenant.core.util.TenantUtils;
 import com.enjoyiot.module.eiot.api.rule.RuleApi;
 import com.enjoyiot.module.eiot.api.rule.dto.RuleInfo;
 import com.enjoyiot.module.eiot.api.rule.dto.RuleInfoPageReqVO;
@@ -63,35 +64,37 @@ public class RuleLoadManager {
 
     @SneakyThrows
     public void initRules() {
-        int idx = 1;
-        int pageSize = 100;
-        while (true) {
-            RuleInfoPageReqVO pageRequest = new RuleInfoPageReqVO();
-            pageRequest.setPageNo(idx);
-            pageRequest.setPageSize(pageSize);
-            PageResult<RuleInfo> all = ruleApi.selectPage(pageRequest);
-            List<RuleInfo> rules = all.getList();
-            if (CollectionUtil.isEmpty(rules)) {
-                return;
-            }
-
-            for (RuleInfo rule : rules) {
-                Long ruleId = rule.getId();
-                String oldMd5 = ruleMd5Map.get(ruleId);
-                String md5 = CodecUtil.md5Str(JSON.toJSONString(rule));
-                if (oldMd5 != null && oldMd5.equals(md5)) {
-                    continue;
+        TenantUtils.executeIgnore(() -> {
+            int idx = 1;
+            int pageSize = 100;
+            while (true) {
+                RuleInfoPageReqVO pageRequest = new RuleInfoPageReqVO();
+                pageRequest.setPageNo(idx);
+                pageRequest.setPageSize(pageSize);
+                PageResult<RuleInfo> all = ruleApi.selectPage(pageRequest);
+                List<RuleInfo> rules = all.getList();
+                if (CollectionUtil.isEmpty(rules)) {
+                    return;
                 }
 
-                log.info("rule {} has changed", ruleId);
-                ruleMd5Map.put(ruleId, md5);
-                refreshRule(rule);
+                for (RuleInfo rule : rules) {
+                    Long ruleId = rule.getId();
+                    String oldMd5 = ruleMd5Map.get(ruleId);
+                    String md5 = CodecUtil.md5Str(JSON.toJSONString(rule));
+                    if (oldMd5 != null && oldMd5.equals(md5)) {
+                        continue;
+                    }
+
+                    log.info("rule {} has changed", ruleId);
+                    ruleMd5Map.put(ruleId, md5);
+                    refreshRule(rule);
+                }
+                if (all.getTotal() < pageSize) {
+                    return;
+                }
+                idx++;
             }
-            if(all.getTotal()<pageSize){
-                return;
-            }
-            idx++;
-        }
+        });
     }
 
     private void refreshRule(RuleInfo ruleInfo) {
