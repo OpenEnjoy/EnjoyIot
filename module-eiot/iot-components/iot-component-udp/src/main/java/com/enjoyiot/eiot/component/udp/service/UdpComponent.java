@@ -53,7 +53,8 @@ public class UdpComponent extends ThingComponent {
     private UdpConfig udpConfigKey;
 
     private final Map<String, String> lastDataHash = new ConcurrentHashMap<>();
-    private final Map<String, Long> lastSeen    = new ConcurrentHashMap<>();
+    protected final Map<String, Long> lastSeen    = new ConcurrentHashMap<>();
+    //private final Map<String, Long> lastSeen    = new ConcurrentHashMap<>();
 
     private final MessageDigest md5;
 
