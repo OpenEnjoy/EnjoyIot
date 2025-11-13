@@ -66,4 +66,8 @@ public class ChannelTemplateDO extends TenantBaseDO {
      */
     private Long deptId;
 
+    private Integer status;
+
+    private String templateCode;
+
 }

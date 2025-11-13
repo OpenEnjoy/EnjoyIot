@@ -118,7 +118,7 @@ spring:
 
   #<<===========iotdb时序数据库配置开始============
   iotdb-datasource:
-    url: iotdb-server-ip:10806
+    url: iotdb-server-ip:6667
     username:
     password:
     baseDb: root.eiot
@@ -313,3 +313,6 @@ iot:
     kafka:
       boostrap-servers: eiot-kafka:9092
 
+config:
+  alert:
+    sms-provider: aliyun

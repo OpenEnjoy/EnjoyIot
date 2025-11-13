@@ -56,4 +56,11 @@ public class ChannelTemplateRespVO {
     @ExcelProperty("创建时间")
     private LocalDateTime createTime;
 
+    @Schema(description = "模板状态", example = "1")
+    @ExcelProperty("模板状态")
+    private Integer status;
+
+    @Schema(description = "模板代码", example = "SMS_123456789")
+    @ExcelProperty("模板代码")
+    private String templateCode;
 }

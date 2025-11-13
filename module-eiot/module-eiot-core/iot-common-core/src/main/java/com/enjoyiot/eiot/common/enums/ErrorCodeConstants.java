@@ -55,6 +55,7 @@ public interface ErrorCodeConstants {
     // 时序数据库数据库
     ErrorCode FILED_DEFINE = new ErrorCode(2_007_007_000, "字段定义异常");
     ErrorCode TABLE_DEFINE = new ErrorCode(2_007_007_000, "表定义异常");
+    ErrorCode TABLE_DELETE = new ErrorCode(2_007_007_000, "表删除异常");
     ErrorCode TABLE_GET = new ErrorCode(2_007_007_000, "表获取异常");
     ErrorCode COLUMN_ADD = new ErrorCode(2_007_007_000, "添加字段异常");
     ErrorCode COLUMN_UPDATE = new ErrorCode(2_007_007_000, "字段修改异常");

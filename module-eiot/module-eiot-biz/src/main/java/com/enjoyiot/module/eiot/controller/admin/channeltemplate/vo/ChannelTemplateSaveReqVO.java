@@ -48,4 +48,10 @@ public class ChannelTemplateSaveReqVO {
     @NotEmpty(message = "通道模板内容不能为空")
     private String content;
 
+    @Schema(description = "模板状态", example = "0")
+    private Integer status;
+
+    @Schema(description = "模板代码", example = "SMS_123456789")
+    private String templateCode;
+
 }
