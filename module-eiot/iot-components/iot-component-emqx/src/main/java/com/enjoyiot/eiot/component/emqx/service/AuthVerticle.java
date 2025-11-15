@@ -87,6 +87,13 @@ public class AuthVerticle extends AbstractVerticle {
                     return;
                 }
 
+                //服务端mqtt输出客户端的clientid默认是UUID，默认UUID的客户端id可以连接emqx服务器
+                String[] clientIdPart = clientId.split("-");
+                if(clientIdPart.length == 5){
+                    httpResult(rc.response(), true);
+                    return;
+                }
+
                 //其它客户端连接
                 String[] parts = clientId.split("_");
                 if (parts.length < 3) {
@@ -134,6 +141,13 @@ public class AuthVerticle extends AbstractVerticle {
             try {
                 String clientId = json.getString("clientid");
                 if ("server".equals(clientId)) {
+                    httpResult(rc.response(), true);
+                    return;
+                }
+
+                //服务端mqtt输出客户端的clientid默认是UUID，默认UUID的客户端id可以连接emqx服务器
+                String[] clientIdPart = clientId.split("-");
+                if(clientIdPart.length == 5){
                     httpResult(rc.response(), true);
                     return;
                 }
