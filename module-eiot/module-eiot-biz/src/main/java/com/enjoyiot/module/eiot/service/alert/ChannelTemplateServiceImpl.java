@@ -31,14 +31,21 @@ import com.enjoyiot.module.eiot.controller.admin.channeltemplate.vo.ChannelTempl
 import com.enjoyiot.module.eiot.controller.admin.channeltemplate.vo.ChannelTemplatePageReqVO;
 import com.enjoyiot.module.eiot.controller.admin.channeltemplate.vo.ChannelTemplateSaveReqVO;
 import com.enjoyiot.module.eiot.convert.ChannelTemplateConvert;
+import com.enjoyiot.module.eiot.dal.dataobject.channelconfig.ChannelConfigDO;
 import com.enjoyiot.module.eiot.dal.dataobject.channeltemplate.ChannelTemplateDO;
 import com.enjoyiot.module.eiot.dal.mysql.alertconfig.AlertConfigMapper;
+import com.enjoyiot.module.eiot.dal.mysql.channelconfig.ChannelConfigMapper;
 import com.enjoyiot.module.eiot.dal.mysql.channeltemplate.ChannelTemplateMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -59,6 +66,9 @@ public class ChannelTemplateServiceImpl implements ChannelTemplateService {
 
     @Resource
     private ChannelConfigService channelConfigService;
+
+    @Resource
+    private ChannelConfigMapper channelConfigMapper;
 
     @Resource
     private ChannelSmsService ChannelSmsTemplateService;
@@ -113,7 +123,14 @@ public class ChannelTemplateServiceImpl implements ChannelTemplateService {
 
     @Override
     public PageResult<ChannelTemplate> getChannelTemplatePage(ChannelTemplatePageReqVO pageReqVO) {
-        return ChannelTemplateConvert.INSTANCE.convertPage(channelTemplateMapper.selectPage(pageReqVO));
+        PageResult<ChannelTemplate> pageResult = ChannelTemplateConvert.INSTANCE.convertPage(channelTemplateMapper.selectPage(pageReqVO));
+        if (CollectionUtils.isNotEmpty(pageResult.getList())) {
+            Set<Long> channelConfigIds = pageResult.getList().stream().map(ChannelTemplate::getChannelConfigId).collect(Collectors.toSet());
+            List<ChannelConfigDO> channelConfigDOList = channelConfigMapper.selectByIds(channelConfigIds);
+            Map<Long, String> channelConfigCodeMap = channelConfigDOList.stream().collect(Collectors.toMap(ChannelConfigDO::getId, ChannelConfigDO::getCode));
+            pageResult.getList().forEach(template -> template.setChannelCode(channelConfigCodeMap.get(template.getChannelConfigId())));
+        }
+        return pageResult;
     }
 
     private void validateChannelTemplateExists(Long id) {
