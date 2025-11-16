@@ -38,7 +38,6 @@ import com.enjoyiot.module.eiot.controller.admin.thingmodel.vo.ThingModelMessage
 import com.enjoyiot.module.eiot.service.device.DeviceInfoService;
 import com.enjoyiot.module.eiot.service.device.DeviceManagerService;
 import com.enjoyiot.module.eiot.service.sip.SipRelationService;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -194,11 +193,27 @@ public class DeviceInfoController {
         return success(BeanUtils.toBean(pageResult, DeviceShortRespVO.class));
     }
 
+    @Operation(summary = "未绑定的子设备列表")
+    @PostMapping("/children/unbindList")
+    @Parameter(name = "nodeType", description = "设备类型", required = true, example = "1")
+    public CommonResult<PageResult<DeviceShortRespVO>> getUnbindPage(@RequestBody @Valid DeviceUnbindPageReqVO pageReqVO) {
+        PageResult<DeviceShortInfo> pageResult = deviceInfoService.getUnbindPage(pageReqVO);
+        return success(BeanUtils.toBean(pageResult, DeviceShortRespVO.class));
+    }
+
+    @Operation(summary = "子设备解绑")
+    @PostMapping("/bind")
+    @Parameter(name = "bind", description = "设备类型", required = true, example = "1")
+    public CommonResult<Void> bind(@RequestBody @Valid DeviceBindReqVO bindReqVO) {
+        deviceInfoService.bindParent(bindReqVO);
+        return success();
+    }
+
     @Operation(summary = "子设备解绑")
     @PostMapping("/unbind")
-    @Parameter(name = "nodeType", description = "设备类型", required = true, example = "1")
+    @Parameter(name = "unbind", description = "设备类型", required = true, example = "1")
     public CommonResult<Void> unbind(@RequestBody @Valid DeviceUnbindReqVO unbindReqVO) {
-        deviceInfoService.unbindParent(unbindReqVO.getId());
+        deviceInfoService.unbindParent(unbindReqVO);
         return success();
     }
 

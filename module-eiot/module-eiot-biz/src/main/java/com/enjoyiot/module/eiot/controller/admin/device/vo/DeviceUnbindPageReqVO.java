@@ -23,19 +23,24 @@
  */
 package com.enjoyiot.module.eiot.controller.admin.device.vo;
 
+import com.enjoyiot.framework.common.pojo.PageParam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.util.List;
-
-@Schema(description = "解绑")
+@Schema(description = "管理后台 - 设备信息分页 Request VO")
 @Data
-public class DeviceUnbindReqVO {
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class DeviceUnbindPageReqVO extends PageParam {
+    @Schema(description = "设备名称")
+    private String name;
 
-    @Schema(description = "设备id", requiredMode = Schema.RequiredMode.REQUIRED, example = "3442")
-    @NotEmpty(message = "设备id不许为空")
-    private List<Long> idList;
+    @Schema(description = "设备唯一标识")
+    private String dn;
+
+    @Schema(description = "产品名称")
+    private String productName;
 
 }

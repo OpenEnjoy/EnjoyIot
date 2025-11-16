@@ -28,25 +28,18 @@ import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 //@Schema(description = "绑定")
 @Data
 public class DeviceBindReqVO {
 
     @Schema(description = "设备id", requiredMode = Schema.RequiredMode.REQUIRED, example = "3442")
-    @NotNull(message = "设备id不许为空")
-    private Long id;
+    @NotEmpty(message = "设备id不许为空")
+    private List<Long> idList;
 
-    @Schema(description = "设备唯一标识", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotEmpty(message = "设备唯一标识不能为空")
-    private String dn;
-
-    @Schema(description = "产品key", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotEmpty(message = "产品key不能为空")
-    private String productKey;
-
-
-
+    @Schema(description = "父级设备id", requiredMode = Schema.RequiredMode.REQUIRED, example = "3442")
+    @NotNull(message = "父级设备id不许为空")
     private Long parentId;
 
 

@@ -48,12 +48,14 @@ public interface EiotDeviceInfoMapper extends BaseMapperX<EiotDeviceInfoDO> {
                 .selectAs(ProductDO::getName, DeviceShortInfo::getProductName)
                 .likeIfPresent(EiotDeviceInfoDO::getDn, reqVO.getDn())
                 .eqIfPresent(EiotDeviceInfoDO::getProductKey, reqVO.getProductKey())
+                .inIfPresent(EiotDeviceInfoDO::getProductKey, reqVO.getProductKeyList())
                 .eqIfPresent(EiotDeviceInfoDO::getDeptId, reqVO.getDeptId())
                 .betweenIfPresent(EiotDeviceInfoDO::getCreateTime, reqVO.getCreateTime())
                 .likeIfPresent(EiotDeviceInfoDO::getName, reqVO.getName())
                 .eqIfPresent(EiotDeviceInfoDO::getState, reqVO.getState())
                 .eqIfPresent(EiotDeviceInfoDO::getSerialNo, reqVO.getSerialNo())
                 .eqIfPresent(EiotDeviceInfoDO::getParentId, reqVO.getParentId())
+                .isNull(reqVO.getBindStatus() != null && !reqVO.getBindStatus(), EiotDeviceInfoDO::getParentId)
                 .orderByDesc(EiotDeviceInfoDO::getId);
         q.leftJoin(ProductDO.class, ProductDO::getProductKey, EiotDeviceInfoDO::getProductKey);
         if(ObjectUtil.isNotNull(reqVO.getGroupId())){

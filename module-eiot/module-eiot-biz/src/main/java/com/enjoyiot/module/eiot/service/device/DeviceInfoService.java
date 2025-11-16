@@ -96,9 +96,11 @@ public interface DeviceInfoService {
 
     List<DeviceInfo> findSubDeviceList(String productKey, String deviceName);
 
+    PageResult<DeviceShortInfo> getUnbindPage(DeviceUnbindPageReqVO pageReqVO);
+
     void bindParent(DeviceBindReqVO saveReqVO);
 
-    void unbindParent(Long deviceId);
+    void unbindParent(DeviceUnbindReqVO unbindReqVO);
 
     DeviceInfo registerDevice(RegisterDevice registerDevice);
 

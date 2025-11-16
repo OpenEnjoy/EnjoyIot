@@ -298,25 +298,35 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
 
     }
 
-    @Caching(
-            evict = {@CacheEvict(cacheNames = RedisKeyConstants.DEVICE, key = "#saveReqVO.productKey+':'+#saveReqVO.dn")
-                    ,
-                    @CacheEvict(cacheNames = RedisKeyConstants.DEVICE_ID, key = "#saveReqVO.id")
+    public PageResult<DeviceShortInfo> getUnbindPage(DeviceUnbindPageReqVO pageReqVO) {
+        DeviceInfoPageReqVO deviceInfoPageReqVO = new DeviceInfoPageReqVO();
+        deviceInfoPageReqVO.setPageNo(pageReqVO.getPageNo());
+        deviceInfoPageReqVO.setPageSize(pageReqVO.getPageSize());
+        deviceInfoPageReqVO.setBindStatus(false);
+        deviceInfoPageReqVO.setName(pageReqVO.getName());
+        deviceInfoPageReqVO.setDn(pageReqVO.getDn());
 
-            }
-    )
+        // 产品名称查询
+        if (StringUtils.isNotBlank(pageReqVO.getProductName())) {
+            List<ProductDO> productList = productMapper.selectList(new LambdaQueryWrapperX<ProductDO>().like(ProductDO::getName, pageReqVO.getProductName()));
+            deviceInfoPageReqVO.setProductKeyList(productList.stream().map(ProductDO::getProductKey).collect(Collectors.toList()));
+        }
+
+        return this.getDeviceInfoPage(deviceInfoPageReqVO);
+    }
+
     @Override
-    public void bindParent(@Validated DeviceBindReqVO saveReqVO) {
+    public void bindParent(@Validated DeviceBindReqVO bindReqVO) {
         LambdaUpdateWrapper<EiotDeviceInfoDO> up = new LambdaUpdateWrapper<>();
-        up.eq(EiotDeviceInfoDO::getId, saveReqVO.getId());
-        up.set(EiotDeviceInfoDO::getParentId, saveReqVO.getParentId());
+        up.in(EiotDeviceInfoDO::getId, bindReqVO.getIdList());
+        up.set(EiotDeviceInfoDO::getParentId, bindReqVO.getParentId());
         deviceInfoMapper.update(null, up);
     }
 
     @Override
-    public void unbindParent(Long deviceId) {
+    public void unbindParent(DeviceUnbindReqVO unbindReqVO) {
         LambdaUpdateWrapper<EiotDeviceInfoDO> up = new LambdaUpdateWrapper<>();
-        up.eq(EiotDeviceInfoDO::getId, deviceId);
+        up.in(EiotDeviceInfoDO::getId, unbindReqVO.getIdList());
         up.set(EiotDeviceInfoDO::getParentId, null);
         deviceInfoMapper.update(null, up);
     }
