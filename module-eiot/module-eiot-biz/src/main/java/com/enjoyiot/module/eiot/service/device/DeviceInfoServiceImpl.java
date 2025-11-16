@@ -314,6 +314,14 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
     }
 
     @Override
+    public void unbindParent(Long deviceId) {
+        LambdaUpdateWrapper<EiotDeviceInfoDO> up = new LambdaUpdateWrapper<>();
+        up.eq(EiotDeviceInfoDO::getId, deviceId);
+        up.set(EiotDeviceInfoDO::getParentId, null);
+        deviceInfoMapper.update(null, up);
+    }
+
+    @Override
     public DeviceInfo registerDevice(RegisterDevice registerDevice) {
         String productKey = registerDevice.getProductKey();
         Product product = productService.getByPk(productKey);

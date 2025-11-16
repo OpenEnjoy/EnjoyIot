@@ -29,10 +29,7 @@ import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
 import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceShortInfo;
 import com.enjoyiot.module.eiot.api.device.dto.RegisterDevice;
-import com.enjoyiot.module.eiot.controller.admin.device.vo.DeviceBindReqVO;
-import com.enjoyiot.module.eiot.controller.admin.device.vo.DeviceInfoImportVo;
-import com.enjoyiot.module.eiot.controller.admin.device.vo.DeviceInfoPageReqVO;
-import com.enjoyiot.module.eiot.controller.admin.device.vo.DeviceInfoSaveReqVO;
+import com.enjoyiot.module.eiot.controller.admin.device.vo.*;
 import com.enjoyiot.module.eiot.controller.admin.device.vo.devicegroup.DeviceImportRespVO;
 
 import javax.validation.Valid;
@@ -100,6 +97,8 @@ public interface DeviceInfoService {
     List<DeviceInfo> findSubDeviceList(String productKey, String deviceName);
 
     void bindParent(DeviceBindReqVO saveReqVO);
+
+    void unbindParent(Long deviceId);
 
     DeviceInfo registerDevice(RegisterDevice registerDevice);
 

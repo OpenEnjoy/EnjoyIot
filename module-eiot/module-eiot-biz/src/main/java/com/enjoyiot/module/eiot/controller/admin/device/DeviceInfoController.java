@@ -38,6 +38,7 @@ import com.enjoyiot.module.eiot.controller.admin.thingmodel.vo.ThingModelMessage
 import com.enjoyiot.module.eiot.service.device.DeviceInfoService;
 import com.enjoyiot.module.eiot.service.device.DeviceManagerService;
 import com.enjoyiot.module.eiot.service.sip.SipRelationService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -183,6 +184,22 @@ public class DeviceInfoController {
         // 导出 Excel
         ExcelUtils.write(response, "设备信息.xls", "数据", DeviceInfoRespVO.class,
                         BeanUtils.toBean(list, DeviceInfoRespVO.class));
+    }
+
+    @Operation(summary = "子设备列表")
+    @PostMapping("/children/list")
+    @Parameter(name = "nodeType", description = "设备类型", required = true, example = "1")
+    public CommonResult<PageResult<DeviceShortRespVO>> getChildrenPage(@RequestBody @Valid DeviceInfoPageReqVO pageReqVO) {
+        PageResult<DeviceShortInfo> pageResult = deviceInfoService.getDeviceInfoPage(pageReqVO);
+        return success(BeanUtils.toBean(pageResult, DeviceShortRespVO.class));
+    }
+
+    @Operation(summary = "子设备解绑")
+    @PostMapping("/unbind")
+    @Parameter(name = "nodeType", description = "设备类型", required = true, example = "1")
+    public CommonResult<Void> unbind(@RequestBody @Valid DeviceUnbindReqVO unbindReqVO) {
+        deviceInfoService.unbindParent(unbindReqVO.getId());
+        return success();
     }
 
     @Operation(summary = "设备物模型日志")

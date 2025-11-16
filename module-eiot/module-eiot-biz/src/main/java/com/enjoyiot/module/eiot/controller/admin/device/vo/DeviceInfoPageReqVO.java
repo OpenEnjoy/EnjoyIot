@@ -80,4 +80,7 @@ public class DeviceInfoPageReqVO extends PageParam {
 
     private Long groupId;
 
+    @Schema(description = "父级id")
+    private Long parentId;
+
 }
