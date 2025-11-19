@@ -30,17 +30,12 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-//@Schema(description = "绑定")
+@Schema(description = "解绑")
 @Data
-public class DeviceBindReqVO {
+public class DeviceUnbindReqVO {
 
     @Schema(description = "设备id", requiredMode = Schema.RequiredMode.REQUIRED, example = "3442")
     @NotEmpty(message = "设备id不许为空")
     private List<Long> idList;
-
-    @Schema(description = "父级设备id", requiredMode = Schema.RequiredMode.REQUIRED, example = "3442")
-    @NotNull(message = "父级设备id不许为空")
-    private Long parentId;
-
 
 }

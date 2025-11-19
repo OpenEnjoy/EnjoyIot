@@ -159,6 +159,11 @@ public class MPJLambdaWrapperX<T> extends MPJLambdaWrapper<T> {
         return this;
     }
 
+    public <X> MPJLambdaWrapperX<T> isNull(boolean condition, SFunction<X, ?> column) {
+        super.isNull(condition, column);
+        return this;
+    }
+
     @Override
     public MPJLambdaWrapperX<T> selectAll(Class<?> clazz) {
         super.selectAll(clazz);
