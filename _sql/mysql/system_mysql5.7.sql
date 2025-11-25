@@ -63,7 +63,8 @@ CREATE TABLE `channel`  (
 INSERT INTO `channel` VALUES (1, 'DingTalk', NULL, '钉钉', '', '2025-02-06 21:43:14', '', '2025-02-07 20:53:01', b'0', 1, 0);
 INSERT INTO `channel` VALUES (2, 'QyWechat', NULL, '企业微信', '', '2025-02-06 21:43:36', '', '2025-02-07 20:53:02', b'0', 1, 0);
 INSERT INTO `channel` VALUES (3, 'Email', NULL, '邮箱', '', '2025-02-06 21:43:55', '', '2025-02-07 20:53:03', b'0', 1, 0);
-
+INSERT INTO channel VALUES (4, 'SMS', NULL, '短信', '', '2025-02-06 21:43:55', '', '2025-02-07 20:53:03', b'0', 1, 0);
+INSERT INTO channel VALUES (5, 'VMS', NULL, '语音', '', '2025-02-06 21:43:55', '', '2025-02-07 20:53:03', b'0', 1, 0);
 -- ----------------------------
 -- Table structure for device_ota_detail
 -- ----------------------------
@@ -278,8 +279,13 @@ CREATE TABLE `eiot_channel_template`  (
 -- ----------------------------
 -- Records of eiot_channel_template
 -- ----------------------------
+
+
 INSERT INTO `eiot_channel_template` VALUES (3, '企业微信模板', 2, '您的地块【${pressure}】<font color=\"warning\">水分过低，请尽快浇水作业</font>\n', '1', '2025-02-09 23:07:46', '1', '2025-02-16 18:01:08', b'0', 1, 0);
 INSERT INTO `eiot_channel_template` VALUES (4, '钉钉通道模板', 1, '您的地块【${title}】<font color=\"warning\">今天气温过高，请做好保湿作业</font>', '1', '2025-02-16 18:00:51', '1', '2025-02-16 18:00:51', b'0', 1, 0);
+-- 增加短信告警模板
+ALTER TABLE eiot_channel_template ADD COLUMN status INT DEFAULT 1 COMMENT '状态 0-待审核 1-审核成功 2-审核失败';
+ALTER TABLE eiot_channel_template ADD COLUMN template_code VARCHAR(128) COMMENT '模板编号';
 
 -- ----------------------------
 -- Table structure for eiot_component
