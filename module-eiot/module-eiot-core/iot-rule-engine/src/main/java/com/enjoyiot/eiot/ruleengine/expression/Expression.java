@@ -105,11 +105,11 @@ public class Expression {
                 break;
             case "between":
                 // value是规则设置的范围值（格式：最小值-最大值），triggerValue是设备上报的值
-                String[] valueRange = value.split("-");
+                String[] valueRange = triggerValue.split("-");
                 if (valueRange.length != 2) {
                     log.warn("between操作符要求value格式为'最小值-最大值'，当前值: {}，忽略此次比较", value);
                     result = false;
-                } else if (!isValidNumber(triggerValue) || !isValidNumber(valueRange[0]) || !isValidNumber(valueRange[1])) {
+                } else if (!isValidNumber(value) || !isValidNumber(valueRange[0]) || !isValidNumber(valueRange[1])) {
                     log.warn("between操作符要求triggerValue和value都为有效数字，triggerValue: {}, value: {}，忽略此次比较", triggerValue, value);
                     result = false;
                 } else {
@@ -119,17 +119,17 @@ public class Expression {
                         log.warn("between操作符要求最小值小于等于最大值，当前值: {}，忽略此次比较", value);
                         result = false;
                     } else {
-                        result = Double.parseDouble(triggerValue) >= min && Double.parseDouble(triggerValue) <= max;
+                        result = Double.parseDouble(value) >= min && Double.parseDouble(value) <= max;
                     }
                 }
                 break;
             case "notBetween":
                 // value是规则设置的范围值（格式：最小值-最大值），triggerValue是设备上报的值
-                String[] valueRangeNot = value.split("-");
+                String[] valueRangeNot = triggerValue.split("-");
                 if (valueRangeNot.length != 2) {
                     log.warn("notBetween操作符要求value格式为'最小值-最大值'，当前值: {}，忽略此次比较", value);
                     result = false;
-                } else if (!isValidNumber(triggerValue) || !isValidNumber(valueRangeNot[0]) || !isValidNumber(valueRangeNot[1])) {
+                } else if (!isValidNumber(value) || !isValidNumber(valueRangeNot[0]) || !isValidNumber(valueRangeNot[1])) {
                     log.warn("notBetween操作符要求triggerValue和value都为有效数字，triggerValue: {}, value: {}，忽略此次比较", triggerValue, value);
                     result = false;
                 } else {
@@ -139,7 +139,7 @@ public class Expression {
                         log.warn("notBetween操作符要求最小值小于等于最大值，当前值: {}，忽略此次比较", value);
                         result = false;
                     } else {
-                        result = Double.parseDouble(triggerValue) < notMin || Double.parseDouble(triggerValue) > notMax;
+                        result = Double.parseDouble(value) < notMin || Double.parseDouble(value) > notMax;
                     }
                 }
                 break;
