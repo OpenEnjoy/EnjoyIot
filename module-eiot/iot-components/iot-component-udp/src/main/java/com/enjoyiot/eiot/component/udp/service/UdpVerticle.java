@@ -25,12 +25,14 @@ public class UdpVerticle extends AbstractVerticle {
 
     private DatagramSocket socket;
     private UdpComponent udpComponent;
-    //private final Map<String, Long> lastSeen = new ConcurrentHashMap<>();
-    private final Map<String, Long> lastSeen = udpComponent.lastSeen;
+    private Map<String, Long> lastSeen;
     private static final long TIMEOUT_MS = 60_000;
     private static final long CLEAN_INTERVAL_MS = 30_000;
 
-
+    public void setUdpComponent(UdpComponent udpComponent) {
+        this.udpComponent = udpComponent;
+        this.lastSeen = udpComponent.lastSeen;
+    }
 
     public void startServer(UdpConfig config) {
         socket = vertx.createDatagramSocket();
