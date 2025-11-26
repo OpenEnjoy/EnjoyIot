@@ -58,5 +58,7 @@ public interface DeviceCtrlService {
 
     DeviceInfo getAndCheckDevice(Long deviceId, boolean checkOwner);
 
-    void bindDevice(Long deviceId, Long parentId);
+    void bindDevice(List<Long> subDeviceIds, Long parentId);
+
+    void unbindDevice(List<Long> subDeviceIds);
 }

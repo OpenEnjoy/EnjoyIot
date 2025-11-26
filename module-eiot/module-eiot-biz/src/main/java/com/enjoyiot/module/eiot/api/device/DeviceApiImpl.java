@@ -172,6 +172,6 @@ public class DeviceApiImpl implements DeviceApi {
 
     @Override
     public List<DeviceInfo> getSubDevicesByProductKeAndDeviceName(String pk, String dn) {
-        return Collections.emptyList();
+        return TenantUtils.executeIgnoreResult(() -> deviceInfoService.findSubDeviceList(pk, dn));
     }
 }

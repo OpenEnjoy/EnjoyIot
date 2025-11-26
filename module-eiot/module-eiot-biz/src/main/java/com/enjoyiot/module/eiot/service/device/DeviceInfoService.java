@@ -113,4 +113,6 @@ public interface DeviceInfoService {
     void savePropertiesCache(Long deviceId, Map<String, DevicePropertyCache> properties);
 
     void clearPropertiesCache(String productKey);
+
+    List<DeviceInfo> getDeviceInfoList(List<Long> subDeviceIds);
 }

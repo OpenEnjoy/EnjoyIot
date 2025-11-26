@@ -333,31 +333,7 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
         deviceInfoMapper.update(null, up);
     }
 
-    @NotNull
-    public DeviceInfo sendUnbindMsg(DeviceInfo device, String parentId) {
-        if (StrUtil.isBlank(parentId)) {
-            return device;
-        }
-        EiotDeviceInfoDO parentDevice = deviceInfoMapper.selectById(parentId);
 
-        if (parentDevice == null) {
-            log.error("sendUnbindMsg : {} parent device not found: {}", device.getDn(), parentId);
-        }
-        try {
-
-            DeviceTopoChangeDTO.DeviceInfo deviceInfo = new DeviceTopoChangeDTO.DeviceInfo();
-            deviceInfo.setDn(device.getDn());
-            deviceInfo.setPk(device.getProductKey());
-            DeviceTopoChangeDTO changeBo = DeviceTopoChangeDTO.builder().status(1).subList(Collections.singletonList(deviceInfo)).build();
-            //下发子设备注销给网关
-            // TODO:
-
-
-        } catch (Throwable e) {
-            log.error("send {} message error", ThingModelMessage.ID_CHANGE, e);
-        }
-        return device;
-    }
 
     @Override
     public DeviceInfo registerDevice(RegisterDevice registerDevice) {
@@ -428,4 +404,10 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
             eiotRedisDAO.clearProperties(deviceIds);
         }
     }
+
+    @Override
+    public List<DeviceInfo> getDeviceInfoList(List<Long> subDeviceIds) {
+        return DeviceInfoConvert.INSTANCE.convertList(deviceInfoMapper.selectByIds(subDeviceIds));
+    }
+
 }
