@@ -278,13 +278,16 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
         }
         String productSecret = product.getProductSecret();
 
-        //校验密码
-        String md5 = MD5.create().digestHex(productSecret + clientId);
-        if (!md5.equals(auth.getPassword())) {
-            log.error("设备认证失败,密码错误,当前:{},期望:{}", auth.getPassword(), md5);
-            endpoint.reject(MqttConnectReturnCode.CONNECTION_REFUSED_BAD_USERNAME_OR_PASSWORD);
-            return;
+        if (false){
+            //校验密码-默认不校验,为了让新手快速上手
+            String md5 = MD5.create().digestHex(productSecret + clientId);
+            if (!md5.equals(auth.getPassword())) {
+                log.error("设备认证失败,密码错误,当前:{},期望:{}", auth.getPassword(), md5);
+                endpoint.reject(MqttConnectReturnCode.CONNECTION_REFUSED_BAD_USERNAME_OR_PASSWORD);
+                return;
+            }
         }
+
 
         //注册设备
         DeviceInfo parentDevice = deviceApi.registerDevice(RegisterDevice.builder()
