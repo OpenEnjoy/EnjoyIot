@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 设备状态检查
@@ -96,8 +97,26 @@ public class DeviceStateCheckHandler implements DeviceMessageHandler {
         if(b && !ThingModelMessage.TYPE_STATE.equals(type)){
             sendDeviceStateChangeMessage(device, state.isOnline() ,time);
         }
+        updateSubDeviceState(device, state, b, type, time);
 
+    }
 
+    private void updateSubDeviceState(DeviceInfo device, DeviceState state, Boolean b, String type, Long time) {
+        if( DeviceInfo.NODE_TYPE_DEVICE == device.getNodeType()){
+             // 网关设备,需要修改其透传子设备的状态
+            List<DeviceInfo> subList = deviceApi.getSubDevicesByProductKeAndDeviceName(device.getProductKey(), device.getName());
+            if(subList != null && !subList.isEmpty()){
+                for (DeviceInfo subDevice : subList) {
+                    Boolean transparent = subDevice.getTransparent();
+                    if (transparent!= null && transparent){
+                        deviceApi.updateDeviceState(subDevice.getId(), state.isOnline());
+                        if(b && !ThingModelMessage.TYPE_STATE.equals(type)){
+                            sendDeviceStateChangeMessage(subDevice, state.isOnline() , time);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void updateDeviceLastTime(DeviceInfo device, ThingModelMessage msg) {
