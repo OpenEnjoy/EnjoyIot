@@ -174,4 +174,9 @@ public class DeviceApiImpl implements DeviceApi {
     public List<DeviceInfo> getSubDevicesByProductKeAndDeviceName(String pk, String dn) {
         return TenantUtils.executeIgnoreResult(() -> deviceInfoService.findSubDeviceList(pk, dn));
     }
+
+    @Override
+    public Boolean deregisterSubDevice(String pk, String dn, String model, String subPkDeregister, String subDnDeregister) {
+        return TenantUtils.executeIgnoreResult(() -> deviceInfoService.subDeRegisterDevice(pk, dn, subPkDeregister,subDnDeregister));
+    }
 }

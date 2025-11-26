@@ -115,4 +115,6 @@ public interface DeviceInfoService {
     void clearPropertiesCache(String productKey);
 
     List<DeviceInfo> getDeviceInfoList(List<Long> subDeviceIds);
+
+    Boolean subDeRegisterDevice(String pk, String dn, String subPkDeregister, String subDnDeregister1);
 }

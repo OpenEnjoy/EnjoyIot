@@ -60,4 +60,6 @@ public interface DeviceApi {
     void invoke(ThingService<?> service);
 
     List<DeviceInfo> getSubDevicesByProductKeAndDeviceName(String pk, String dn);
+
+    Boolean deregisterSubDevice(String pk, String dn, String model, String subPkDeregister, String subDnDeregister);
 }

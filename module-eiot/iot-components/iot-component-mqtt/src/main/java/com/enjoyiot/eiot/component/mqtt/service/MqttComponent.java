@@ -420,6 +420,20 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
                         replyArray(endpoint, topic, payload, 0);
                         break;
 
+                    case "thing.lifetime.deregister":
+                        String subPkDeregister = params.getString("productKey");
+                        String subDnDeregister = params.getString("deviceName");
+                        Boolean ret = deviceApi.deregisterSubDevice(pk, dn, model, subPkDeregister, subDnDeregister);
+                        if (ret) {
+                            //取消绑定注册成功
+                            reply(endpoint, topic, payload);
+                        } else {
+                            //取消绑定失败
+                            reply(endpoint, topic, new JsonObject(), -1);
+                        }
+
+                        break;
+
                     case "thing.event.property.post":
                         //属性上报
                         report(PropertyReport.builder()

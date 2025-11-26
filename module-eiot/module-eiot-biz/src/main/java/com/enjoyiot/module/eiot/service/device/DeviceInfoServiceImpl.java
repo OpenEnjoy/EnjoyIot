@@ -154,6 +154,25 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
         return ret;
     }
 
+    void clearDeviceCache(Long deviceId, String productKey, String deviceName) {
+        DeviceInfo deviceInfo = null;
+        if (deviceId != null){
+            deviceInfo = getDeviceInfoFromCache(deviceId);
+        }
+        if (ObjectUtil.isNull(deviceInfo) && StringUtils.isNotBlank(productKey)&& StringUtils.isNotBlank(deviceName)) {
+            deviceInfo = getDeviceByPkDnByCache(productKey, deviceName);
+        }
+        if (deviceInfo == null) {
+            return;
+        }
+        Long id = deviceInfo.getId();
+
+        clearCache(RedisKeyConstants.DEVICE_ID, id.toString());
+        clearCache(RedisKeyConstants.DEVICE, deviceInfo.getProductKey() + "_" + deviceInfo.getDn());
+
+        return;
+    }
+
     private void clearCache(String cacheName, String key) {
         Cache cache = cacheManager.getCache(cacheName);
         if (cache != null) {
@@ -334,7 +353,6 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
     }
 
 
-
     @Override
     public DeviceInfo registerDevice(RegisterDevice registerDevice) {
         String productKey = registerDevice.getProductKey();
@@ -408,6 +426,18 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
     @Override
     public List<DeviceInfo> getDeviceInfoList(List<Long> subDeviceIds) {
         return DeviceInfoConvert.INSTANCE.convertList(deviceInfoMapper.selectByIds(subDeviceIds));
+    }
+
+    @Override
+    public Boolean subDeRegisterDevice(String pk, String dn, String subPkDeregister, String subDnDeregister) {
+        DeviceInfo subDevice = getDeviceByPkDnByCache(pk, dn);
+        if (ObjectUtil.isNull(subDevice)){
+            return Boolean.TRUE;
+        }
+        deviceInfoMapper.update(null, new LambdaUpdateWrapper<EiotDeviceInfoDO>().set(EiotDeviceInfoDO::getParentId, null).eq(EiotDeviceInfoDO::getId, subDevice.getId()));
+
+        clearDeviceCache(null, subPkDeregister, subDnDeregister);
+        return Boolean.TRUE;
     }
 
 }
