@@ -27,6 +27,7 @@ import com.enjoyiot.eiot.common.thing.ThingService;
 import com.enjoyiot.framework.common.pojo.CommonResult;
 import com.enjoyiot.module.eiot.api.device.dto.*;
 
+import java.util.List;
 import java.util.Map;
 
 public interface DeviceApi {
@@ -57,4 +58,6 @@ public interface DeviceApi {
      * @param service 服务
      */
     void invoke(ThingService<?> service);
+
+    List<DeviceInfo> getSubDevicesByProductKeAndDeviceName(String pk, String dn);
 }

@@ -3,10 +3,7 @@ package com.enjoyiot.eiot.component.http.service;
 import com.enjoyiot.eiot.common.enums.DeviceState;
 import com.enjoyiot.eiot.component.core.ComponentServices;
 import com.enjoyiot.eiot.component.core.ThingComponent;
-import com.enjoyiot.eiot.component.core.model.down.DeviceConfig;
-import com.enjoyiot.eiot.component.core.model.down.PropertyGet;
-import com.enjoyiot.eiot.component.core.model.down.PropertySet;
-import com.enjoyiot.eiot.component.core.model.down.ServiceInvoke;
+import com.enjoyiot.eiot.component.core.model.down.*;
 import com.enjoyiot.eiot.component.core.model.up.DeviceStateChange;
 import com.enjoyiot.eiot.component.core.model.up.EventReport;
 import com.enjoyiot.eiot.component.core.model.up.PropertyReport;
@@ -95,6 +92,11 @@ public class HttpComponent extends ThingComponent implements Handler<RoutingCont
     }
 
     @Override
+    protected void deviceOta(DeviceOta action) {
+
+    }
+
+    @Override
     protected void serviceInvoke(ServiceInvoke action) {
         throw new UnsupportedOperationException("不支持该功能");
     }
@@ -112,6 +114,11 @@ public class HttpComponent extends ThingComponent implements Handler<RoutingCont
     @Override
     protected void deviceConfig(DeviceConfig action) {
         throw new UnsupportedOperationException("不支持该功能");
+    }
+
+    @Override
+    protected void deviceTopoChange(DeviceTopoChange action) {
+
     }
 
     @Override

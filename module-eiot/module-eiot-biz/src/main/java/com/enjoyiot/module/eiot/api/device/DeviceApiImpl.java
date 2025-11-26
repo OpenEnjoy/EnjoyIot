@@ -41,6 +41,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -166,5 +168,10 @@ public class DeviceApiImpl implements DeviceApi {
             DeviceInfo device = deviceInfoService.getDeviceByPkDnByCache(service.getProductKey(), service.getDn());
             deviceCtrlService.invokeService(device.getId(),service.getIdentifier(), (Map<String, Object>) service.getParams());
         });
+    }
+
+    @Override
+    public List<DeviceInfo> getSubDevicesByProductKeAndDeviceName(String pk, String dn) {
+        return Collections.emptyList();
     }
 }

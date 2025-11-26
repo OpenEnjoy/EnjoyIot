@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.enjoyiot.eiot.common.enums.DeviceState;
 import com.enjoyiot.eiot.component.core.ComponentServices;
 import com.enjoyiot.eiot.component.core.ThingComponent;
-import com.enjoyiot.eiot.component.core.model.down.DeviceConfig;
-import com.enjoyiot.eiot.component.core.model.down.PropertyGet;
-import com.enjoyiot.eiot.component.core.model.down.PropertySet;
-import com.enjoyiot.eiot.component.core.model.down.ServiceInvoke;
+import com.enjoyiot.eiot.component.core.model.down.*;
 import com.enjoyiot.eiot.component.core.model.up.DeviceStateChange;
 import com.enjoyiot.eiot.component.core.model.up.EventReport;
 import com.enjoyiot.eiot.component.core.model.up.PropertyReport;
@@ -104,6 +101,11 @@ public class UdpComponent extends ThingComponent {
         udpVerticle.stopServer();
         udpVerticle.startServer(udpConfigKey);
         return true;
+    }
+
+    @Override
+    protected void deviceOta(DeviceOta action) {
+
     }
 
     /**
@@ -340,4 +342,9 @@ public class UdpComponent extends ThingComponent {
     @Override protected void propertyGet(PropertyGet action)       { throw new UnsupportedOperationException("UDP 不支持属性获取"); }
     @Override protected void propertySet(PropertySet action)       { throw new UnsupportedOperationException("UDP 不支持属性设置"); }
     @Override protected void deviceConfig(DeviceConfig action)     { throw new UnsupportedOperationException("UDP 不支持配置下发"); }
+
+    @Override
+    protected void deviceTopoChange(DeviceTopoChange action) {
+
+    }
 }

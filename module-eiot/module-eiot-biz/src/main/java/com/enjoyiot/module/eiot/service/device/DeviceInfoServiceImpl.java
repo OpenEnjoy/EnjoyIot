@@ -26,8 +26,10 @@ package com.enjoyiot.module.eiot.service.device;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.enjoyiot.eiot.common.thing.ThingModelMessage;
 import com.enjoyiot.framework.common.exception.ServiceException;
 import com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil;
 import com.enjoyiot.framework.common.pojo.PageResult;
@@ -35,10 +37,7 @@ import com.enjoyiot.framework.common.util.object.BeanUtils;
 import com.enjoyiot.framework.common.util.validation.ValidationUtils;
 import com.enjoyiot.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.enjoyiot.framework.tenant.core.aop.TenantIgnore;
-import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
-import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
-import com.enjoyiot.module.eiot.api.device.dto.DeviceShortInfo;
-import com.enjoyiot.module.eiot.api.device.dto.RegisterDevice;
+import com.enjoyiot.module.eiot.api.device.dto.*;
 import com.enjoyiot.module.eiot.api.enums.ErrorCodeConstants;
 import com.enjoyiot.module.eiot.api.product.dto.Product;
 import com.enjoyiot.module.eiot.controller.admin.device.vo.*;
@@ -53,8 +52,10 @@ import com.enjoyiot.module.eiot.dal.mysql.product.ProductMapper;
 import com.enjoyiot.module.eiot.dal.redis.RedisKeyConstants;
 import com.enjoyiot.module.eiot.dal.redis.no.EiotRedisDAO;
 import com.enjoyiot.module.eiot.service.product.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
@@ -78,6 +79,7 @@ import static com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil.
  */
 @Service
 @Validated
+@Slf4j
 public class DeviceInfoServiceImpl implements DeviceInfoService {
 
     @Resource
@@ -329,6 +331,32 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
         up.in(EiotDeviceInfoDO::getId, unbindReqVO.getIdList());
         up.set(EiotDeviceInfoDO::getParentId, null);
         deviceInfoMapper.update(null, up);
+    }
+
+    @NotNull
+    public DeviceInfo sendUnbindMsg(DeviceInfo device, String parentId) {
+        if (StrUtil.isBlank(parentId)) {
+            return device;
+        }
+        EiotDeviceInfoDO parentDevice = deviceInfoMapper.selectById(parentId);
+
+        if (parentDevice == null) {
+            log.error("sendUnbindMsg : {} parent device not found: {}", device.getDn(), parentId);
+        }
+        try {
+
+            DeviceTopoChangeDTO.DeviceInfo deviceInfo = new DeviceTopoChangeDTO.DeviceInfo();
+            deviceInfo.setDn(device.getDn());
+            deviceInfo.setPk(device.getProductKey());
+            DeviceTopoChangeDTO changeBo = DeviceTopoChangeDTO.builder().status(1).subList(Collections.singletonList(deviceInfo)).build();
+            //下发子设备注销给网关
+            // TODO:
+
+
+        } catch (Throwable e) {
+            log.error("send {} message error", ThingModelMessage.ID_CHANGE, e);
+        }
+        return device;
     }
 
     @Override

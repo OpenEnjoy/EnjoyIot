@@ -27,10 +27,7 @@ import cn.hutool.core.util.IdUtil;
 import com.enjoyiot.eiot.common.thing.ThingModelMessage;
 import com.enjoyiot.eiot.component.core.model.ActionType;
 import com.enjoyiot.eiot.common.enums.DeviceState;
-import com.enjoyiot.eiot.component.core.model.down.DeviceConfig;
-import com.enjoyiot.eiot.component.core.model.down.PropertyGet;
-import com.enjoyiot.eiot.component.core.model.down.PropertySet;
-import com.enjoyiot.eiot.component.core.model.down.ServiceInvoke;
+import com.enjoyiot.eiot.component.core.model.down.*;
 import com.enjoyiot.eiot.component.core.model.up.*;
 import com.enjoyiot.module.eiot.api.component.dto.ComponentInfo;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
@@ -98,6 +95,9 @@ public abstract class ThingComponent extends AbstractComponent {
             case ThingModelMessage.TYPE_OTA:
                 doOta(message);
                 break;
+            case ThingModelMessage.TYPE_TOPO_CHANGE:
+                topoChange( message);
+                break;
         }
     }
 
@@ -145,10 +145,31 @@ public abstract class ThingComponent extends AbstractComponent {
                 .config(message.dataToMap())
                 .build());
     }
+    /**
+     * 通知网关设备拓扑图变化
+     *
+     * @param action 动作
+     * @return result
+     */
+    protected void topoChange(ThingModelMessage action) {
+        deviceTopoChange(DeviceTopoChange.builder()
+                .productKey(action.getProductKey())
+                .deviceName(action.getDn())
+                .params(action.dataToMap())
+                .build());
+    }
+
 
     private void doOta(ThingModelMessage message) {
-
+        deviceOta(DeviceOta.builder().id(message.getId())
+                .productKey(message.getProductKey())
+                .deviceName(message.getDn())
+                .data(message.getData())
+                .build()
+        );
     }
+
+    protected abstract void deviceOta(DeviceOta action);
 
     protected abstract void serviceInvoke(ServiceInvoke action);
 
@@ -158,6 +179,7 @@ public abstract class ThingComponent extends AbstractComponent {
 
     protected abstract void deviceConfig(DeviceConfig action);
 
+    protected abstract void deviceTopoChange(DeviceTopoChange action);
     public void report(ReportAction action) {
         ActionType type = action.getType();
         ThingModelMessage message = null;

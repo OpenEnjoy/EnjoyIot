@@ -24,13 +24,11 @@
 package com.enjoyiot.eiot.component.mqtt.service;
 
 import cn.hutool.crypto.digest.MD5;
+import cn.hutool.json.JSONUtil;
 import com.enjoyiot.eiot.component.core.ComponentServices;
 import com.enjoyiot.eiot.component.core.ThingComponent;
 import com.enjoyiot.eiot.common.enums.DeviceState;
-import com.enjoyiot.eiot.component.core.model.down.DeviceConfig;
-import com.enjoyiot.eiot.component.core.model.down.PropertyGet;
-import com.enjoyiot.eiot.component.core.model.down.PropertySet;
-import com.enjoyiot.eiot.component.core.model.down.ServiceInvoke;
+import com.enjoyiot.eiot.component.core.model.down.*;
 import com.enjoyiot.eiot.component.core.model.up.DeviceStateChange;
 import com.enjoyiot.eiot.component.core.model.up.EventReport;
 import com.enjoyiot.eiot.component.core.model.up.PropertyReport;
@@ -49,6 +47,7 @@ import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mqtt.MqttAuth;
 import io.vertx.mqtt.MqttEndpoint;
@@ -136,6 +135,19 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
     }
 
     @Override
+    protected void deviceOta(DeviceOta action) {
+        String topic = String.format("/ota/deivce/upgrade/%s/%s", action.getProductKey(), action.getDeviceName());
+        publish(action.getProductKey(),
+                action.getDeviceName(),
+                topic,
+                new JsonObject()
+                        .put("id", action.getId())
+                        .put("code", "200")
+                        .put("data", JSONUtil.parse(action.getData())).toString()
+        );
+    }
+
+    @Override
     protected void propertyGet(PropertyGet action) {
         String topic = String.format("/sys/%s/%s/c/service/property/get", action.getProductKey(), action.getDeviceName());
         publish(
@@ -160,6 +172,21 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
                 new JsonObject()
                         .put("id", action.getId())
                         .put("method", "thing.service.property.set")
+                        .put("params", action.getParams())
+                        .toString()
+        );
+    }
+
+    @Override
+    public void deviceTopoChange(DeviceTopoChange action) {
+        String topic = String.format("/sys/%s/%s/c/topo/change", action.getProductKey(), action.getDeviceName());
+         publish(
+                action.getProductKey(),
+                action.getDeviceName(),
+                topic,
+                new JsonObject()
+                        .put("id", action.getId())
+                        .put("method", "thing.topo.change")
                         .put("params", action.getParams())
                         .toString()
         );
@@ -363,6 +390,11 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
                     case "thing.lifetime.register":
                         //子设备注册
                         subPk = params.getString("productKey");
+                        if (parentDevice.getProductKey().equals(subPk)) {
+                            //防呆
+                            log.warn("你自己注册自己? wtf ? 注册子产品Key与父产品Key相同");
+                            return;
+                        }
                         subDn = params.getString("deviceName");
                         String subModel = params.getString("model");
                         try {
@@ -381,6 +413,13 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
                             reply(endpoint, topic, new JsonObject(), -1);
                         }
                         return;
+                    case "thing.topo.get":
+                        //网关获取拓扑关系
+                        List<DeviceInfo> subDeviceList = deviceApi.getSubDevicesByProductKeAndDeviceName(pk, dn);
+                        payload.put("params", new JsonArray(JsonUtils.toJsonString(subDeviceList)));
+                        replyArray(endpoint, topic, payload, 0);
+                        break;
+
                     case "thing.event.property.post":
                         //属性上报
                         report(PropertyReport.builder()
@@ -473,6 +512,19 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
      */
     private void reply(MqttEndpoint endpoint, String topic, JsonObject payload) {
         reply(endpoint, topic, payload, 0);
+    }
+
+    /**
+     * 回复设备
+     */
+    private void replyArray(MqttEndpoint endpoint, String topic, JsonObject payload, int code) {
+        Map<String, Object> payloadReply = new HashMap<>();
+        payloadReply.put("id", payload.getString("id"));
+        payloadReply.put("method", payload.getString("method") + "_reply");
+        payloadReply.put("code", code);
+        payloadReply.put("data", payload.getJsonArray("params"));
+
+        endpoint.publish(topic.replace("/s/", "/c/") + "_reply", JsonObject.mapFrom(payloadReply).toBuffer(), MqttQoS.AT_LEAST_ONCE, false, false);
     }
 
     /**

@@ -14,10 +14,7 @@ import com.enjoyiot.eiot.common.enums.DeviceState;
 import com.enjoyiot.eiot.common.utils.HexUtil;
 import com.enjoyiot.eiot.component.core.ComponentServices;
 import com.enjoyiot.eiot.component.core.ThingComponent;
-import com.enjoyiot.eiot.component.core.model.down.DeviceConfig;
-import com.enjoyiot.eiot.component.core.model.down.PropertyGet;
-import com.enjoyiot.eiot.component.core.model.down.PropertySet;
-import com.enjoyiot.eiot.component.core.model.down.ServiceInvoke;
+import com.enjoyiot.eiot.component.core.model.down.*;
 import com.enjoyiot.eiot.component.core.model.up.DeviceStateChange;
 import com.enjoyiot.eiot.component.core.model.up.PropertyReport;
 import com.enjoyiot.eiot.component.modbusCustom.cilent.VertxModbusClient;
@@ -292,6 +289,11 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
         return true;
     }
 
+    @Override
+    protected void deviceOta(DeviceOta action) {
+
+    }
+
     private void cancelTasks() {
         if (readTaskFuture != null) {
             readTaskFuture.cancel(true);
@@ -375,6 +377,11 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
 
     @Override
     protected void deviceConfig(DeviceConfig action) {
+
+    }
+
+    @Override
+    protected void deviceTopoChange(DeviceTopoChange action) {
 
     }
 

@@ -24,11 +24,13 @@ package com.enjoyiot.module.eiot.service.device;
 
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.enjoyiot.eiot.common.thing.ThingModelMessage;
 import com.enjoyiot.eiot.virtualdevice.VirtualManager;
 import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceConfig;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
+import com.enjoyiot.module.eiot.api.device.dto.DeviceTopoChangeDTO;
 import com.enjoyiot.module.eiot.service.component.ComponentManager;
 import com.enjoyiot.module.eiot.service.iot.ParseThingModelService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +38,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -148,6 +151,29 @@ public class DeviceCtrlServiceImpl implements DeviceCtrlService {
     @Override
     public DeviceInfo getAndCheckDevice(Long deviceId, boolean checkOwner) {
         return deviceInfoService.getDeviceInfo(deviceId);
+    }
+
+    @Override
+    public void bindDevice(Long deviceId, Long parentId) {
+        DeviceInfo subDevice = deviceInfoService.getDeviceInfoFromCache(deviceId);
+        DeviceInfo parentDevice = deviceInfoService.getDeviceInfoFromCache(parentId);
+
+        if(ObjectUtil.isNull(subDevice)|| ObjectUtil.isNull(parentDevice)){
+            return;
+        }
+        try {
+
+            DeviceTopoChangeDTO.DeviceInfo deviceInfo = new DeviceTopoChangeDTO.DeviceInfo();
+            deviceInfo.setDn(subDevice.getDn());
+            deviceInfo.setPk(subDevice.getProductKey());
+            DeviceTopoChangeDTO changeBo = DeviceTopoChangeDTO.builder().status(0).subList(Collections.singletonList(deviceInfo)).build();
+            //下发子设备绑定给网关
+            send(parentDevice.getId(), parentDevice.getProductKey(), parentDevice.getDn(),
+                    changeBo,
+                    ThingModelMessage.TYPE_TOPO_CHANGE, ThingModelMessage.ID_CHANGE);
+        } catch (Throwable e) {
+            log.error("send {} message error", ThingModelMessage.ID_CHANGE, e);
+        }
     }
 
     /**
