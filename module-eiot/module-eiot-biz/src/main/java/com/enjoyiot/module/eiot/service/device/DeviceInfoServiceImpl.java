@@ -431,7 +431,7 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
 
     @Override
     public Boolean subDeRegisterDevice(String pk, String dn, String subPkDeregister, String subDnDeregister) {
-        DeviceInfo subDevice = getDeviceByPkDnByCache(pk, dn);
+        DeviceInfo subDevice = getDeviceByPkDnByCache(subPkDeregister, subDnDeregister);
         if (ObjectUtil.isNull(subDevice)){
             return Boolean.TRUE;
         }
