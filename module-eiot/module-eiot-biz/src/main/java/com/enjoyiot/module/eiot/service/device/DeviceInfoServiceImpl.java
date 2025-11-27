@@ -116,6 +116,7 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
         deviceInfo.setNodeType(productDO.getNodeType());
         deviceInfo.setState(DeviceInfo.STATE_NOT_ACTIVE);
         deviceInfo.setTenantId(productDO.getTenantId());
+        deviceInfo.setTransparent(productDO.getTransparent());
         deviceInfoMapper.insert(deviceInfo);
         // 返回
         return deviceInfo.getId();

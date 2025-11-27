@@ -23,14 +23,18 @@
 package com.enjoyiot.eiot.ruleengine.handler.sys;
 
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.IdUtil;
 import com.enjoyiot.eiot.common.constant.Constants;
 import com.enjoyiot.eiot.common.enums.DeviceState;
 import com.enjoyiot.eiot.common.thing.ThingModelMessage;
 import com.enjoyiot.eiot.message.core.MqProducer;
 import com.enjoyiot.eiot.ruleengine.handler.DeviceMessageHandler;
+import com.enjoyiot.framework.common.util.collection.CollectionUtils;
 import com.enjoyiot.module.eiot.api.device.DeviceApi;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
+import com.enjoyiot.module.eiot.api.product.ProductApi;
+import com.enjoyiot.module.eiot.api.product.dto.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,13 +106,11 @@ public class DeviceStateCheckHandler implements DeviceMessageHandler {
     }
 
     private void updateSubDeviceState(DeviceInfo device, DeviceState state, Boolean b, String type, Long time) {
-        if( DeviceInfo.NODE_TYPE_DEVICE == device.getNodeType()){
-             // 网关设备,需要修改其透传子设备的状态
-            List<DeviceInfo> subList = deviceApi.getSubDevicesByProductKeAndDeviceName(device.getProductKey(), device.getName());
-            if(subList != null && !subList.isEmpty()){
+        if( DeviceInfo.NODE_TYPE_GATEWAY == device.getNodeType()){
+            List<DeviceInfo> subList = deviceApi.getSubDevicesByProductKeAndDeviceName(device.getProductKey(), device.getDn());
+            if(CollectionUtil.isNotEmpty(subList)){
                 for (DeviceInfo subDevice : subList) {
-                    Boolean transparent = subDevice.getTransparent();
-                    if (transparent!= null && transparent){
+                    if (subDevice != null && subDevice.getTransparent()){
                         deviceApi.updateDeviceState(subDevice.getId(), state.isOnline());
                         if(b && !ThingModelMessage.TYPE_STATE.equals(type)){
                             sendDeviceStateChangeMessage(subDevice, state.isOnline() , time);
