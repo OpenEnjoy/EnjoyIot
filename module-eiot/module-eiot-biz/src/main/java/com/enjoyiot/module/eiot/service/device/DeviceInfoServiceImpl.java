@@ -26,8 +26,10 @@ package com.enjoyiot.module.eiot.service.device;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.enjoyiot.eiot.common.thing.ThingModelMessage;
 import com.enjoyiot.framework.common.exception.ServiceException;
 import com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil;
 import com.enjoyiot.framework.common.pojo.PageResult;
@@ -35,10 +37,7 @@ import com.enjoyiot.framework.common.util.object.BeanUtils;
 import com.enjoyiot.framework.common.util.validation.ValidationUtils;
 import com.enjoyiot.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.enjoyiot.framework.tenant.core.aop.TenantIgnore;
-import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
-import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
-import com.enjoyiot.module.eiot.api.device.dto.DeviceShortInfo;
-import com.enjoyiot.module.eiot.api.device.dto.RegisterDevice;
+import com.enjoyiot.module.eiot.api.device.dto.*;
 import com.enjoyiot.module.eiot.api.enums.ErrorCodeConstants;
 import com.enjoyiot.module.eiot.api.product.dto.Product;
 import com.enjoyiot.module.eiot.controller.admin.device.vo.*;
@@ -53,8 +52,10 @@ import com.enjoyiot.module.eiot.dal.mysql.product.ProductMapper;
 import com.enjoyiot.module.eiot.dal.redis.RedisKeyConstants;
 import com.enjoyiot.module.eiot.dal.redis.no.EiotRedisDAO;
 import com.enjoyiot.module.eiot.service.product.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
@@ -78,6 +79,7 @@ import static com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil.
  */
 @Service
 @Validated
+@Slf4j
 public class DeviceInfoServiceImpl implements DeviceInfoService {
 
     @Resource
@@ -114,6 +116,7 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
         deviceInfo.setNodeType(productDO.getNodeType());
         deviceInfo.setState(DeviceInfo.STATE_NOT_ACTIVE);
         deviceInfo.setTenantId(productDO.getTenantId());
+        deviceInfo.setTransparent(productDO.getTransparent());
         deviceInfoMapper.insert(deviceInfo);
         // 返回
         return deviceInfo.getId();
@@ -150,6 +153,25 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
             clearCache(RedisKeyConstants.DEVICE, deviceInfo.getProductKey() + ":" + deviceInfo.getDn());
         }
         return ret;
+    }
+
+    void clearDeviceCache(Long deviceId, String productKey, String deviceName) {
+        DeviceInfo deviceInfo = null;
+        if (deviceId != null){
+            deviceInfo = getDeviceInfoFromCache(deviceId);
+        }
+        if (ObjectUtil.isNull(deviceInfo) && StringUtils.isNotBlank(productKey)&& StringUtils.isNotBlank(deviceName)) {
+            deviceInfo = getDeviceByPkDnByCache(productKey, deviceName);
+        }
+        if (deviceInfo == null) {
+            return;
+        }
+        Long id = deviceInfo.getId();
+
+        clearCache(RedisKeyConstants.DEVICE_ID, id.toString());
+        clearCache(RedisKeyConstants.DEVICE, deviceInfo.getProductKey() + "_" + deviceInfo.getDn());
+
+        return;
     }
 
     private void clearCache(String cacheName, String key) {
@@ -331,6 +353,7 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
         deviceInfoMapper.update(null, up);
     }
 
+
     @Override
     public DeviceInfo registerDevice(RegisterDevice registerDevice) {
         String productKey = registerDevice.getProductKey();
@@ -400,4 +423,22 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
             eiotRedisDAO.clearProperties(deviceIds);
         }
     }
+
+    @Override
+    public List<DeviceInfo> getDeviceInfoList(List<Long> subDeviceIds) {
+        return DeviceInfoConvert.INSTANCE.convertList(deviceInfoMapper.selectByIds(subDeviceIds));
+    }
+
+    @Override
+    public Boolean subDeRegisterDevice(String pk, String dn, String subPkDeregister, String subDnDeregister) {
+        DeviceInfo subDevice = getDeviceByPkDnByCache(subPkDeregister, subDnDeregister);
+        if (ObjectUtil.isNull(subDevice)){
+            return Boolean.TRUE;
+        }
+        deviceInfoMapper.update(null, new LambdaUpdateWrapper<EiotDeviceInfoDO>().set(EiotDeviceInfoDO::getParentId, null).eq(EiotDeviceInfoDO::getId, subDevice.getId()));
+
+        clearDeviceCache(null, subPkDeregister, subDnDeregister);
+        return Boolean.TRUE;
+    }
+
 }

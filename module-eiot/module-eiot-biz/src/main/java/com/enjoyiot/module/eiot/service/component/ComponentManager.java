@@ -94,11 +94,6 @@ public class ComponentManager implements ConsumerHandler<ComponentMessage> {
         producer.publish(Constants.getSendToDeviceTopic(router), msg);
     }
 
-    @NotNull
-    private static String getSendToDeviceTopic(String componentType) {
-        return String.format("%s/%s", componentType, THING_MODEL_MESSAGE_TOPIC);
-    }
-
     private void componentDiscover(ComponentMessage msg) {
         //组件类型
         String type = msg.getType();

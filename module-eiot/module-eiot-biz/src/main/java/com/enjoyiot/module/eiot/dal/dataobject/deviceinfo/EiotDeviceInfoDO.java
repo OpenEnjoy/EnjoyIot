@@ -111,4 +111,5 @@ public class EiotDeviceInfoDO extends TenantBaseDO {
 
     private Integer nodeType;
 
+    private Boolean transparent;
 }

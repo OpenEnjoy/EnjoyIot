@@ -60,6 +60,7 @@ public class ThingModelMessage {
     public static final String ID_REGISTER = "register";
     public static final String SERVICE_REPLY_SUFFIX = "_reply";
 
+    public static final String TYPE_TOPO_CHANGE = "topo_change";
 
     private String id;
 

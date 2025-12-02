@@ -26,10 +26,7 @@ package com.enjoyiot.eiot.component.emqx.service;
 
 import com.enjoyiot.eiot.component.core.ComponentServices;
 import com.enjoyiot.eiot.component.core.ThingComponent;
-import com.enjoyiot.eiot.component.core.model.down.DeviceConfig;
-import com.enjoyiot.eiot.component.core.model.down.PropertyGet;
-import com.enjoyiot.eiot.component.core.model.down.PropertySet;
-import com.enjoyiot.eiot.component.core.model.down.ServiceInvoke;
+import com.enjoyiot.eiot.component.core.model.down.*;
 
 import com.enjoyiot.eiot.component.emqx.model.MqttConfig;
 
@@ -95,6 +92,11 @@ public class EmqxComponent extends ThingComponent {
         return true;
     }
 
+    @Override
+    protected void deviceOta(DeviceOta action) {
+
+    }
+
 
     @Override
     protected void serviceInvoke(ServiceInvoke action) {
@@ -155,6 +157,11 @@ public class EmqxComponent extends ThingComponent {
                         .put("params", action.getConfig())
                         .toString()
         );
+    }
+
+    @Override
+    protected void deviceTopoChange(DeviceTopoChange action) {
+
     }
 
     private void publish(String pk, String dn, String topic, String msg) {
