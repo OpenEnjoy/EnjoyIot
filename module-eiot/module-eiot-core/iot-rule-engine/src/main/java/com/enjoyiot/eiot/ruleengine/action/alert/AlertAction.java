@@ -60,4 +60,15 @@ public class AlertAction implements Action<AlertService> {
         return results;
     }
 
+    /**
+     * 告警解除动作，使用恢复脚本（如未配置则复用触发脚本）
+     */
+    public List<String> recover(ThingModelMessage msg) {
+        List<String> results = new ArrayList<>();
+        for (AlertService service : services) {
+            results.add(service.executeRecover(msg));
+        }
+        return results;
+    }
+
 }

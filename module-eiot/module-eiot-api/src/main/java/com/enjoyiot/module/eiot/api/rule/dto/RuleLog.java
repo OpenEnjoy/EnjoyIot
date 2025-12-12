@@ -35,6 +35,7 @@ public class RuleLog {
     public static final String STATE_MATCHED_FILTER = "matched_filter";
     public static final String STATE_UNMATCHED_FILTER = "unmatched_filter";
     public static final String STATE_EXECUTED_ACTION = "executed_action";
+    public static final String STATE_RECOVERED = "recovered";
 
     private Long id;
 
