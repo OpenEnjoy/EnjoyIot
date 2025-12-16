@@ -29,6 +29,7 @@ import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.module.eiot.api.rule.dto.FilterConfig;
 import com.enjoyiot.module.eiot.api.rule.dto.RuleInfo;
+import com.enjoyiot.module.eiot.api.rule.dto.TriggerOptions;
 import com.enjoyiot.module.eiot.api.task.dto.RuleAction;
 import com.enjoyiot.module.eiot.controller.admin.rule.vo.EiotRuleInfoSaveReqVO;
 import com.enjoyiot.module.eiot.dal.dataobject.ruleinfo.EiotRuleInfoDO;
@@ -55,6 +56,7 @@ public interface RuleInfoConvert {
             @Mapping(source = "actions", target = "actions", qualifiedByName = {"stringToRuleActionList"}),
 //            @Mapping(source = "actions", target = "actions", ignore = true),
             @Mapping(source = "filters", target = "filters", qualifiedByName = {"stringToFilterConfigList"}),
+            @Mapping(source = "triggerOptions", target = "triggerOptions", qualifiedByName = {"stringToTriggerOptions"})
     })
     RuleInfo convert(EiotRuleInfoDO ylRuleInfoDO);
 
@@ -76,6 +78,14 @@ public interface RuleInfoConvert {
         return JsonUtils.parseArray(jsonString, RuleAction.class);
     }
 
+    @Named("stringToTriggerOptions")
+    default TriggerOptions stringToTriggerOptions(String jsonString) {
+        if (StrUtil.isBlank(jsonString)) {
+            return new TriggerOptions();
+        }
+        return JsonUtils.parseObject(jsonString, TriggerOptions.class);
+    }
+
 
     RuleInfo edit2Info(EiotRuleInfoSaveReqVO createReqVO);
 
@@ -83,6 +93,7 @@ public interface RuleInfoConvert {
             @Mapping(source = "listeners", target = "listeners", qualifiedByName = {"filterConfigList2string"}),
             @Mapping(source = "actions", target = "actions", qualifiedByName = {"ruleActionList2string"}),
             @Mapping(source = "filters", target = "filters", qualifiedByName = {"filterConfigList2string"}),
+            @Mapping(source = "triggerOptions", target = "triggerOptions", qualifiedByName = {"triggerOptions2string"})
     })
     EiotRuleInfoDO toDo(RuleInfo ruleInfo);
 
@@ -100,6 +111,14 @@ public interface RuleInfoConvert {
             return "[]";
         }
         return JsonUtils.toJsonString(listeners);
+    }
+
+    @Named("triggerOptions2string")
+    default String triggerOptions2string(TriggerOptions triggerOptions) {
+        if (triggerOptions == null) {
+            return "{}";
+        }
+        return JsonUtils.toJsonString(triggerOptions);
     }
 
 }

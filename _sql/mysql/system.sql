@@ -604,6 +604,7 @@ CREATE TABLE `eiot_rule_info`  (
                                    `listeners` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL COMMENT '监听器',
                                    `filters` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL COMMENT '过滤器',
                                    `actions` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL COMMENT '动作',
+                                   `trigger_options` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL COMMENT '触发控制配置(JSON)',
                                    `typ` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '类型(scene数据流转 flow场景联动)',
                                    `state` tinyint NULL DEFAULT NULL COMMENT '状态(0启用 1禁用)',
                                    `remark` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '描述',

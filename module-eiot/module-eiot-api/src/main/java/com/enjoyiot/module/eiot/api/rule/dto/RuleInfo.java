@@ -23,6 +23,7 @@
 package com.enjoyiot.module.eiot.api.rule.dto;
 
 import com.enjoyiot.module.eiot.api.task.dto.RuleAction;
+import com.enjoyiot.module.eiot.api.rule.dto.TriggerOptions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -54,6 +55,11 @@ public class RuleInfo {
 
     private List<RuleAction> actions;
 
+    /**
+     * 触发控制配置：频率限制 / 延时触发 / 告警解除
+     */
+    private TriggerOptions triggerOptions;
+
 
 
     private Integer state;
@@ -75,5 +81,9 @@ public class RuleInfo {
 
     public List<RuleAction> getActions() {
         return actions == null ? new ArrayList<>() : actions;
+    }
+
+    public TriggerOptions getTriggerOptions() {
+        return triggerOptions == null ? new TriggerOptions() : triggerOptions;
     }
 }

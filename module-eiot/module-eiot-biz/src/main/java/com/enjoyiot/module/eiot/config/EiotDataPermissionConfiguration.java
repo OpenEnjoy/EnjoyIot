@@ -1,11 +1,12 @@
+
 /*
  *
  *  * | Licensed 未经许可不能去掉「Enjoy-iot」相关版权
  *  * +----------------------------------------------------------------------
- *  * | Author: xw2sy@163.com
+ *  * | Author: xw2sy@163.com | Tel: 19918996474
  *  * +----------------------------------------------------------------------
  *
- *  Copyright [2025] [Enjoy-iot]
+ *  Copyright [2025] [Enjoy-iot] | Tel: 19918996474
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,32 +21,27 @@
  *  limitations under the License.
  * /
  */
-package com.enjoyiot.module.eiot.api.rule.dto;
+package com.enjoyiot.module.eiot.config;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.enjoyiot.framework.datapermission.core.rule.dept.DeptDataPermissionRuleCustomizer;
+import com.enjoyiot.module.eiot.dal.dataobject.deviceinfo.EiotDeviceInfoDO;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class RuleLog {
+/**
+ * iot 模块的数据权限 Configuration
+ *
+ * @author ph
+ */
+@Configuration(proxyBeanMethods = false)
+public class EiotDataPermissionConfiguration {
 
-    public static final String STATE_MATCHED_LISTENER = "matched_listener";
-    public static final String STATE_MATCHED_FILTER = "matched_filter";
-    public static final String STATE_UNMATCHED_FILTER = "unmatched_filter";
-    public static final String STATE_EXECUTED_ACTION = "executed_action";
-    public static final String STATE_RECOVERED = "recovered";
+    @Bean
+    public DeptDataPermissionRuleCustomizer iotDeptDataPermissionRuleCustomizer() {
+        return rule -> {
+            // device
+            rule.addDeptColumn(EiotDeviceInfoDO.class);
+        };
+    }
 
-    private Long id;
-
-    private Long ruleId;
-
-    private String state;
-
-    private String content;
-
-    private Boolean success;
-
-    private Long logAt;
 }
