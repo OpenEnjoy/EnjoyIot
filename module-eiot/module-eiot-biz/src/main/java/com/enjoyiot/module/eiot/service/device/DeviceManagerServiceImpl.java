@@ -55,6 +55,7 @@ import com.enjoyiot.module.eiot.dal.dataobject.GroupDO;
 import com.enjoyiot.module.eiot.dal.mysql.EiotIotDeviceGroupMapper;
 import com.enjoyiot.module.eiot.dal.mysql.EiotIotGroupMapper;
 import com.enjoyiot.module.eiot.service.product.ThingModelService;
+import com.enjoyiot.module.eiot.service.device.DeviceConfigService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -89,6 +90,9 @@ public class DeviceManagerServiceImpl implements DeviceManagerService {
 
     @Resource
     private EiotIotDeviceGroupMapper deviceGroupMapper;
+
+    @Resource
+    private DeviceConfigService deviceConfigService;
 
     @Resource
     private MqProducer<ThingModelMessage> producer;
@@ -173,12 +177,19 @@ public class DeviceManagerServiceImpl implements DeviceManagerService {
 
     @Override
     public DeviceConfigVo getConfig(Long deviceId) {
-        return null;
+        DeviceConfig config = deviceConfigService.findByDeviceId(deviceId);
+        if (config == null) {
+            return null;
+        }
+        DeviceConfigVo vo = BeanUtils.toBean(config, DeviceConfigVo.class);
+        vo.setDeviceId(String.valueOf(config.getDeviceId()));
+        vo.setCreateAt(config.getCreateAt());
+        return vo;
     }
 
     @Override
     public Boolean saveConfig(DeviceConfig data) {
-        return null;
+        return deviceConfigService.saveConfig(data);
     }
 
     @Override

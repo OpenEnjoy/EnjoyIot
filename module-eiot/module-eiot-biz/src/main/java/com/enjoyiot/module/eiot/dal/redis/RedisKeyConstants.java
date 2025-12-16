@@ -52,6 +52,13 @@ public interface RedisKeyConstants {
     String DEVICE_PROPERTY="iot:deviceProperty:";
 
     /**
+     * 设备配置缓存
+     */
+    String DEVICE_CONFIG = "iot:deviceConfig";
+
+    String DEVICE_ID_CONFIG = "iot:deviceIdConfig";
+
+    /**
      产品物模型缓存
      */
     String THING_MODEL = "iot:thing_model";

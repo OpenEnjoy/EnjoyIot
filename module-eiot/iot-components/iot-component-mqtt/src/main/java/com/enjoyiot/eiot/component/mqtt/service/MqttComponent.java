@@ -416,6 +416,22 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
                             reply(endpoint, topic, new JsonObject(), -1);
                         }
                         return;
+                    case "thing.config.get":
+                        try {
+                            com.enjoyiot.module.eiot.api.device.dto.DeviceConfig deviceConfig = deviceApi.getDeviceConfig(subPk, subDn);
+                            if (deviceConfig == null || deviceConfig.getConfig() == null) {
+                                reply(endpoint, topic, new JsonObject(), -1);
+                                break;
+                            }
+                            Map<String, Object> config = JsonUtils.parseObject(deviceConfig.getConfig(), Map.class);
+                            payload.put("params", new JsonObject(config));
+                            reply(endpoint, topic, payload);
+                        } catch (Throwable e) {
+                            log.error("thing.config.get handle failed", e);
+                            reply(endpoint, topic, new JsonObject(), -1);
+                        }
+                        break;
+
                     case "thing.topo.get":
                         //网关获取拓扑关系
                         List<DeviceInfo> subDeviceList = deviceApi.getSubDevicesByProductKeAndDeviceName(pk, dn);
