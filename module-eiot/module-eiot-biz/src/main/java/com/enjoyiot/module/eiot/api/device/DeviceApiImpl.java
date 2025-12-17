@@ -163,6 +163,11 @@ public class DeviceApiImpl implements DeviceApi {
     }
 
     @Override
+    public DeviceConfig getDeviceConfig(String productKey, String dn) {
+        return TenantUtils.executeIgnoreResult(() -> deviceConfigService.findByPkDn(productKey, dn));
+    }
+
+    @Override
     public void invoke(ThingService<?> service) {
         TenantUtils.executeIgnore(()->{
             DeviceInfo device = deviceInfoService.getDeviceByPkDnByCache(service.getProductKey(), service.getDn());

@@ -255,6 +255,8 @@ platform:
       - iot:deviceLast
       - iot:deviceProperty
       - iot:thing_model
+      - iot:deviceIdConfig
+      - iot:deviceConfig
   sms-code: # 短信验证码相关的配置项
     expire-times: 10m
     send-frequency: 1m
