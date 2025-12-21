@@ -40,6 +40,8 @@ public enum ActionType {
 
     //注册
     REGISTER("register"),
+    // 子设备注销
+    SUB_DEREGISTER("deregister"),
     //子注册
     SUB_REGISTER("sub_register"),
     // 心跳ping

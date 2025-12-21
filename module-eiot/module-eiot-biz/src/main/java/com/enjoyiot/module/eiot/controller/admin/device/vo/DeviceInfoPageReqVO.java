@@ -31,6 +31,7 @@ import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.enjoyiot.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND;
 
@@ -46,6 +47,9 @@ public class DeviceInfoPageReqVO extends PageParam {
 
     @Schema(description = "产品key")
     private String productKey;
+
+    @Schema(description = "产品key列表")
+    private List<String> productKeyList;
 
     @Schema(description = "机构id", example = "13057")
     private Long deptId;
@@ -79,5 +83,11 @@ public class DeviceInfoPageReqVO extends PageParam {
     @Schema(description = "分组id")
 
     private Long groupId;
+
+    @Schema(description = "父级id")
+    private Long parentId;
+
+    @Schema(description = "绑定状态")
+    private Boolean bindStatus;
 
 }

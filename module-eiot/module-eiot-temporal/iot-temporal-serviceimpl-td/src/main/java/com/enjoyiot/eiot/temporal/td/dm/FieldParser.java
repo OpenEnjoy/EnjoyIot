@@ -71,7 +71,11 @@ public class FieldParser {
                 }
             }
             if ("NCHAR".equals(fType) && len < 1) {
-                throw exception(FILED_DEFINE, filedName + " 长度错误");
+                //throw exception(FILED_DEFINE, filedName + " 长度错误");
+                len = 255;
+            }
+            if (filedName.contains(".")) {
+                filedName = "`" + filedName + "`";
             }
         }
 

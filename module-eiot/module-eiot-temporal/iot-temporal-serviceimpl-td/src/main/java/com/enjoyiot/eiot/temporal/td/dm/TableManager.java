@@ -103,6 +103,10 @@ public class TableManager {
         return String.format(DESC_TB_TPL, tbName);
     }
 
+    public static String getDropStableSql(String tbName) {
+        return String.format(DROP_STABLE_TPL, tbName);
+    }
+
     /**
      * 获取添加字段sql
      */

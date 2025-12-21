@@ -60,10 +60,14 @@ public class DevicePropertyDataImpl implements IDevicePropertyData {
         }
 
         String tbName = Constants.getProductPropertySTableName(device.getProductKey());
+        String filedName = name;
+        if (name.contains(".")) {
+            filedName = "`" + name + "`";
+        }
         List<TbDeviceProperty> deviceProperties = tdTemplate.query(String.format(
                         "select time,%s as `value`,device_id from %s where device_id=? and time>=? and time<=? " +
                                 "order by time asc limit 0," + size,
-                        name.toLowerCase(), tbName),
+                        filedName.toLowerCase(), tbName),
                 new BeanPropertyRowMapper<>(TbDeviceProperty.class),
                 deviceId, start, end
         );
@@ -95,6 +99,9 @@ public class DevicePropertyDataImpl implements IDevicePropertyData {
 
         //组织sql
         oldProperties.forEach((key, val) -> {
+            if (key.contains(".")) {
+                key = "`" + key + "`";
+            }
             sbFieldNames.append(key)
                     .append(",");
             sbFieldPlaces.append("?,");

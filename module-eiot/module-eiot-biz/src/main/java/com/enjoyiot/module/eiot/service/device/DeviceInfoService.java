@@ -29,10 +29,7 @@ import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
 import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceShortInfo;
 import com.enjoyiot.module.eiot.api.device.dto.RegisterDevice;
-import com.enjoyiot.module.eiot.controller.admin.device.vo.DeviceBindReqVO;
-import com.enjoyiot.module.eiot.controller.admin.device.vo.DeviceInfoImportVo;
-import com.enjoyiot.module.eiot.controller.admin.device.vo.DeviceInfoPageReqVO;
-import com.enjoyiot.module.eiot.controller.admin.device.vo.DeviceInfoSaveReqVO;
+import com.enjoyiot.module.eiot.controller.admin.device.vo.*;
 import com.enjoyiot.module.eiot.controller.admin.device.vo.devicegroup.DeviceImportRespVO;
 
 import jakarta.validation.Valid;
@@ -99,7 +96,11 @@ public interface DeviceInfoService {
 
     List<DeviceInfo> findSubDeviceList(String productKey, String deviceName);
 
+    PageResult<DeviceShortInfo> getUnbindPage(DeviceUnbindPageReqVO pageReqVO);
+
     void bindParent(DeviceBindReqVO saveReqVO);
+
+    void unbindParent(DeviceUnbindReqVO unbindReqVO);
 
     DeviceInfo registerDevice(RegisterDevice registerDevice);
 
@@ -112,4 +113,8 @@ public interface DeviceInfoService {
     void savePropertiesCache(Long deviceId, Map<String, DevicePropertyCache> properties);
 
     void clearPropertiesCache(String productKey);
+
+    List<DeviceInfo> getDeviceInfoList(List<Long> subDeviceIds);
+
+    Boolean subDeRegisterDevice(String pk, String dn, String subPkDeregister, String subDnDeregister1);
 }

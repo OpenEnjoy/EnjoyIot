@@ -4,10 +4,7 @@ import com.enjoyiot.eiot.common.enums.DeviceState;
 import com.enjoyiot.eiot.component.coap.model.CoapRequestInfo;
 import com.enjoyiot.eiot.component.core.ComponentServices;
 import com.enjoyiot.eiot.component.core.ThingComponent;
-import com.enjoyiot.eiot.component.core.model.down.DeviceConfig;
-import com.enjoyiot.eiot.component.core.model.down.PropertyGet;
-import com.enjoyiot.eiot.component.core.model.down.PropertySet;
-import com.enjoyiot.eiot.component.core.model.down.ServiceInvoke;
+import com.enjoyiot.eiot.component.core.model.down.*;
 import com.enjoyiot.eiot.component.core.model.up.DeviceStateChange;
 import com.enjoyiot.eiot.component.core.model.up.EventReport;
 import com.enjoyiot.eiot.component.core.model.up.PropertyReport;
@@ -82,6 +79,11 @@ public class CoapComponent extends ThingComponent {
     }
 
     @Override
+    protected void deviceOta(DeviceOta action) {
+
+    }
+
+    @Override
     protected void serviceInvoke(ServiceInvoke action) {
         throw new UnsupportedOperationException("CoAP组件不支持服务调用");
     }
@@ -99,6 +101,11 @@ public class CoapComponent extends ThingComponent {
     @Override
     protected void deviceConfig(DeviceConfig action) {
         throw new UnsupportedOperationException("CoAP组件不支持设备配置下发");
+    }
+
+    @Override
+    protected void deviceTopoChange(DeviceTopoChange action) {
+
     }
 
     /**

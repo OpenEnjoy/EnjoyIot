@@ -35,6 +35,7 @@ import com.enjoyiot.module.eiot.controller.admin.device.vo.devicegroup.*;
 import com.enjoyiot.module.eiot.controller.admin.iot.vo.DeviceIdReqVo;
 import com.enjoyiot.module.eiot.controller.admin.sip.vo.SipRelation;
 import com.enjoyiot.module.eiot.controller.admin.thingmodel.vo.ThingModelMessageBo;
+import com.enjoyiot.module.eiot.service.device.DeviceCtrlService;
 import com.enjoyiot.module.eiot.service.device.DeviceInfoService;
 import com.enjoyiot.module.eiot.service.device.DeviceManagerService;
 import com.enjoyiot.module.eiot.service.sip.SipRelationService;
@@ -78,6 +79,9 @@ public class DeviceInfoController {
 
     @Resource
     private SipRelationService sipRelationService;
+
+    @Resource
+    private DeviceCtrlService deviceCtrlService;
 
     @PostMapping("/create")
     @Operation(summary = "创建设备信息")
@@ -183,6 +187,40 @@ public class DeviceInfoController {
         // 导出 Excel
         ExcelUtils.write(response, "设备信息.xls", "数据", DeviceInfoRespVO.class,
                         BeanUtils.toBean(list, DeviceInfoRespVO.class));
+    }
+
+    @Operation(summary = "子设备列表")
+    @PostMapping("/children/list")
+    @Parameter(name = "nodeType", description = "设备类型", required = true, example = "1")
+    public CommonResult<PageResult<DeviceShortRespVO>> getChildrenPage(@RequestBody @Valid DeviceInfoPageReqVO pageReqVO) {
+        PageResult<DeviceShortInfo> pageResult = deviceInfoService.getDeviceInfoPage(pageReqVO);
+        return success(BeanUtils.toBean(pageResult, DeviceShortRespVO.class));
+    }
+
+    @Operation(summary = "未绑定的子设备列表")
+    @PostMapping("/children/unbindList")
+    @Parameter(name = "nodeType", description = "设备类型", required = true, example = "1")
+    public CommonResult<PageResult<DeviceShortRespVO>> getUnbindPage(@RequestBody @Valid DeviceUnbindPageReqVO pageReqVO) {
+        PageResult<DeviceShortInfo> pageResult = deviceInfoService.getUnbindPage(pageReqVO);
+        return success(BeanUtils.toBean(pageResult, DeviceShortRespVO.class));
+    }
+
+    @Operation(summary = "子设备解绑")
+    @PostMapping("/bind")
+    @Parameter(name = "bind", description = "设备类型", required = true, example = "1")
+    public CommonResult<Void> bind(@RequestBody @Valid DeviceBindReqVO bindReqVO) {
+        deviceCtrlService.bindDevice(bindReqVO.getIdList(), bindReqVO.getParentId());
+        deviceInfoService.bindParent(bindReqVO);
+        return success();
+    }
+
+    @Operation(summary = "子设备解绑")
+    @PostMapping("/unbind")
+    @Parameter(name = "unbind", description = "设备类型", required = true, example = "1")
+    public CommonResult<Void> unbind(@RequestBody @Valid DeviceUnbindReqVO unbindReqVO) {
+        deviceCtrlService.unbindDevice(unbindReqVO.getIdList());
+        deviceInfoService.unbindParent(unbindReqVO);
+        return success();
     }
 
     @Operation(summary = "设备物模型日志")

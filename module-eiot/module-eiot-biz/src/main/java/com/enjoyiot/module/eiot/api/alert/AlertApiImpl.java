@@ -66,6 +66,7 @@ public class AlertApiImpl implements AlertApi {
 
         Message message = Message.builder()
                 .content(channelTemplate.getContent())
+                .templateCode(channelTemplate.getTemplateCode())
                 .alertConfigId(alertConfig.getId())
                 .build();
 

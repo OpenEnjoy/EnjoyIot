@@ -49,4 +49,16 @@ public class ChannelTemplate extends TenantModel {
 
     private String content;
 
+    /**
+     * Template status: 0-pending, 1-approved, 2-rejected
+     */
+    private Integer status;
+
+    /**
+     * Template code from cloud provider (e.g., Alibaba Cloud SMS template code)
+     */
+    private String templateCode;
+
+    private String channelCode;
+
 }

@@ -51,6 +51,7 @@ public class MqttService extends ScriptService implements LinkService {
 
     private String username;
     private String password;
+    private String clientid;
     private String host;
     private int port;
 
@@ -87,6 +88,7 @@ public class MqttService extends ScriptService implements LinkService {
         Map<String, Object> config = new HashMap<>();
         config.put(MqttClientLink.HOST, host);
         config.put(MqttClientLink.PORT, port);
+        config.put(MqttClientLink.CLIENTID, clientid);
         config.put(MqttClientLink.USERNAME, username);
         config.put(MqttClientLink.PASSWORD, password);
         return config;

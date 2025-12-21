@@ -31,20 +31,28 @@ import com.enjoyiot.module.eiot.controller.admin.channeltemplate.vo.ChannelTempl
 import com.enjoyiot.module.eiot.controller.admin.channeltemplate.vo.ChannelTemplatePageReqVO;
 import com.enjoyiot.module.eiot.controller.admin.channeltemplate.vo.ChannelTemplateSaveReqVO;
 import com.enjoyiot.module.eiot.convert.ChannelTemplateConvert;
+import com.enjoyiot.module.eiot.dal.dataobject.channelconfig.ChannelConfigDO;
 import com.enjoyiot.module.eiot.dal.dataobject.channeltemplate.ChannelTemplateDO;
 import com.enjoyiot.module.eiot.dal.mysql.alertconfig.AlertConfigMapper;
+import com.enjoyiot.module.eiot.dal.mysql.channelconfig.ChannelConfigMapper;
 import com.enjoyiot.module.eiot.dal.mysql.channeltemplate.ChannelTemplateMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.annotation.Resource;
 
-
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 /**
  * 通道模板 Service 实现类
  *
  * @author EnjoyIot
  */
+@Slf4j
 @Service
 @Validated
 public class ChannelTemplateServiceImpl implements ChannelTemplateService {
@@ -55,11 +63,23 @@ public class ChannelTemplateServiceImpl implements ChannelTemplateService {
     @Resource
     private AlertConfigMapper alertConfigMapper;
 
+    @Resource
+    private ChannelConfigService channelConfigService;
+
+    @Resource
+    private ChannelConfigMapper channelConfigMapper;
+
+    @Resource
+    private ChannelSmsService ChannelSmsTemplateService;
 
     @Override
     public Long createChannelTemplate(ChannelTemplateSaveReqVO createReqVO) {
-        // 插入
         ChannelTemplateDO channelTemplate = BeanUtils.toBean(createReqVO, ChannelTemplateDO.class);
+
+        // 短信需要单独处理
+        ChannelSmsTemplateService.createTemplate(createReqVO, channelTemplate);
+
+        // 插入
         channelTemplateMapper.insert(channelTemplate);
         // 返回
         return channelTemplate.getId();
@@ -71,6 +91,10 @@ public class ChannelTemplateServiceImpl implements ChannelTemplateService {
         validateChannelTemplateExists(updateReqVO.getId());
         // 更新
         ChannelTemplateDO updateObj = BeanUtils.toBean(updateReqVO, ChannelTemplateDO.class);
+
+        // 短信需要单独处理
+        ChannelSmsTemplateService.updateTemplate(updateReqVO, updateObj);
+
         channelTemplateMapper.updateById(updateObj);
     }
 
@@ -82,6 +106,11 @@ public class ChannelTemplateServiceImpl implements ChannelTemplateService {
         if(alertConfigMapper.selectCountByChannelTemplateId(id)>0){
             throw ServiceExceptionUtil.exception(ErrorCodeConstants.CHANNEL_TEMPLATE_USED);
         }
+
+        // 短信需要单独处理
+        ChannelTemplateDO channelTemplateDO = channelTemplateMapper.selectById(id);
+        ChannelSmsTemplateService.deleteTemplate(channelTemplateDO);
+
         // 删除
         channelTemplateMapper.deleteById(id);
     }
@@ -93,7 +122,14 @@ public class ChannelTemplateServiceImpl implements ChannelTemplateService {
 
     @Override
     public PageResult<ChannelTemplate> getChannelTemplatePage(ChannelTemplatePageReqVO pageReqVO) {
-        return ChannelTemplateConvert.INSTANCE.convertPage(channelTemplateMapper.selectPage(pageReqVO));
+        PageResult<ChannelTemplate> pageResult = ChannelTemplateConvert.INSTANCE.convertPage(channelTemplateMapper.selectPage(pageReqVO));
+        if (CollectionUtils.isNotEmpty(pageResult.getList())) {
+            Set<Long> channelConfigIds = pageResult.getList().stream().map(ChannelTemplate::getChannelConfigId).collect(Collectors.toSet());
+            List<ChannelConfigDO> channelConfigDOList = channelConfigMapper.selectByIds(channelConfigIds);
+            Map<Long, String> channelConfigCodeMap = channelConfigDOList.stream().collect(Collectors.toMap(ChannelConfigDO::getId, ChannelConfigDO::getCode));
+            pageResult.getList().forEach(template -> template.setChannelCode(channelConfigCodeMap.get(template.getChannelConfigId())));
+        }
+        return pageResult;
     }
 
     private void validateChannelTemplateExists(Long id) {

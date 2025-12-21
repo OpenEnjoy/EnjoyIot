@@ -21,7 +21,7 @@
  *  limitations under the License.
  * /
  */
-package com.enjoyiot.module.ai.sevice;
+package com.enjoyiot.module.ai.service;
 
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.module.ai.controller.admin.vo.AlgorithmCreateReqVO;

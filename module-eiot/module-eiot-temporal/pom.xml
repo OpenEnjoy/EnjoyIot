@@ -18,5 +18,6 @@
 <!--        <module>iot-temporal-serviceimpl-es</module>-->
         <module>iot-temporal-serviceimpl-iotdb</module>
         <module>iot-temporal-serviceimpl-timescaledb</module>
+        <module>iot-temporal-serviceimpl-kw</module>
     </modules>
 </project>

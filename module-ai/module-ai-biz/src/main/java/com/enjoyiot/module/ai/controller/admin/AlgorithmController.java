@@ -32,7 +32,7 @@ import com.enjoyiot.module.ai.controller.admin.vo.AlgorithmRespVO;
 import com.enjoyiot.module.ai.controller.admin.vo.AlgorithmUpdateReqVO;
 import com.enjoyiot.module.ai.dal.dataobject.AlgorithmDO;
 
-import com.enjoyiot.module.ai.sevice.AlgorithmService;
+import com.enjoyiot.module.ai.service.AlgorithmService;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;

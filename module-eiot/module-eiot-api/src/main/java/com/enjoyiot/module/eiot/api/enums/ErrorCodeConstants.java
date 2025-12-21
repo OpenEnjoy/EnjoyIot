@@ -62,4 +62,13 @@ public interface ErrorCodeConstants {
 
     ErrorCode TEMPLATE_NAME_ALREADY = new ErrorCode(2_006_004_000, "模板名称已存在");
     ErrorCode RELATED_PRODUCTS_EXIST = new ErrorCode(2_006_004_000, "关联产品已存在");
+    
+    // ========== SMS模板相关 2_006_005_000 ==========
+    ErrorCode CHANNEL_CONFIG_PARAM_ERROR = new ErrorCode(2_006_005_000, "通道配置参数错误");
+    ErrorCode SMS_TEMPLATE_CREATE_FAILED = new ErrorCode(2_006_005_001, "短信模板创建失败");
+    ErrorCode SMS_TEMPLATE_UPDATE_FAILED = new ErrorCode(2_006_005_002, "短信模板更新失败");
+    ErrorCode SMS_TEMPLATE_DELETE_FAILED = new ErrorCode(2_006_005_003, "短信模板删除失败");
+    ErrorCode SMS_TEMPLATE_UPDATE_ERROR_IN_AUDIT = new ErrorCode(2_006_005_004, "待审核状态无法更新模板内容");
+    ErrorCode SMS_TEMPLATE_DELETE_ERROR_IN_AUDIT = new ErrorCode(2_006_005_004, "待审核状态无法删除");
+    ErrorCode SMS_SEND_FAILED = new ErrorCode(2_006_005_005, "短信发送失败");
 }

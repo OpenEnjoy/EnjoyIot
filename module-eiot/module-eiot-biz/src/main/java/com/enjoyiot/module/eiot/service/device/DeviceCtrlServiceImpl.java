@@ -23,12 +23,16 @@
 package com.enjoyiot.module.eiot.service.device;
 
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.enjoyiot.eiot.common.thing.ThingModelMessage;
 import com.enjoyiot.eiot.virtualdevice.VirtualManager;
 import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceConfig;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
+import com.enjoyiot.module.eiot.api.device.dto.DeviceTopoChangeDTO;
 import com.enjoyiot.module.eiot.service.component.ComponentManager;
 import com.enjoyiot.module.eiot.service.iot.ParseThingModelService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +40,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -148,6 +154,102 @@ public class DeviceCtrlServiceImpl implements DeviceCtrlService {
     @Override
     public DeviceInfo getAndCheckDevice(Long deviceId, boolean checkOwner) {
         return deviceInfoService.getDeviceInfo(deviceId);
+    }
+
+
+    /**
+     * 解绑子设备
+     */
+    public void unbindDevice(List<Long> subDeviceIds) {
+        if (CollectionUtil.isEmpty(subDeviceIds)){
+            return;
+        }
+        Long deviceId = subDeviceIds.get(0);
+        DeviceInfo deviceInfo = deviceInfoService.getDeviceInfoFromCache(deviceId);
+        if (deviceInfo == null) {
+            return;
+        }
+        Long parentId = deviceInfo.getParentId();
+        if (ObjectUtil.isNull(parentId)) {
+            return;
+        }
+        DeviceInfo parent = deviceInfoService.getDeviceInfoFromCache(parentId);
+        List<DeviceInfo> subList =deviceInfoService.getDeviceInfoList(subDeviceIds);
+        sendUnbindMsg(subList, parent);
+    }
+
+    private void sendUnbindMsg(List<DeviceInfo> subList, DeviceInfo parent) {
+        if (parent == null) {
+            log.error("sendUnbindMsg : parent device not found: {}", parent.getDn());
+            return;
+        }
+        if(CollectionUtil.isEmpty(subList)){
+            log.error("sendUnbindMsg : sub device not found: {}", parent.getDn());
+            return;
+        }
+
+        try {
+            List<DeviceTopoChangeDTO.DeviceInfo> changeDeviceList
+                    = subList.stream().map(device -> {
+                DeviceTopoChangeDTO.DeviceInfo d = new DeviceTopoChangeDTO.DeviceInfo();
+                d.setDn(device.getDn());
+                d.setPk(device.getProductKey());
+                return d;
+            }).collect(Collectors.toList());
+
+            DeviceTopoChangeDTO changeBo = DeviceTopoChangeDTO.builder().status(1).subList(changeDeviceList).build();
+            //下发子设备注销给网关
+            send(parent.getId(), parent.getProductKey(), parent.getDn(),
+                    changeBo,
+                    ThingModelMessage.TYPE_TOPO_CHANGE, ThingModelMessage.ID_CHANGE);
+        } catch (Throwable e) {
+            log.error("send {} message error", ThingModelMessage.ID_CHANGE, e);
+        }
+        return ;
+    }
+
+    @Override
+    public void bindDevice(List<Long> subDeviceIds, Long parentId) {
+        if (CollectionUtil.isEmpty(subDeviceIds)){
+            return;
+        }
+        if (ObjectUtil.isNull(parentId)) {
+            return;
+        }
+        DeviceInfo parent = deviceInfoService.getDeviceInfoFromCache(parentId);
+        List<DeviceInfo> subList =deviceInfoService.getDeviceInfoList(subDeviceIds);
+
+        sendBindMsg(subList, parent);
+    }
+
+    private void sendBindMsg(List<DeviceInfo> subList, DeviceInfo parent) {
+        if (parent == null) {
+            log.error("sendUnbindMsg : parent device not found: {}", parent.getDn());
+            return;
+        }
+        if(CollectionUtil.isEmpty(subList)){
+            log.error("sendUnbindMsg : sub device not found: {}", parent.getDn());
+            return;
+        }
+
+        try {
+            List<DeviceTopoChangeDTO.DeviceInfo> changeDeviceList
+                    = subList.stream().map(device -> {
+                DeviceTopoChangeDTO.DeviceInfo d = new DeviceTopoChangeDTO.DeviceInfo();
+                d.setDn(device.getDn());
+                d.setPk(device.getProductKey());
+                return d;
+            }).collect(Collectors.toList());
+
+            DeviceTopoChangeDTO changeBo = DeviceTopoChangeDTO.builder().status(0).subList(changeDeviceList).build();
+            //下发子设备注销给网关
+            send(parent.getId(), parent.getProductKey(), parent.getDn(),
+                    changeBo,
+                    ThingModelMessage.TYPE_TOPO_CHANGE, ThingModelMessage.ID_CHANGE);
+        } catch (Throwable e) {
+            log.error("send {} message error", ThingModelMessage.ID_CHANGE, e);
+        }
+        return ;
     }
 
     /**

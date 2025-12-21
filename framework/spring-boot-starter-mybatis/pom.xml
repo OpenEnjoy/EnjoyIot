@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <optional>true</optional>
+<!--            <optional>true</optional>-->
         </dependency>
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
@@ -60,6 +60,11 @@
         <dependency>
             <groupId>org.opengauss</groupId>
             <artifactId>opengauss-jdbc</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.kaiwudb</groupId>
+            <artifactId>kaiwudb-jdbc</artifactId>
             <optional>true</optional>
         </dependency>
 

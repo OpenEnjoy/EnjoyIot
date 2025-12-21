@@ -60,7 +60,7 @@ public class IotdbDatasourceConfig {
     @Bean("iotdbJdbcTemplate")
     public IotdbTemplate iotdbJdbcTemplate() {
         HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl("jdbc:iotdb://47.104.95.120:16667/");
+        dataSource.setJdbcUrl("jdbc:iotdb://" + getUrl());
         dataSource.setUsername(username);
         dataSource.setPassword(password);
         dataSource.setDriverClassName("org.apache.iotdb.jdbc.IoTDBDriver");
