@@ -31,11 +31,11 @@ import com.enjoyiot.module.eiot.api.alert.dto.SmsConfig;
 import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.module.eiot.api.alert.dto.Message;
 import io.vertx.ext.web.client.WebClient;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
