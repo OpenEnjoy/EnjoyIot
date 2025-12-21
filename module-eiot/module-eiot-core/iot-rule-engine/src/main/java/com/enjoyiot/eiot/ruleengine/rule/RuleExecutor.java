@@ -26,10 +26,12 @@ package com.enjoyiot.eiot.ruleengine.rule;
 import com.enjoyiot.eiot.IRuleLogData;
 import com.enjoyiot.eiot.common.thing.ThingModelMessage;
 import com.enjoyiot.eiot.ruleengine.action.Action;
+import com.enjoyiot.eiot.ruleengine.action.alert.AlertAction;
 import com.enjoyiot.eiot.ruleengine.filter.Filter;
 import com.enjoyiot.eiot.ruleengine.listener.Listener;
 import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.module.eiot.api.rule.dto.RuleLog;
+import com.enjoyiot.module.eiot.api.rule.dto.TriggerOptions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -49,40 +51,37 @@ public class RuleExecutor {
     @Autowired
     private IRuleLogData ruleLogData;
 
+    @Autowired
+    private TriggerControlService triggerControlService;
+
     public void execute(ThingModelMessage message, Rule rule) {
+        TriggerOptions options = rule.getTriggerOptions();
+
         if (!doListeners(message, rule)) {
             log.info("The listener did not match the appropriate content,rule:{},{}", rule.getId(), rule.getName());
+            // 监听器不匹配时，如果开启了告警解除，调度恢复
+            triggerControlService.scheduleRecoverIfNeeded(rule, message, options);
             return;
         }
-        log.info("Start execute rule {},id:{}", rule.getName(), rule.getId());
 
-        RuleLog ruleLog = new RuleLog();
-        ruleLog.setRuleId(rule.getId());
-        ruleLog.setState(RuleLog.STATE_MATCHED_LISTENER);
-
-        try {
-            if (!doFilters(rule, message)) {
-                ruleLog.setState(RuleLog.STATE_UNMATCHED_FILTER);
-                log.info("The filter did not match the appropriate content,rule:{},{}", rule.getId(), rule.getName());
-                return;
-            }
-            ruleLog.setState(RuleLog.STATE_MATCHED_FILTER);
-
-            //执行动作返回执行内容
-            List<String> results = doActions(rule, message);
-            //保存动作内容和状态
-            ruleLog.setContent(JsonUtils.toJsonString(results));
-            ruleLog.setState(RuleLog.STATE_EXECUTED_ACTION);
-            ruleLog.setSuccess(true);
-            log.info("rule execution completed,id:{}", rule.getId());
-        } catch (Throwable e) {
-            log.error("rule execution error,id:" + rule.getId(), e);
-            ruleLog.setSuccess(false);
-            ruleLog.setContent(e.toString());
-        } finally {
-            ruleLog.setLogAt(System.currentTimeMillis());
-            ruleLogData.add(ruleLog);
+        if (!doFilters(rule, message)) {
+            recordLog(rule.getId(), RuleLog.STATE_UNMATCHED_FILTER, null, false);
+            // 过滤器不匹配时，如果开启了告警解除，调度恢复
+            triggerControlService.scheduleRecoverIfNeeded(rule, message, options);
+            return;
         }
+
+        // 匹配成功，取消恢复任务
+        triggerControlService.cancelRecover(rule.getId());
+
+        // 限频判断
+        if (!triggerControlService.passRateLimit(rule.getId(), options)) {
+            log.info("rule {} skipped by minIntervalSec", rule.getId());
+            return;
+        }
+
+        // 执行动作：有延时入队列，无延时直接执行
+        triggerControlService.executeAction(rule, message, options, this);
     }
 
     private boolean doListeners(ThingModelMessage message, Rule rule) {
@@ -107,12 +106,59 @@ public class RuleExecutor {
         return true;
     }
 
-    private List<String> doActions(Rule rule, ThingModelMessage msg) {
+    /**
+     * 执行动作（可被外部调用，用于延时队列消费）
+     */
+    void executeActions(Rule rule, ThingModelMessage message, boolean recovery) {
+        RuleLog ruleLog = new RuleLog();
+        ruleLog.setRuleId(rule.getId());
+        ruleLog.setState(recovery ? RuleLog.STATE_RECOVERED : RuleLog.STATE_MATCHED_FILTER);
+        try {
+            List<String> results = doActions(rule, message, recovery);
+            ruleLog.setContent(JsonUtils.toJsonString(results));
+            if (!recovery) {
+                ruleLog.setState(RuleLog.STATE_EXECUTED_ACTION);
+            }
+            ruleLog.setSuccess(true);
+            // 状态标记：恢复时标记恢复，触发时由调用方标记（避免重复）
+            if (recovery) {
+                triggerControlService.markRecovered(rule.getId());
+                log.info("rule {} alert recovered", rule.getId());
+            } else {
+                log.info("rule execution completed,id:{}", rule.getId());
+            }
+        } catch (Throwable e) {
+            log.error("rule execution error,id:" + rule.getId(), e);
+            ruleLog.setSuccess(false);
+            ruleLog.setContent(e.toString());
+        } finally {
+            ruleLog.setLogAt(System.currentTimeMillis());
+            ruleLogData.add(ruleLog);
+        }
+    }
+
+    private List<String> doActions(Rule rule, ThingModelMessage msg, boolean recovery) {
         List<String> results = new ArrayList<>();
         for (Action<?> action : rule.getActions()) {
+            if (recovery) {
+                if (action instanceof AlertAction) {
+                    results.addAll(((AlertAction) action).recover(msg));
+                }
+                continue;
+            }
             results.addAll(action.execute(msg));
         }
         return results;
+    }
+
+    private void recordLog(Long ruleId, String state, String content, Boolean success) {
+        RuleLog ruleLog = new RuleLog();
+        ruleLog.setRuleId(ruleId);
+        ruleLog.setState(state);
+        ruleLog.setContent(content);
+        ruleLog.setSuccess(success);
+        ruleLog.setLogAt(System.currentTimeMillis());
+        ruleLogData.add(ruleLog);
     }
 
 }

@@ -26,10 +26,8 @@ package com.enjoyiot.module.eiot.service.device;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.enjoyiot.eiot.common.thing.ThingModelMessage;
 import com.enjoyiot.framework.common.exception.ServiceException;
 import com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil;
 import com.enjoyiot.framework.common.pojo.PageResult;
@@ -37,6 +35,7 @@ import com.enjoyiot.framework.common.util.object.BeanUtils;
 import com.enjoyiot.framework.common.util.validation.ValidationUtils;
 import com.enjoyiot.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.enjoyiot.framework.tenant.core.aop.TenantIgnore;
+import com.enjoyiot.framework.security.core.util.SecurityFrameworkUtils;
 import com.enjoyiot.module.eiot.api.device.dto.*;
 import com.enjoyiot.module.eiot.api.enums.ErrorCodeConstants;
 import com.enjoyiot.module.eiot.api.product.dto.Product;
@@ -55,7 +54,6 @@ import com.enjoyiot.module.eiot.service.product.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
@@ -109,6 +107,10 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
         ProductDO productDO = productMapper.getByProductKey(productKey);
         if (ObjectUtils.isNull(productDO)) {
             throw ServiceExceptionUtil.exception(ErrorCodeConstants.PRODUCT_NOT_EXISTS);
+        }
+        // 若未显式传递机构，则默认使用当前登录用户机构，确保数据权限生效
+        if (createReqVO.getDeptId() == null) {
+            createReqVO.setDeptId(SecurityFrameworkUtils.getLoginUserDeptId());
         }
         // 插入
         EiotDeviceInfoDO deviceInfo = BeanUtils.toBean(createReqVO, EiotDeviceInfoDO.class);

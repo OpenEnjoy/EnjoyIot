@@ -66,6 +66,10 @@ public class EiotRuleInfoDO extends TenantBaseDO {
      */
     private String actions;
     /**
+     * 触发控制配置(JSON)：频率限制/延时/告警解除
+     */
+    private String triggerOptions;
+    /**
      * 类型(1数据流转 2场景联动)
      */
     private String typ;

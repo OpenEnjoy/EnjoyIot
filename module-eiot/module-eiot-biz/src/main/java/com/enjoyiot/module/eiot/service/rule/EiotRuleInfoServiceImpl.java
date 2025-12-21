@@ -103,6 +103,8 @@ public class EiotRuleInfoServiceImpl implements EiotRuleInfoService {
             }
             EiotRuleInfoDO obj = RuleInfoConvert.INSTANCE.toDo(ruleInfo);
             ruleInfoMapper.updateById(obj);
+            // 更新规则后，同步更新缓存（即使规则是停止状态，也要更新缓存）
+            ruleManager.add(ruleInfo);
         }
         // 返回
         return id;

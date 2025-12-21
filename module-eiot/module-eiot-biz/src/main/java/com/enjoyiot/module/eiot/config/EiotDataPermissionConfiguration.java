@@ -21,48 +21,27 @@
  *  limitations under the License.
  * /
  */
-package com.enjoyiot.module.eiot.dal.redis;
+package com.enjoyiot.module.eiot.config;
+
+import com.enjoyiot.framework.datapermission.core.rule.dept.DeptDataPermissionRuleCustomizer;
+import com.enjoyiot.module.eiot.dal.dataobject.deviceinfo.EiotDeviceInfoDO;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
- * yl Redis Key 枚举类
+ * iot 模块的数据权限 Configuration
  *
- * @author EnjoyIot
+ * @author ph
  */
-public interface RedisKeyConstants {
+@Configuration(proxyBeanMethods = false)
+public class EiotDataPermissionConfiguration {
 
-    /**
-    产品缓存
-     */
-    String PRODUCT = "iot:product";
-    /**
-     设备缓存
-     */
-
-    String DEVICE = "iot:device";
-    String DEVICE_ID = "iot:deviceId";
-
-    /**
-     设备最新上报缓存
-     */
-    String DEVICE_LAST="iot:deviceLast:";
-    /**
-     设备属性缓存
-     */
-
-    String DEVICE_PROPERTY="iot:deviceProperty:";
-
-    /**
-     * 设备配置缓存
-     */
-    String DEVICE_CONFIG = "iot:deviceConfig";
-
-    String DEVICE_ID_CONFIG = "iot:deviceIdConfig";
-
-    /**
-     产品物模型缓存
-     */
-    String THING_MODEL = "iot:thing_model";
-
-
+    @Bean
+    public DeptDataPermissionRuleCustomizer iotDeptDataPermissionRuleCustomizer() {
+        return rule -> {
+            // device
+            rule.addDeptColumn(EiotDeviceInfoDO.class);
+        };
+    }
 
 }

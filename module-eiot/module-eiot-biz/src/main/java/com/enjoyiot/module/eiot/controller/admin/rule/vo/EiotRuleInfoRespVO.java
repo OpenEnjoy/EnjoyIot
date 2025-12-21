@@ -26,6 +26,7 @@ package com.enjoyiot.module.eiot.controller.admin.rule.vo;
 import cn.idev.excel.annotation.ExcelIgnoreUnannotated;
 import cn.idev.excel.annotation.ExcelProperty;
 import com.enjoyiot.module.eiot.api.rule.dto.FilterConfig;
+import com.enjoyiot.module.eiot.api.rule.dto.TriggerOptions;
 import com.enjoyiot.module.eiot.api.task.dto.RuleAction;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -74,4 +75,7 @@ public class EiotRuleInfoRespVO {
 
     @Schema(description = "动作")
     private List<RuleAction> actions;
+
+    @Schema(description = "触发控制配置")
+    private TriggerOptions triggerOptions;
 }

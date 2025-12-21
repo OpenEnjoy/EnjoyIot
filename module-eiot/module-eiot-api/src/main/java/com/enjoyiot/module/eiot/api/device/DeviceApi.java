@@ -52,6 +52,8 @@ public interface DeviceApi {
 
     DeviceConfig getDeviceConfig(Long deviceId);
 
+    DeviceConfig getDeviceConfig(String productKey, String dn);
+
     /**
      * 调用设备服务
      *

@@ -61,6 +61,8 @@ import org.springframework.stereotype.Component;
 import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Slf4j
@@ -78,21 +80,39 @@ public class RuleManager {
     @Resource
     private DeviceApi deviceApi;
 
-    @Autowired
+    @Resource
     private MessageService messageService;
 
+    @Resource
+    private TriggerControlService triggerControlService;
+
+    /**
+     * 规则缓存，用于延时任务回放
+     */
+    private final Map<Long, Rule> ruleCache = new ConcurrentHashMap<>();
+
     public void add(RuleInfo ruleInfo) {
-        if (RuleInfo.STATE_STOPPED.equals(ruleInfo.getState())) {
-            return;
-        }
         Rule rule = parseRule(ruleInfo);
-        ruleMessageHandler.putRule(rule);
+        // 如果是更新（缓存已存在），且规则是停止状态，清理 Redis 缓存（触发控制参数可能已改变）
+        boolean isUpdate = ruleCache.containsKey(ruleInfo.getId());
+        if (isUpdate && RuleInfo.STATE_STOPPED.equals(ruleInfo.getState())) {
+            triggerControlService.clearRuleCache(ruleInfo.getId());
+        }
+        // 始终更新缓存，确保缓存是最新的配置
+        ruleCache.put(ruleInfo.getId(), rule);
+        // 只有运行中的规则才添加到消息处理器
+        if (!RuleInfo.STATE_STOPPED.equals(ruleInfo.getState())) {
+            ruleMessageHandler.putRule(rule);
+        }
     }
 
     public void remove(Long ruleId) {
         ruleMessageHandler.removeRule(ruleId);
+        ruleCache.remove(ruleId);
         // 移出link连接
         LinkFactory.ruleClose(ruleId);
+        // 清理 Redis 缓存（限流器、触发状态）
+        triggerControlService.clearRuleCache(ruleId);
     }
 
     public void pause(Long ruleId) {
@@ -101,6 +121,10 @@ public class RuleManager {
 
     public void resume(RuleInfo ruleInfo) {
         add(ruleInfo);
+    }
+
+    public Rule getRule(Long ruleId) {
+        return ruleCache.get(ruleId);
     }
 
     private Rule parseRule(RuleInfo ruleInfo) {
@@ -128,7 +152,7 @@ public class RuleManager {
             actions.add(parseAction(ruleInfo.getId(), action.getType(), action.getConfig()));
         }
 
-        return new Rule(ruleInfo.getId(), ruleInfo.getName(), listeners, filters, actions, ruleInfo.getTenantId());
+        return new Rule(ruleInfo.getId(), ruleInfo.getName(), listeners, filters, actions, ruleInfo.getTenantId(), ruleInfo.getTriggerOptions());
     }
 
     private Listener<?> parseListener(String type, String config) {
@@ -199,6 +223,7 @@ public class RuleManager {
 
             AlertAction alertAction = parse(config, AlertAction.class);
             String script = alertAction.getServices().get(0).getScript();
+            String recoverScript = alertAction.getServices().get(0).getRecoverScript();
 
             List<AlertService> alertServices = new ArrayList<>();
 
@@ -218,7 +243,8 @@ public class RuleManager {
 
                     AlertService service = new AlertService();
                     service.setScript(script);
-                    service.setDeviceApi(deviceApi);
+                    service.setRecoverScript(recoverScript);
+                    service.initDeviceApi(deviceApi);
                     service.setMessageService(messageService);
 
                     Message message = alertApi.getNotifyMessage(alertConfig);

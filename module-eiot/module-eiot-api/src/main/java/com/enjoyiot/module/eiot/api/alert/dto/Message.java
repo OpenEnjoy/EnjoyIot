@@ -46,6 +46,7 @@ public class Message {
     private String channelConfig;
     private Long alertConfigId;
     private String templateCode;
+    private Long tenantId;
 
     public String getFormatContent() {
         String fmt = content;

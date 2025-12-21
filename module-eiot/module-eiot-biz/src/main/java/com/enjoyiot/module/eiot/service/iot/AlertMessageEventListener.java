@@ -26,6 +26,7 @@ package com.enjoyiot.module.eiot.service.iot;
 
 import com.enjoyiot.eiot.message.event.MessageEvent;
 import com.enjoyiot.eiot.message.listener.MessageEventListener;
+import com.enjoyiot.framework.tenant.core.context.TenantContextHolder;
 import com.enjoyiot.module.eiot.api.alert.dto.AlertConfig;
 import com.enjoyiot.module.eiot.api.alert.dto.Message;
 import com.enjoyiot.module.eiot.service.alert.AlertConfigService;
@@ -49,6 +50,7 @@ public class AlertMessageEventListener implements MessageEventListener {
     @EventListener(classes = MessageEvent.class)
     public void doEvent(MessageEvent event) {
         Message message = event.getMessage();
+        TenantContextHolder.setTenantId(message.getTenantId());
         AlertConfig alertConfig = alertConfigService.getAlertConfig(message.getAlertConfigId());
         alertConfigService.addAlertRecord(alertConfig, message.getFormatContent());
     }
