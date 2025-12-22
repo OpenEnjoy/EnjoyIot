@@ -52,6 +52,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Component
@@ -59,9 +60,9 @@ public class TcpComponent extends ThingComponent implements Handler<NetSocket> {
 
     private final Map<String, VertxTcpClient> clientMap = new ConcurrentHashMap<>();
 
-    private final Map<String, String> dnToPk = new HashMap<>();
+    private final Map<String, String> dnToPk = new ConcurrentHashMap<>();
 
-    private final Map<String, Long> heartbeatDevice = new HashMap<>();
+    private final Map<String, Long> heartbeatDevice = new ConcurrentHashMap<>();
 
     private final TcpVerticle tcpVerticle;
 
@@ -117,6 +118,8 @@ public class TcpComponent extends ThingComponent implements Handler<NetSocket> {
             socket.exceptionHandler(Throwable::printStackTrace).closeHandler(nil -> {
                 log.debug("tcp server client [{}] closed", socket.remoteAddress());
                 client.shutdown();
+                // 清理客户端映射
+                clientMap.entrySet().removeIf(e -> e.getValue() == client);
             });
             // 这个地方是在TCP服务初始化的时候设置的 parserSupplier
             client.setKeepAliveTimeoutMs(keepAliveTimeout);
@@ -131,29 +134,35 @@ public class TcpComponent extends ThingComponent implements Handler<NetSocket> {
                     if (code == DataPackage.CODE_REGISTER) {
                         heartbeatDevice.remove(addr);
                         //设备注册
-                        String pk = new String(data.getPayload());
+                        String pk = new String(data.getPayload(), StandardCharsets.UTF_8);
                         dnToPk.put(addr, pk);
-                        RegisterDevice build = RegisterDevice.builder()
-                                .productKey(pk)
-                                .deviceName(addr)
-                                .build();
-
-                        DeviceInfo parentDevice = deviceApi.registerDevice(build);
-
-                        if(parentDevice != null){
-                            //回复注册成功给客户端
+                        if (pk != null && !pk.isEmpty()) {
+                            RegisterDevice build = RegisterDevice.builder()
+                                    .productKey(pk)
+                                    .deviceName(addr)
+                                    .build();
+                            DeviceInfo parentDevice = deviceApi.registerDevice(build);
+                            if (parentDevice != null) {
+                                sendMsg(addr, DataEncoder.encode(
+                                        DataPackage.builder()
+                                                .addr(addr)
+                                                .code(DataPackage.CODE_REGISTER_REPLY)
+                                                .mid(data.getMid())
+                                                .payload(Buffer.buffer().appendInt(0).getBytes())
+                                                .build()
+                                ));
+                                cacheDeviceComponentInfo(pk, addr);
+                            }
+                        } else {
                             sendMsg(addr, DataEncoder.encode(
                                     DataPackage.builder()
                                             .addr(addr)
                                             .code(DataPackage.CODE_REGISTER_REPLY)
                                             .mid(data.getMid())
-                                            .payload(Buffer.buffer().appendInt(0).toString())
+                                            .payload(Buffer.buffer().appendInt(0).getBytes())
                                             .build()
                             ));
                         }
-
-                        // 缓存设备对应的组件信息(用于下发控制指令时查询设备对应的组件信息从而拼接topic)
-                        cacheDeviceComponentInfo(pk, addr);
 
                         return;
                     }
@@ -168,46 +177,18 @@ public class TcpComponent extends ThingComponent implements Handler<NetSocket> {
                         //设备数据上报
 //                        online(addr);
 
-                        JSONObject object = JSONUtil.parseObj(data.getPayload());
+                        JSONObject object = JSONUtil.parseObj(new String(data.getPayload(), StandardCharsets.UTF_8));
                         report(PropertyReport.builder()
                                 .productKey(dnToPk.get(addr))
                                 .deviceName(addr)
                                 .params(object.getRaw())
                                 .build());
-
-                        sendMsg(addr, DataEncoder.encode(
-                                DataPackage.builder()
-                                        .addr(addr)
-                                        .code(DataPackage.CODE_DATA_UP)
-                                        .mid(data.getMid())
-                                        .payload(Buffer.buffer().appendInt(0).toString())
-                                        .build()
-                        ));
-                    }
-                    if (code == DataPackage.CODE_EVENT_UP) {
-                        //设备事件上报
-//                        online(addr);
-
-                        JSONObject object = JSONUtil.parseObj(data.getPayload());
-                        report(EventReport.builder()
-                                .productKey(dnToPk.get(addr))
-                                .deviceName(addr)
-                                .name("up_param")
-                                .params(object.getRaw())
-                                .build());
-
-                        sendMsg(addr, DataEncoder.encode(
-                                DataPackage.builder()
-                                        .addr(addr)
-                                        .code(DataPackage.CODE_DATA_UP)
-                                        .mid(data.getMid())
-                                        .payload(Buffer.buffer().appendInt(0).toString())
-                                        .build()
-                        ));
                     }
 
                     //未注册断开连接
-                    if (!clientMap.containsKey(data.getAddr())) {
+                    if (code != DataPackage.CODE_REGISTER
+                            && code != DataPackage.CODE_HEARTBEAT
+                            && !dnToPk.containsKey(data.getAddr())) {
                         socket.close();
                     }
 
@@ -285,7 +266,7 @@ public class TcpComponent extends ThingComponent implements Handler<NetSocket> {
                 // 消息序号
                 .mid((short)IdUtil.getSnowflakeNextId())
                 // 消息体
-                .payload(payload)
+                .payload(payload.getBytes(StandardCharsets.UTF_8))
                 .build();
         log.info("下发属性设置数据包dataPackage:{}", JSON.toJSONString(dataPackage));
         sendMsg(action.getDeviceName(), DataEncoder.encode(dataPackage));
@@ -303,16 +284,18 @@ public class TcpComponent extends ThingComponent implements Handler<NetSocket> {
 
     @Scheduled(fixedRate = 40, timeUnit = TimeUnit.SECONDS)
     private void offlineCheckTask() {
-        log.info("keepClientTask");
+        log.info("offlineCheckTask");
         Set<String> clients = new HashSet<>(clientMap.keySet());
         for (String key : clients) {
             VertxTcpClient client = clientMap.get(key);
             if (!client.isOnline()) {
                 client.shutdown();
+                clientMap.remove(key);
             }
         }
 
-        heartbeatDevice.keySet().iterator().forEachRemaining(addr -> {
+        Set<String> heartbeatKeys = new HashSet<>(heartbeatDevice.keySet());
+        heartbeatKeys.forEach(addr -> {
             Long time = heartbeatDevice.get(addr);
             //心跳超时，判定为离线
             if (System.currentTimeMillis() - time > keepAliveTimeout * 2) {
@@ -330,7 +313,7 @@ public class TcpComponent extends ThingComponent implements Handler<NetSocket> {
 
     public void sendMsg(String addr, Buffer msg) {
         VertxTcpClient tcpClient = clientMap.get(addr);
-        if (tcpClient != null) {
+        if (tcpClient != null && tcpClient.socket != null) {
             tcpClient.sendMessage(msg);
         }
     }
@@ -340,11 +323,13 @@ public class TcpComponent extends ThingComponent implements Handler<NetSocket> {
         String pk = dnToPk.get(addr);
 
         //上线
-        report(DeviceStateChange.builder()
-                .deviceName(addr)
-                .productKey(pk)
-                .state(DeviceState.ONLINE)
-                .build());
+        if (pk != null && !pk.isEmpty()) {
+            report(DeviceStateChange.builder()
+                    .deviceName(addr)
+                    .productKey(pk)
+                    .state(DeviceState.ONLINE)
+                    .build());
+        }
     }
 
 

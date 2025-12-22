@@ -35,10 +35,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.enjoyiot.eiot.common.enums.ErrorCodeConstants.PARAMS_EXCEPTION;
 import static com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil.exception;
@@ -223,6 +220,10 @@ public abstract class ThingComponent extends AbstractComponent {
         message.setOccurred(message.getTime());
         //填充设备id
         DeviceInfo deviceInfo = componentServices.getDeviceApi().getDeviceByPkDnByCache(action.getProductKey(), action.getDeviceName());
+        if (Objects.isNull(deviceInfo)) {
+            System.out.println("设备不存在");
+            return;
+        }
         message.setDeviceId(deviceInfo.getId());
         sendMessage(message);
     }

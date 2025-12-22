@@ -2,6 +2,7 @@ package com.enjoyiot.eiot.component.tcp.parser;
 
 import io.vertx.core.buffer.Buffer;
 import lombok.extern.slf4j.Slf4j;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 数据解码
@@ -12,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 public class DataDecoder {
 
     public static DataPackage decode(Buffer buffer) {
-        String string = buffer.toString();
         DataPackage data = new DataPackage();
         //获得设备号长度(2字节)
         int index = 0;
@@ -20,7 +20,8 @@ public class DataDecoder {
         data.setAddrLength(bufferInt);
         // 获取设备号
         index += 2;
-        data.setAddr(buffer.getBuffer(index, index + bufferInt).toString());
+        byte[] addrBytes = buffer.getBytes(index, index + bufferInt);
+        data.setAddr(new String(addrBytes, StandardCharsets.UTF_8));
         // 获取功能码(2字节)
         index += bufferInt;
         data.setCode(buffer.getShort(index));
@@ -29,7 +30,8 @@ public class DataDecoder {
         data.setMid((buffer.getShort(index)));
         // 获取包体(数据实体)
         index += 2;
-        data.setPayload(buffer.getString(index, buffer.length()));
+        byte[] payloadBytes = buffer.getBytes(index, buffer.length());
+        data.setPayload(payloadBytes);
         return data;
     }
 

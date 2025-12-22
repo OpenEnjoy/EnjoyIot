@@ -23,12 +23,11 @@ import java.io.IOException;
 @Builder
 public class DataPackage {
 
-    public static final short CODE_REGISTER = 10;
-    public static final short CODE_REGISTER_REPLY = 11;
-    public static final short CODE_HEARTBEAT = 20;
-    public static final short CODE_DATA_UP = 30;
-    public static final short CODE_EVENT_UP = 40;
-    public static final short CODE_DATA_DOWN = 50;
+    public static final short CODE_REGISTER = 0x10;
+    public static final short CODE_REGISTER_REPLY = 0x11;
+    public static final short CODE_HEARTBEAT = 0x20;
+    public static final short CODE_DATA_UP = 0x30;
+    public static final short CODE_DATA_DOWN = 0x40;
 
     /**
      * 设备地址长度
@@ -53,8 +52,7 @@ public class DataPackage {
     /**
      * 包体数据
      */
-//    @JsonSerialize(using = BufferSerializer.class)
-    private String payload;
+    private byte[] payload;
 
 
     public static class BufferSerializer extends JsonSerializer<byte[]> {

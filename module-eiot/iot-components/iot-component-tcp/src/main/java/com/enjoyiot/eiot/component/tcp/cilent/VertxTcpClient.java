@@ -71,6 +71,10 @@ public class VertxTcpClient {
 
     public void sendMessage(Buffer buffer) {
         log.info("write data:{}", buffer.toString());
+        if (socket == null) {
+            log.warn("tcp client [{}] socket is null, drop message", getId());
+            return;
+        }
         socket.write(buffer, r -> {
             keepAlive();
             if (r.succeeded()) {
