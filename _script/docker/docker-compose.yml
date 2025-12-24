@@ -108,6 +108,7 @@ services:
     restart: unless-stopped
     ports:
       - "48080:48080"
+      - "18831:18831"  ## 默认mqtt组件端口
     extra_hosts:
       - "host.docker.internal:172.17.0.1"  ## 添加宿主机网络,一般情况下是172.17.0.1, 具体使用ip addr show docker0 查看
     environment:
