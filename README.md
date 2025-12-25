@@ -114,3 +114,6 @@ https://y5yrmmjjns.feishu.cn/wiki/FlxmwXzQJiEKCJkGuIhcLsyjnwh?fromScene=spaceOve
 
   :+1:  **数据可视化**([https://gitee.com/xiaopujun/light-chaser](https://gitee.com/xiaopujun/light-chaser))  [官网](http://www.lcpdesigner.cn/home)
 
+  :fa-star:    **现代化文件管理网盘系统** ([https://gitee.com/xddcode/free-fs](https://gitee.com/xddcode/free-fs))
+
+
