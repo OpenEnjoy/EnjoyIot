@@ -115,13 +115,19 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
         // 插入
         EiotDeviceInfoDO deviceInfo = BeanUtils.toBean(createReqVO, EiotDeviceInfoDO.class);
         deviceInfo.setId(IdUtil.getSnowflakeNextId());
-        deviceInfo.setNodeType(productDO.getNodeType());
         deviceInfo.setState(DeviceInfo.STATE_NOT_ACTIVE);
-        deviceInfo.setTenantId(productDO.getTenantId());
-        deviceInfo.setTransparent(productDO.getTransparent());
+        initProductInfo(deviceInfo, productDO);
         deviceInfoMapper.insert(deviceInfo);
         // 返回
         return deviceInfo.getId();
+    }
+
+    private void initProductInfo(EiotDeviceInfoDO deviceInfo, ProductDO productDO) {
+        deviceInfo.setNodeType(productDO.getNodeType());
+        deviceInfo.setTenantId(productDO.getTenantId());
+//        deviceInfo.setProtocolCode(productDO.getProtocolCode());
+//        deviceInfo.setKeepAliveTime(productDO.getKeepAliveTime());
+        deviceInfo.setTransparent(productDO.getTransparent());
     }
 
     @Override
@@ -141,7 +147,8 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
         }
         // 更新
         EiotDeviceInfoDO updateObj = BeanUtils.toBean(updateReqVO, EiotDeviceInfoDO.class);
-        updateObj.setNodeType(productDO.getNodeType());
+        initProductInfo(updateObj, productDO);
+
         deviceInfoMapper.updateById(updateObj);
     }
 
