@@ -71,4 +71,10 @@ public interface ErrorCodeConstants {
     ErrorCode SMS_TEMPLATE_UPDATE_ERROR_IN_AUDIT = new ErrorCode(2_006_005_004, "待审核状态无法更新模板内容");
     ErrorCode SMS_TEMPLATE_DELETE_ERROR_IN_AUDIT = new ErrorCode(2_006_005_004, "待审核状态无法删除");
     ErrorCode SMS_SEND_FAILED = new ErrorCode(2_006_005_005, "短信发送失败");
+    
+    // ========== 设备影子 2_006_006_000 ==========
+    ErrorCode DEVICE_SHADOW_NOT_EXISTS = new ErrorCode(2_006_006_000, "设备影子不存在");
+    ErrorCode DEVICE_SHADOW_VERSION_CONFLICT = new ErrorCode(2_006_006_001, "设备影子版本冲突");
+    ErrorCode DEVICE_SHADOW_SYNC_FAILED = new ErrorCode(2_006_006_002, "设备影子同步失败");
+    ErrorCode DEVICE_NOT_EXISTS = new ErrorCode(2_006_006_003, "设备不存在");
 }

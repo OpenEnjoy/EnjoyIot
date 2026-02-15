@@ -164,6 +164,11 @@ public class EmqxComponent extends ThingComponent {
 
     }
 
+    @Override
+    protected void shadowPush(ShadowPush action) {
+
+    }
+
     private void publish(String pk, String dn, String topic, String msg) {
 
         mqttVerticle.getClient().publish(topic, Buffer.buffer(msg), MqttQoS.AT_MOST_ONCE, false, false);

@@ -70,7 +70,10 @@ public enum ActionType {
     TOPO_CHANGE("topo_change"),
 
     //OTA
-    OTA("ota");
+    OTA("ota"),
+
+    //设备影子推送
+    SHADOW_PUSH("shadow_push");
 
     private final String type;
 
