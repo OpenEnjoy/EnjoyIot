@@ -95,7 +95,22 @@ public abstract class ThingComponent extends AbstractComponent {
             case ThingModelMessage.TYPE_TOPO_CHANGE:
                 topoChange( message);
                 break;
+            case ThingModelMessage.TYPE_SHADOW:
+                doShadowPush(message);
+                break;
         }
+    }
+
+    private void doShadowPush(ThingModelMessage message) {
+        shadowPush(ShadowPush.builder()
+                .id(message.getId())
+                .productKey(message.getProductKey())
+                .deviceName(message.getDn())
+                .desired((Map<String, Object>) message.dataToMap().get("desired"))
+                .reported((Map<String, Object>) message.dataToMap().get("reported"))
+                .metadata((Map<String, Object>) message.dataToMap().get("metadata"))
+                .version((Long) message.dataToMap().get("version"))
+                .build());
     }
 
     private void doServiceInvoke(ThingModelMessage message) {
@@ -177,6 +192,8 @@ public abstract class ThingComponent extends AbstractComponent {
     protected abstract void deviceConfig(DeviceConfig action);
 
     protected abstract void deviceTopoChange(DeviceTopoChange action);
+
+    protected abstract void shadowPush(ShadowPush action);
     public void report(ReportAction action) {
         ActionType type = action.getType();
         ThingModelMessage message = null;

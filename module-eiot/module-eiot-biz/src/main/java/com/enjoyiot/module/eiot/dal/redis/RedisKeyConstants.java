@@ -63,6 +63,10 @@ public interface RedisKeyConstants {
      */
     String THING_MODEL = "iot:thing_model";
 
+    /**
+     * 设备影子缓存（按设备ID）
+     */
+    String DEVICE_SHADOW = "iot:shadow";
 
 
 }

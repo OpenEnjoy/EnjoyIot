@@ -122,6 +122,11 @@ public class HttpComponent extends ThingComponent implements Handler<RoutingCont
     }
 
     @Override
+    protected void shadowPush(ShadowPush action) {
+        throw new UnsupportedOperationException("不支持该功能");
+    }
+
+    @Override
     public void handle(RoutingContext ctx) {
         HttpServerResponse response = ctx.response();
         response.putHeader("content-type", "application/json");

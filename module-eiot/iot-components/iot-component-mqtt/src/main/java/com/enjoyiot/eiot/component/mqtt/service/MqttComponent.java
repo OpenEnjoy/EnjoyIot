@@ -41,6 +41,9 @@ import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
 import com.enjoyiot.module.eiot.api.device.dto.RegisterDevice;
 import com.enjoyiot.module.eiot.api.product.ProductApi;
 import com.enjoyiot.module.eiot.api.product.dto.Product;
+import com.enjoyiot.module.eiot.api.shadow.DeviceShadowApi;
+import com.enjoyiot.module.eiot.api.shadow.dto.DeviceShadowDTO;
+import com.enjoyiot.module.eiot.enums.shadow.ShadowErrorCodeEnum;
 import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
 import io.netty.handler.codec.mqtt.MqttProperties;
 import io.netty.handler.codec.mqtt.MqttQoS;
@@ -57,6 +60,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 @Slf4j
@@ -71,17 +75,20 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
 
     private final DeviceApi deviceApi;
 
+    private final DeviceShadowApi deviceShadowApi;
 
     protected MqttComponent(
             MqttVerticle mqttVerticle,
             ProductApi productApi,
             DeviceApi deviceApi,
+            DeviceShadowApi deviceShadowApi,
             ComponentServices componentServices
     ) {
         super(componentServices);
         this.mqttVerticle = mqttVerticle;
         this.productApi = productApi;
         this.deviceApi = deviceApi;
+        this.deviceShadowApi = deviceShadowApi;
     }
 
     @Override
@@ -208,6 +215,36 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
         );
     }
 
+    @Override
+    protected void shadowPush(ShadowPush action) {
+        String topic = String.format("/shadow/get/%s/%s", action.getProductKey(), action.getDeviceName());
+
+        // 构建 control 消息
+        Map<String, Object> message = new HashMap<>();
+        message.put("method", "control");
+        
+        // 构建 payload
+        Map<String, Object> payload = new HashMap<>();
+
+        Map<String, Object> state = new HashMap<>();
+        state.put("desired", action.getDesired());
+        state.put("reported", action.getReported());
+
+        payload.put("state", state);
+        payload.put("metadata", action.getMetadata());
+
+        message.put("payload", payload);
+        message.put("version", action.getVersion());
+        message.put("timestamp", System.currentTimeMillis());
+
+        publish(
+                action.getProductKey(),
+                action.getDeviceName(),
+                topic,
+                JSONUtil.toJsonStr(message)
+        );
+    }
+
     public void publish(String pk, String dn, String topic, String msg) {
         MqttEndpoint endpoint = endpointMap.get(getEndpointKey(pk, dn));
         if (endpoint == null) {
@@ -314,11 +351,36 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
             for (MqttTopicSubscription s : subscribe.topicSubscriptions()) {
                 log.info("Subscription for {},with QoS {}", s.topicName(), s.qualityOfService());
                 try {
-                    String[] subPkDn = getSubDevice(s.topicName());
+                    String topicName = s.topicName();
+                    
+                    // 特殊处理：设备影子 topic
+                    if (topicName.startsWith("/shadow/")) {
+                        String[] parts = topicName.split("/");
+                        if (parts.length >= 5) {
+                            String subPk = parts[3];
+                            String subDn = parts[4];
+                            // 验证设备是否有权限订阅此影子 topic（只能订阅自己的）
+                            if (pk.equals(subPk) && dn.equals(subDn)) {
+                                fixOnline(pk, dn, endpoint);
+                                reasonCodes.add(MqttSubAckReasonCode.qosGranted(s.qualityOfService()));
+                                log.info("设备订阅影子topic成功: pk={}, dn={}, topic={}", pk, dn, topicName);
+                            } else {
+                                reasonCodes.add(MqttSubAckReasonCode.NOT_AUTHORIZED);
+                                log.error("设备无权订阅其他设备的影子topic: 当前设备pk={},dn={}, 订阅topic={}", pk, dn, topicName);
+                            }
+                        } else {
+                            reasonCodes.add(MqttSubAckReasonCode.NOT_AUTHORIZED);
+                            log.error("影子topic格式不正确: {}", topicName);
+                        }
+                        continue;
+                    }
+                    
+                    // 普通 topic 处理
+                    String[] subPkDn = getSubDevice(topicName);
                     //检验topic
                     if (subPkDn == null) {
                         reasonCodes.add(MqttSubAckReasonCode.NOT_AUTHORIZED);
-                        log.error("订阅的topic格式不正确");
+                        log.error("订阅的topic格式不正确: {}", topicName);
                         continue;
                     }
                     String subPk = subPkDn[0];
@@ -375,6 +437,12 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
                 endpoint.publishReceived(message.messageId());
             }
             if (payload.isEmpty()) {
+                return;
+            }
+
+            // 处理设备影子 Topic
+            if (topic.startsWith("/shadow/")) {
+                handleShadowMessage(endpoint, topic, payload);
                 return;
             }
 
@@ -591,4 +659,367 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
 
         endpoint.publish(topic, JsonObject.mapFrom(payloadReply).toBuffer(), MqttQoS.AT_LEAST_ONCE, false, false);
     }
+
+    /**
+     * 处理设备影子消息
+     * Topic 格式: /shadow/update/${productKey}/${deviceName}
+     */
+    private void handleShadowMessage(MqttEndpoint endpoint, String topic, JsonObject payload) {
+        try {
+            // 解析 topic 获取 productKey 和 deviceName
+            String[] parts = topic.split("/");
+            if (parts.length < 5) {
+                log.error("设备影子 Topic 格式不正确: {}", topic);
+                return;
+            }
+
+            String action = parts[2]; // update 或 get
+            String productKey = parts[3];
+            String deviceName = parts[4];
+
+            // 确保设备在线
+            fixOnline(productKey, deviceName, endpoint);
+
+            // 获取设备信息
+            DeviceInfo deviceInfo = deviceApi.getDeviceByPkDnByCache(productKey, deviceName);
+            if (deviceInfo == null) {
+                log.error("设备不存在: pk={}, dn={}", productKey, deviceName);
+                replyShadowError(endpoint, productKey, deviceName, ShadowErrorCodeEnum.SERVER_ERROR);
+                return;
+            }
+
+            String method = payload.getString("method", "").toLowerCase();
+            
+            if ("update".equals(action)) {
+                handleShadowUpdate(endpoint, deviceInfo, payload, method);
+            } else if ("get".equals(action)) {
+                handleShadowGet(endpoint, deviceInfo, payload);
+            } else {
+                log.error("不支持的影子操作: {}", action);
+            }
+
+        } catch (Exception e) {
+            log.error("处理设备影子消息失败, topic: {}, payload: {}", topic, payload, e);
+        }
+    }
+
+    /**
+     * 处理设备影子更新
+     */
+    private void handleShadowUpdate(MqttEndpoint endpoint, DeviceInfo deviceInfo, JsonObject payload, String method) {
+        try {
+            Long deviceId = deviceInfo.getId();
+            String productKey = deviceInfo.getProductKey();
+            String dn = deviceInfo.getDn();
+
+            // 校验 method 字段
+            if (StringUtils.isBlank(method)) {
+                replyShadowError(endpoint, productKey, dn, ShadowErrorCodeEnum.MISSING_METHOD);
+                return;
+            }
+
+            // 处理 get 方法
+            if ("get".equals(method)) {
+                DeviceShadowDTO shadow = deviceShadowApi.getByDeviceId(deviceId);
+                if (shadow == null) {
+                    replyShadowError(endpoint, productKey, dn, ShadowErrorCodeEnum.SERVER_ERROR);
+                    return;
+                }
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("method", "reply");
+                response.put("payload", buildShadowPayload(shadow));
+                response.put("version", shadow.getVersion());
+                response.put("timestamp", System.currentTimeMillis());
+
+                String topic = String.format("/shadow/get/%s/%s", productKey, dn);
+                endpoint.publish(topic, JsonObject.mapFrom(response).toBuffer(), 
+                    MqttQoS.AT_LEAST_ONCE, false, false);
+
+                log.info("返回设备影子: deviceId={}, version={}", deviceId, shadow.getVersion());
+                return;
+            }
+
+            // 处理 update 方法
+            if ("update".equals(method)) {
+                handleShadowUpdateMethod(endpoint, deviceId, productKey, dn, payload);
+                return;
+            }
+
+            // 处理 delete 方法
+            if ("delete".equals(method)) {
+                handleShadowDeleteMethod(endpoint, deviceId, productKey, dn, payload);
+                return;
+            }
+
+            // 不支持的方法
+            replyShadowError(endpoint, productKey, dn, ShadowErrorCodeEnum.INVALID_METHOD);
+
+        } catch (Exception e) {
+            log.error("处理设备影子更新失败", e);
+            replyShadowError(endpoint, deviceInfo.getProductKey(), deviceInfo.getDn(), ShadowErrorCodeEnum.SERVER_ERROR);
+        }
+    }
+
+    /**
+     * 处理设备影子 update 方法
+     */
+    private void handleShadowUpdateMethod(MqttEndpoint endpoint, Long deviceId, String productKey, String dn, JsonObject payload) {
+        JsonObject state = payload.getJsonObject("state");
+        if (state == null) {
+            replyShadowError(endpoint, productKey, dn, ShadowErrorCodeEnum.MISSING_STATE);
+            return;
+        }
+
+        // 解析 version
+        Long deviceVersion = parseVersion(payload, endpoint, productKey, dn);
+        if (deviceVersion == null && payload.getValue("version") != null) {
+            return; // 版本解析失败，已回复错误
+        }
+
+        try {
+            Long newVersion;
+
+            // 特殊版本号：-1 表示清空整个影子
+            if (deviceVersion != null && deviceVersion == -1) {
+                newVersion = deviceShadowApi.clearShadow(deviceId);
+                log.info("设备清空影子: deviceId={}, newVersion={}", deviceId, newVersion);
+                replyShadowSuccess(endpoint, productKey, dn, newVersion);
+                return;
+            }
+
+            // 检查是否清空 desired
+            Object desiredObj = state.getValue("desired");
+            if (desiredObj != null && "null".equals(String.valueOf(desiredObj))) {
+                newVersion = deviceShadowApi.clearDesired(deviceId, deviceVersion);
+                log.info("设备清空期望状态: deviceId={}, newVersion={}", deviceId, newVersion);
+                replyShadowSuccess(endpoint, productKey, dn, newVersion);
+                return;
+            }
+
+            // 更新 reported
+            Object reportedObj = state.getValue("reported");
+            if (reportedObj == null) {
+                replyShadowError(endpoint, productKey, dn, ShadowErrorCodeEnum.MISSING_REPORTED);
+                return;
+            }
+
+            Map<String, Object> reportedMap;
+            if ("null".equals(String.valueOf(reportedObj))) {
+                // 清空全部 reported
+                reportedMap = new HashMap<>();
+            } else {
+                JsonObject reported = state.getJsonObject("reported");
+                if (reported == null || reported.isEmpty()) {
+                    replyShadowError(endpoint, productKey, dn, ShadowErrorCodeEnum.MISSING_REPORTED);
+                    return;
+                }
+                reportedMap = reported.getMap();
+            }
+
+            // 校验属性个数
+            if (reportedMap.size() > 128) {
+                replyShadowError(endpoint, productKey, dn, ShadowErrorCodeEnum.TOO_MANY_ATTRIBUTES);
+                return;
+            }
+
+            newVersion = deviceShadowApi.updateReported(deviceId, reportedMap, deviceVersion);
+            log.info("设备更新影子: deviceId={}, newVersion={}", deviceId, newVersion);
+            replyShadowSuccess(endpoint, productKey, dn, newVersion);
+
+        } catch (Exception e) {
+            log.error("设备影子更新失败: deviceId={}, version={}", deviceId, deviceVersion, e);
+            replyShadowError(endpoint, productKey, dn, ShadowErrorCodeEnum.VERSION_CONFLICT);
+        }
+    }
+
+    /**
+     * 处理设备影子 delete 方法
+     */
+    private void handleShadowDeleteMethod(MqttEndpoint endpoint, Long deviceId, String productKey, String dn, JsonObject payload) {
+        JsonObject state = payload.getJsonObject("state");
+        if (state == null) {
+            replyShadowError(endpoint, productKey, dn, ShadowErrorCodeEnum.MISSING_STATE);
+            return;
+        }
+
+        // 解析 version
+        Long deviceVersion = parseVersion(payload, endpoint, productKey, dn);
+        if (deviceVersion == null && payload.getValue("version") != null) {
+            return; // 版本解析失败，已回复错误
+        }
+
+        try {
+            Object reportedObj = state.getValue("reported");
+            if (reportedObj == null) {
+                replyShadowError(endpoint, productKey, dn, ShadowErrorCodeEnum.MISSING_REPORTED);
+                return;
+            }
+
+            Long newVersion;
+
+            if ("null".equals(String.valueOf(reportedObj))) {
+                // 删除全部属性：使用完全替换方法传入空 map
+                newVersion = deviceShadowApi.replaceReported(deviceId, new HashMap<>(), deviceVersion);
+            } else {
+                // 删除指定属性
+                JsonObject reported = state.getJsonObject("reported");
+                if (reported == null || reported.isEmpty()) {
+                    replyShadowError(endpoint, productKey, dn, ShadowErrorCodeEnum.MISSING_REPORTED);
+                    return;
+                }
+
+                // 收集值为 "null" 的属性 key
+                java.util.List<String> keysToDelete = new java.util.ArrayList<>();
+                for (String key : reported.fieldNames()) {
+                    if ("null".equals(String.valueOf(reported.getValue(key)))) {
+                        keysToDelete.add(key);
+                    }
+                }
+
+                if (keysToDelete.isEmpty()) {
+                    replyShadowError(endpoint, productKey, dn, ShadowErrorCodeEnum.MISSING_REPORTED);
+                    return;
+                }
+
+                newVersion = deviceShadowApi.deleteReportedProperties(deviceId, keysToDelete, deviceVersion);
+            }
+
+            log.info("设备删除影子属性: deviceId={}, newVersion={}", deviceId, newVersion);
+            replyShadowSuccess(endpoint, productKey, dn, newVersion);
+
+        } catch (Exception e) {
+            log.error("设备影子删除失败: deviceId={}, version={}", deviceId, deviceVersion, e);
+            replyShadowError(endpoint, productKey, dn, ShadowErrorCodeEnum.VERSION_CONFLICT);
+        }
+    }
+
+    /**
+     * 解析版本号
+     */
+    private Long parseVersion(JsonObject payload, MqttEndpoint endpoint, String productKey, String dn) {
+        Object versionObj = payload.getValue("version");
+        if (versionObj == null) {
+            return null;
+        }
+
+        try {
+            if (versionObj instanceof Number) {
+                return ((Number) versionObj).longValue();
+            } else {
+                return Long.parseLong(versionObj.toString());
+            }
+        } catch (NumberFormatException e) {
+            replyShadowError(endpoint, productKey, dn, ShadowErrorCodeEnum.INVALID_VERSION);
+            return null;
+        }
+    }
+
+    /**
+     * 处理设备影子获取
+     */
+    private void handleShadowGet(MqttEndpoint endpoint, DeviceInfo deviceInfo, JsonObject payload) {
+        try {
+            String method = payload.getString("method", "get");
+            
+            if ("get".equals(method)) {
+                // 设备请求获取完整影子
+                DeviceShadowDTO shadow = deviceShadowApi.getByDeviceId(deviceInfo.getId());
+                if (shadow == null) {
+                    replyShadowError(endpoint, deviceInfo.getProductKey(), deviceInfo.getDn(), ShadowErrorCodeEnum.SERVER_ERROR);
+                    return;
+                }
+
+                // 构建响应消息
+                Map<String, Object> response = new HashMap<>();
+                response.put("method", "reply");
+                response.put("payload", buildShadowPayload(shadow));
+                response.put("version", shadow.getVersion());
+                response.put("timestamp", System.currentTimeMillis());
+
+                String topic = String.format("/shadow/get/%s/%s", 
+                    deviceInfo.getProductKey(), deviceInfo.getDn());
+                endpoint.publish(topic, JsonObject.mapFrom(response).toBuffer(), 
+                    MqttQoS.AT_LEAST_ONCE, false, false);
+
+                log.info("返回设备影子: deviceId={}, version={}", deviceInfo.getId(), shadow.getVersion());
+            }
+
+        } catch (Exception e) {
+            log.error("处理设备影子获取失败", e);
+            replyShadowError(endpoint, deviceInfo.getProductKey(), deviceInfo.getDn(), ShadowErrorCodeEnum.SERVER_ERROR);
+        }
+    }
+
+    /**
+     * 构建影子 payload
+     */
+    private Map<String, Object> buildShadowPayload(DeviceShadowDTO shadow) {
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("status", "success");
+
+        Map<String, Object> state = new HashMap<>();
+        
+        // 添加 desired 和 reported
+        if (shadow.getDesired() != null && !shadow.getDesired().isEmpty()) {
+            state.put("desired", shadow.getDesired());
+        }
+        if (shadow.getReported() != null && !shadow.getReported().isEmpty()) {
+            state.put("reported", shadow.getReported());
+        }
+
+        payload.put("state", state);
+        
+        // 添加元数据
+        if (shadow.getMetadata() != null) {
+            payload.put("metadata", shadow.getMetadata());
+        }
+
+        return payload;
+    }
+
+    /**
+     * 回复影子操作成功
+     */
+    private void replyShadowSuccess(MqttEndpoint endpoint, String productKey, String deviceName, Long version) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("method", "reply");
+        
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("status", "success");
+        if (version != null) {
+            payload.put("version", version);
+        }
+        
+        response.put("payload", payload);
+        response.put("timestamp", System.currentTimeMillis());
+
+        String topic = String.format("/shadow/get/%s/%s", productKey, deviceName);
+        endpoint.publish(topic, JsonObject.mapFrom(response).toBuffer(), 
+            MqttQoS.AT_LEAST_ONCE, false, false);
+    }
+
+    /**
+     * 回复影子操作失败
+     */
+    private void replyShadowError(MqttEndpoint endpoint, String productKey, String deviceName, ShadowErrorCodeEnum errorCode) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("method", "reply");
+        
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("status", "error");
+        
+        Map<String, Object> content = new HashMap<>();
+        content.put("errorcode", String.valueOf(errorCode.getCode()));
+        content.put("errormessage", errorCode.getMessage());
+        payload.put("content", content);
+        
+        response.put("payload", payload);
+        response.put("timestamp", System.currentTimeMillis());
+
+        String topic = String.format("/shadow/get/%s/%s", productKey, deviceName);
+        endpoint.publish(topic, JsonObject.mapFrom(response).toBuffer(), 
+            MqttQoS.AT_LEAST_ONCE, false, false);
+    }
+
 }

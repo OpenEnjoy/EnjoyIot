@@ -183,7 +183,7 @@ public class OtaServiceImpl implements OtaService {
                 deviceCtrlService.otaUpgrade(deviceId, true, otaPackageDO);
                 deviceOtaDetails.add(DeviceOtaDetail.builder()
                         .taskId(IdUtil.fastSimpleUUID())
-                        .deviceName(deviceInfo.getName())
+                        .deviceName(deviceInfo.getDn())
                         .otaInfoId(deviceOtaInfo.getId())
                         .module(otaPackageDO.getModule())
                         .version(otaPackageDO.getVersion())

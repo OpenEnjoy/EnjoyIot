@@ -347,4 +347,9 @@ public class UdpComponent extends ThingComponent {
     protected void deviceTopoChange(DeviceTopoChange action) {
 
     }
+
+    @Override
+    protected void shadowPush(ShadowPush action) {
+
+    }
 }
