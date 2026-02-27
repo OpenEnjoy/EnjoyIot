@@ -108,6 +108,11 @@ public class CoapComponent extends ThingComponent {
 
     }
 
+    @Override
+    protected void shadowPush(ShadowPush action) {
+
+    }
+
     /**
      * 统一的设备请求处理方法
      */

@@ -301,6 +301,11 @@ public class TcpComponent extends ThingComponent implements Handler<NetSocket> {
 
     }
 
+    @Override
+    protected void shadowPush(ShadowPush action) {
+
+    }
+
     @Scheduled(fixedRate = 40, timeUnit = TimeUnit.SECONDS)
     private void offlineCheckTask() {
         log.info("keepClientTask");

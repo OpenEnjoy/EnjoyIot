@@ -385,6 +385,11 @@ public class ModbusComponent extends ThingComponent implements Handler<NetSocket
 
     }
 
+    @Override
+    protected void shadowPush(ShadowPush action) {
+
+    }
+
     private void offlineCheckTask() {
         log.info("keepClientTask");
         //新建列表，防止并发时被修改

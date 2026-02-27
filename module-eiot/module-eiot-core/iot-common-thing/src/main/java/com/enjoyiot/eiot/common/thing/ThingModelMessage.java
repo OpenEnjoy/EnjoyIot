@@ -62,6 +62,9 @@ public class ThingModelMessage {
 
     public static final String TYPE_TOPO_CHANGE = "topo_change";
 
+    public static final String TYPE_SHADOW = "shadow";
+    public static final String ID_SHADOW_UPDATE = "update";
+
     private String id;
 
     private String mid;

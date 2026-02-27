@@ -51,6 +51,7 @@ import com.enjoyiot.module.eiot.dal.mysql.product.ProductMapper;
 import com.enjoyiot.module.eiot.dal.redis.RedisKeyConstants;
 import com.enjoyiot.module.eiot.dal.redis.no.EiotRedisDAO;
 import com.enjoyiot.module.eiot.service.product.ProductService;
+import com.enjoyiot.module.eiot.service.shadow.DeviceShadowService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -60,6 +61,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
@@ -98,7 +100,10 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
     @Resource
     private CacheManager cacheManager;
 
+    @Resource
+    private DeviceShadowService deviceShadowService;
 
+    @Transactional
     @Override
     public Long createDeviceInfo(DeviceInfoSaveReqVO createReqVO) {
 
@@ -120,6 +125,10 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
         deviceInfo.setTenantId(productDO.getTenantId());
         deviceInfo.setTransparent(productDO.getTransparent());
         deviceInfoMapper.insert(deviceInfo);
+        
+        // 创建设备影子
+        deviceShadowService.createShadow(deviceInfo.getId());
+        
         // 返回
         return deviceInfo.getId();
     }
@@ -379,6 +388,9 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
         deviceInfo.setSerialNo(registerDevice.getDeviceName());
 
         Long deviceId = createDeviceInfo(deviceInfo);
+        
+        // 创建设备影子（createDeviceInfo 中已经创建了，这里不需要重复创建）
+        
         return getDeviceInfo(deviceId);
     }
 
