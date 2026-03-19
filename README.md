@@ -116,6 +116,8 @@ https://y5yrmmjjns.feishu.cn/wiki/FlxmwXzQJiEKCJkGuIhcLsyjnwh?fromScene=spaceOve
 
 ## :fa-chain-broken: 友情链接
 
+  :fa-star:  **乐飞无人机智巡平台** ([https://gitee.com/open-enjoy/uavs](https://gitee.com/open-enjoy/uavs))
+
   :fa-star:    **MyEMS能源管理系统** ([https://gitee.com/myems/myems](https://gitee.com/myems/myems))
 
   :+1:  **数据可视化**([https://gitee.com/xiaopujun/light-chaser](https://gitee.com/xiaopujun/light-chaser))  [官网](http://www.lcpdesigner.cn/home)
