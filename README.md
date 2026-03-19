@@ -6,6 +6,7 @@
 
 ## 平台简介
 
+【enjoy-iot】为乐飞智联旗下开源物联网平台，系列产品推荐：[乐飞无人机智巡平台](https://gitee.com/open-enjoy/uavs)
 
 > 有任何问题，或者想要的功能，可以在 _Issues_ 中提交。
 >
@@ -44,6 +45,11 @@
 <img alt="wx.png" src=".image/rule.png" width="600"/>
 <img alt="wx.png" src=".image/rule_action.png" width="600"/>
 <img alt="wx.png" src=".image/alarm_conf.png" width="600"/>
+
+
+### 无人机智巡平台
+![输入图片说明](.image/ScreenShot_2026-03-19_194559_346.png)
+
 
 ### 文档
 
