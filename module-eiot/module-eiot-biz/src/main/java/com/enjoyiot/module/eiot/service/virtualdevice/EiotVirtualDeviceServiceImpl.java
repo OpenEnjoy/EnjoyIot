@@ -24,7 +24,7 @@
 package com.enjoyiot.module.eiot.service.virtualdevice;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.enjoyiot.eiot.com.enjoyiot.eiot.IVirtualDeviceLogData;
+import com.enjoyiot.eiot.IVirtualDeviceLogData;
 import com.enjoyiot.eiot.virtualdevice.VirtualManager;
 import com.enjoyiot.framework.common.exception.ServiceException;
 import com.enjoyiot.framework.common.pojo.PageResult;
