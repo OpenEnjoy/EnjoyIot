@@ -23,7 +23,7 @@
 package com.enjoyiot.eiot.temporal.td.service;
 
 
-import com.enjoyiot.eiot.IVirtualDeviceLogData;
+import com.enjoyiot.eiot.com.enjoyiot.eiot.IVirtualDeviceLogData;
 import com.enjoyiot.eiot.temporal.td.dao.TdTemplate;
 import com.enjoyiot.eiot.temporal.td.model.TbVirtualDeviceLog;
 import com.enjoyiot.framework.common.pojo.PageResult;
