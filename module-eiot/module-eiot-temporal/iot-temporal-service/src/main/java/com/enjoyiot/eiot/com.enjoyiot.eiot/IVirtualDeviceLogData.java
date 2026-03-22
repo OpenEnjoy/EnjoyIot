@@ -21,29 +21,28 @@
  * /
  */
 
-package com.enjoyiot.eiot;
+package com.enjoyiot.eiot.com.enjoyiot.eiot;
 
 
-import com.enjoyiot.module.eiot.api.thingmodel.dto.ThingModel;
+import com.enjoyiot.framework.common.pojo.PageResult;
+import com.enjoyiot.module.eiot.api.virtualdevice.dto.VirtualDeviceLog;
 
-/**
- * 数据结构接口
- */
-public interface IDbStructureData {
+public interface IVirtualDeviceLogData {
 
     /**
-     * 定义物模型，根据物模型定义表
+     * 根据虚拟设备id分页查询日志
+     *
+     * @param virtualDeviceId
+     * @param page
+     * @param size
+     * @return
      */
-    void defineThingModel(ThingModel thingModel);
+    PageResult<VirtualDeviceLog> findByVirtualDeviceId(Long virtualDeviceId, int page, int size);
 
     /**
-     * 更新物模型定义
+     * 新增虚拟设备日志
+     *
+     * @param log
      */
-    void updateThingModel(ThingModel thingModel);
-
-    /**
-     * 初始化数据库结构
-     */
-    void initDbStructure();
-
+    void add(VirtualDeviceLog log);
 }
