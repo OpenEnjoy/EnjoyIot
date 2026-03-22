@@ -20,30 +20,38 @@
  *  limitations under the License.
  * /
  */
+package com.enjoyiot.eiot;
 
-package com.enjoyiot.eiot.com.enjoyiot.eiot;
 
+import com.enjoyiot.module.eiot.api.device.dto.DeviceProperty;
+import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
 
-import com.enjoyiot.module.eiot.api.thingmodel.dto.ThingModel;
+import java.util.List;
+import java.util.Map;
 
 /**
- * 数据结构接口
+ * 设备属性时序数据接口
  */
-public interface IDbStructureData {
+public interface IDevicePropertyData {
 
     /**
-     * 定义物模型，根据物模型定义表
+     * 按时间范围取设备指定属性的历史数据
+     *
+     * @param deviceId 设备id
+     * @param name     属性名称
+     * @param start    开始时间戳
+     * @param end      结束时间戳
+     * @param size     取时间范围内的数量
      */
-    void defineThingModel(ThingModel thingModel);
+    List<DeviceProperty> findDevicePropertyHistory(Long deviceId, String name, long start, long end, int size);
 
     /**
-     * 更新物模型定义
+     * 添加多个属性
+     *
+     * @param deviceId   设备ID
+     * @param properties 属性
+     * @param time       属性上报时间
      */
-    void updateThingModel(ThingModel thingModel);
-
-    /**
-     * 初始化数据库结构
-     */
-    void initDbStructure();
+    void addProperties(Long deviceId, Map<String, DevicePropertyCache> properties, long time);
 
 }

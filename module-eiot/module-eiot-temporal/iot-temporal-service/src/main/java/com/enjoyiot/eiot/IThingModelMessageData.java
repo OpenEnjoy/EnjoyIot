@@ -21,7 +21,7 @@
  * /
  */
 
-package com.enjoyiot.eiot.com.enjoyiot.eiot;
+package com.enjoyiot.eiot;
 
 
 import com.enjoyiot.eiot.common.thing.ThingModelMessage;

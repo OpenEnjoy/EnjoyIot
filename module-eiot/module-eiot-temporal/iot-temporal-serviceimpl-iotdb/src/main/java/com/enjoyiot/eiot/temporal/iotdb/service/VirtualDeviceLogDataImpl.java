@@ -1,7 +1,7 @@
 package com.enjoyiot.eiot.temporal.iotdb.service;
 
 
-import com.enjoyiot.eiot.com.enjoyiot.eiot.IVirtualDeviceLogData;
+import com.enjoyiot.eiot.IVirtualDeviceLogData;
 import com.enjoyiot.eiot.temporal.iotdb.config.Constants;
 import com.enjoyiot.eiot.temporal.iotdb.config.IotdbDatasourceConfig;
 import com.enjoyiot.eiot.temporal.iotdb.dao.IotdbBaseService;
