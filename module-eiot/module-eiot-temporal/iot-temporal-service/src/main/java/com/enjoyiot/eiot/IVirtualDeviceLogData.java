@@ -20,28 +20,29 @@
  *  limitations under the License.
  * /
  */
-package com.enjoyiot.eiot.com.enjoyiot.eiot;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package com.enjoyiot.eiot;
 
-/**
- * 统计的时间数据
- */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class TimeData {
+
+import com.enjoyiot.framework.common.pojo.PageResult;
+import com.enjoyiot.module.eiot.api.virtualdevice.dto.VirtualDeviceLog;
+
+public interface IVirtualDeviceLogData {
 
     /**
-     * 时间
+     * 根据虚拟设备id分页查询日志
+     *
+     * @param virtualDeviceId
+     * @param page
+     * @param size
+     * @return
      */
-    private long time;
+    PageResult<VirtualDeviceLog> findByVirtualDeviceId(Long virtualDeviceId, int page, int size);
 
     /**
-     * 数据值
+     * 新增虚拟设备日志
+     *
+     * @param log
      */
-    private Object data;
-
+    void add(VirtualDeviceLog log);
 }

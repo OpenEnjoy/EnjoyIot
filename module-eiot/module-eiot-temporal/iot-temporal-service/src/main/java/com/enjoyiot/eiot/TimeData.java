@@ -20,38 +20,28 @@
  *  limitations under the License.
  * /
  */
-package com.enjoyiot.eiot.com.enjoyiot.eiot;
+package com.enjoyiot.eiot;
 
-
-import com.enjoyiot.module.eiot.api.device.dto.DeviceProperty;
-import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
-
-import java.util.List;
-import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * 设备属性时序数据接口
+ * 统计的时间数据
  */
-public interface IDevicePropertyData {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class TimeData {
 
     /**
-     * 按时间范围取设备指定属性的历史数据
-     *
-     * @param deviceId 设备id
-     * @param name     属性名称
-     * @param start    开始时间戳
-     * @param end      结束时间戳
-     * @param size     取时间范围内的数量
+     * 时间
      */
-    List<DeviceProperty> findDevicePropertyHistory(Long deviceId, String name, long start, long end, int size);
+    private long time;
 
     /**
-     * 添加多个属性
-     *
-     * @param deviceId   设备ID
-     * @param properties 属性
-     * @param time       属性上报时间
+     * 数据值
      */
-    void addProperties(Long deviceId, Map<String, DevicePropertyCache> properties, long time);
+    private Object data;
 
 }
