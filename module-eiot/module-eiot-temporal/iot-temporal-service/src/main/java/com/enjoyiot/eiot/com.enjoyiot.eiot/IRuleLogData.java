@@ -21,17 +21,18 @@
  * /
  */
 
-package com.enjoyiot.eiot;
+package com.enjoyiot.eiot.com.enjoyiot.eiot;
 
 
 import com.enjoyiot.framework.common.pojo.PageResult;
-import com.enjoyiot.module.eiot.api.task.dto.TaskLog;
+import com.enjoyiot.module.eiot.api.rule.dto.RuleLog;
 
-public interface ITaskLogData {
-    void deleteByTaskId(Long taskId);
+public interface IRuleLogData {
 
-    PageResult<TaskLog> findByTaskId(Long taskId, int page, int size);
+    void deleteByRuleId(Long ruleId);
 
-    void add(TaskLog log);
+    PageResult<RuleLog> findByRuleId(Long ruleId, int page, int size);
+
+    void add(RuleLog log);
 
 }
