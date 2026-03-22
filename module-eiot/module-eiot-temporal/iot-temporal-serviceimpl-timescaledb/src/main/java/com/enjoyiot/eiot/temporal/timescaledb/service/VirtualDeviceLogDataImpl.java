@@ -24,7 +24,7 @@ package com.enjoyiot.eiot.temporal.timescaledb.service;
 
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.enjoyiot.eiot.IVirtualDeviceLogData;
+import com.enjoyiot.eiot.com.enjoyiot.eiot.IVirtualDeviceLogData;
 import com.enjoyiot.eiot.temporal.timescaledb.dao.PgVirtualDeviceLogMapper;
 import com.enjoyiot.eiot.temporal.timescaledb.model.PgVirtualDeviceLog;
 import com.enjoyiot.framework.common.pojo.PageParam;

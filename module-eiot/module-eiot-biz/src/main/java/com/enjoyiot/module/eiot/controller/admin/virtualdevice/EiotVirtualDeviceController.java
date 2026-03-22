@@ -22,7 +22,7 @@
  */
 package com.enjoyiot.module.eiot.controller.admin.virtualdevice;
 
-import com.enjoyiot.eiot.IVirtualDeviceLogData;
+import com.enjoyiot.eiot.com.enjoyiot.eiot.IVirtualDeviceLogData;
 import com.enjoyiot.framework.common.pojo.CommonResult;
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.framework.common.util.object.BeanUtils;

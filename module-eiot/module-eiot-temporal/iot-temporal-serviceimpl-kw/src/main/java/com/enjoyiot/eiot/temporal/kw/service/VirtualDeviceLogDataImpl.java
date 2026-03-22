@@ -24,7 +24,7 @@ package com.enjoyiot.eiot.temporal.kw.service;
 
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.enjoyiot.eiot.IVirtualDeviceLogData;
+import com.enjoyiot.eiot.com.enjoyiot.eiot.IVirtualDeviceLogData;
 import com.enjoyiot.eiot.temporal.kw.dao.KwVirtualDeviceLogMapper;
 import com.enjoyiot.eiot.temporal.kw.model.KwVirtualDeviceLog;
 import com.enjoyiot.framework.common.pojo.PageParam;

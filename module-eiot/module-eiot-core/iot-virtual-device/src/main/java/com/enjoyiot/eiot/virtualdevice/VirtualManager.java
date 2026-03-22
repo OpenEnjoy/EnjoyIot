@@ -24,7 +24,7 @@ package com.enjoyiot.eiot.virtualdevice;
 
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
-import com.enjoyiot.eiot.IVirtualDeviceLogData;
+import com.enjoyiot.eiot.com.enjoyiot.eiot.IVirtualDeviceLogData;
 import com.enjoyiot.eiot.common.constant.Constants;
 import com.enjoyiot.eiot.common.thing.ThingModelMessage;
 import com.enjoyiot.eiot.engine.IScriptEngine;
