@@ -23,7 +23,7 @@
 package com.enjoyiot.eiot.temporal.es.service;
 
 
-import com.enjoyiot.eiot.IVirtualDeviceLogData;
+import com.enjoyiot.eiot.com.enjoyiot.eiot.IVirtualDeviceLogData;
 import com.enjoyiot.eiot.temporal.es.convert.EsVirtualLogConvert;
 import com.enjoyiot.eiot.temporal.es.dao.VirtualDeviceLogRepository;
 import com.enjoyiot.eiot.temporal.es.document.DocVirtualDeviceLog;
