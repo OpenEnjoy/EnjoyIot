@@ -63,8 +63,7 @@ public class DeviceCtrlServiceImpl implements DeviceCtrlService {
     private ComponentManager componentManager;
 
     @Resource
-    @Lazy
-    private VirtualManager virtualManager;
+    private Optional<VirtualManager> virtualManager;
 
 
     /**
@@ -268,7 +267,7 @@ public class DeviceCtrlServiceImpl implements DeviceCtrlService {
                 .identifier(identifier)
                 .data(data)
                 .build();
-        if (virtualManager.isVirtual(deviceId)) {
+        if (virtualManager.isPresent() && virtualManager.get().isVirtual(deviceId)) {
             //虚拟设备指令下发
             virtualManager.send(message);
         } else {
