@@ -66,11 +66,20 @@ public class TriggerControlService implements InitializingBean {
     }
 
     private void consume(RBlockingQueue<TriggerJob> queue, boolean recovery) {
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             try {
-                TriggerJob job = queue.take();
+                TriggerJob job = queue.poll(1, TimeUnit.SECONDS);
+                if (job == null) {
+                    continue;
+                }
                 TenantContextHolder.setTenantId(job.getTenantId());
                 processJob(job, recovery);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            } catch (org.redisson.RedissonShutdownException e) {
+                log.info("Redisson is shutdown, stop trigger queue consumer. recovery={}", recovery);
+                break;
             } catch (Throwable e) {
                 log.error("Trigger queue consumer error, recovery={}", recovery, e);
             }
