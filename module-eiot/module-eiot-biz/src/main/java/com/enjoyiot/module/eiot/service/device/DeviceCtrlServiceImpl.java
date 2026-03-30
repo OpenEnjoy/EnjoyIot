@@ -43,6 +43,7 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -269,7 +270,7 @@ public class DeviceCtrlServiceImpl implements DeviceCtrlService {
                 .build();
         if (virtualManager.isPresent() && virtualManager.get().isVirtual(deviceId)) {
             //虚拟设备指令下发
-            virtualManager.send(message);
+            virtualManager.get().send(message);
         } else {
             //设备指令下发
             componentManager.sendToDevice(message);
