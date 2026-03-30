@@ -44,6 +44,8 @@ import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.context.annotation.Lazy;
+
 import java.util.*;
 
 @Slf4j
@@ -57,6 +59,7 @@ public class VirtualManager {
     @Autowired
     private DeviceApi deviceApi;
     @Autowired
+    @Lazy
     private Scheduler scheduler;
 
     @Autowired
