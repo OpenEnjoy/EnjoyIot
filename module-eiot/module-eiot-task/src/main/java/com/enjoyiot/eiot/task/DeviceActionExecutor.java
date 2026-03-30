@@ -45,6 +45,7 @@ import java.util.Map;
 public class DeviceActionExecutor implements ActionExecutor<Object> {
 
     @Resource
+    @org.springframework.context.annotation.Lazy
     private DeviceApi deviceApi;
 
     private Map<Integer, DeviceActionMsg> actionMap = Maps.newConcurrentMap();
