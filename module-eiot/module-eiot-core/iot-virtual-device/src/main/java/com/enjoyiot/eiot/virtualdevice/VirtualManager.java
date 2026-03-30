@@ -42,6 +42,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -57,6 +58,7 @@ public class VirtualManager {
     @Autowired
     private DeviceApi deviceApi;
     @Autowired
+    @Lazy
     private Scheduler scheduler;
 
     @Autowired

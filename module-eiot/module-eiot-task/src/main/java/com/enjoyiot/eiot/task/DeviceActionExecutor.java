@@ -32,6 +32,7 @@ import com.google.common.collect.Maps;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -45,6 +46,7 @@ import java.util.Map;
 public class DeviceActionExecutor implements ActionExecutor<Object> {
 
     @Resource
+    @Lazy
     private DeviceApi deviceApi;
 
     private Map<Integer, DeviceActionMsg> actionMap = Maps.newConcurrentMap();
