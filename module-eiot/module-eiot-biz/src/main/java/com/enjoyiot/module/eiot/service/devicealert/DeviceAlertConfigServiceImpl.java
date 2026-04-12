@@ -39,6 +39,12 @@ public class DeviceAlertConfigServiceImpl implements DeviceAlertConfigService {
     @Override
     public Long createDeviceAlertConfig(DeviceAlertConfigSaveReqVO createReqVO) {
         DeviceAlertConfigDO config = BeanUtils.toBean(createReqVO, DeviceAlertConfigDO.class);
+        if (createReqVO.getConditions() != null) {
+            config.setConditions(JsonUtils.toJsonString(createReqVO.getConditions()));
+        }
+        if (createReqVO.getTriggerOptions() != null) {
+            config.setTriggerOptions(JsonUtils.toJsonString(createReqVO.getTriggerOptions()));
+        }
         deviceAlertConfigMapper.insert(config);
         return config.getId();
     }
@@ -47,6 +53,12 @@ public class DeviceAlertConfigServiceImpl implements DeviceAlertConfigService {
     public void updateDeviceAlertConfig(DeviceAlertConfigSaveReqVO updateReqVO) {
         validateDeviceAlertConfigExists(updateReqVO.getId());
         DeviceAlertConfigDO updateObj = BeanUtils.toBean(updateReqVO, DeviceAlertConfigDO.class);
+        if (updateReqVO.getConditions() != null) {
+            updateObj.setConditions(JsonUtils.toJsonString(updateReqVO.getConditions()));
+        }
+        if (updateReqVO.getTriggerOptions() != null) {
+            updateObj.setTriggerOptions(JsonUtils.toJsonString(updateReqVO.getTriggerOptions()));
+        }
         deviceAlertConfigMapper.updateById(updateObj);
     }
 
