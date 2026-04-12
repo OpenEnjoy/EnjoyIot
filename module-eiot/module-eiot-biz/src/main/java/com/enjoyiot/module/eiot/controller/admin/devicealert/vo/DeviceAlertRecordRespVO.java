@@ -22,6 +22,9 @@ public class DeviceAlertRecordRespVO {
     @Schema(description = "告警状态: alert(触发) / recover(恢复)")
     private String alertState;
 
+    @Schema(description = "恢复时间")
+    private Long recoverTime;
+
     @Schema(description = "告警等级")
     private String level;
 

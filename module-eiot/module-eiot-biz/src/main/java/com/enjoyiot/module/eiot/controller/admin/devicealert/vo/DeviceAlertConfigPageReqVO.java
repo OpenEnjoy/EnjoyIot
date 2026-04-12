@@ -1,14 +1,15 @@
 package com.enjoyiot.module.eiot.controller.admin.devicealert.vo;
 
+import com.enjoyiot.framework.common.pojo.PageParam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Schema(description = "管理后台 - 设备告警配置分页 Request VO")
 @Data
-public class DeviceAlertConfigPageReqVO {
+public class DeviceAlertConfigPageReqVO extends PageParam {
 
-    @Schema(description = "产品ID")
-    private Long productId;
+    @Schema(description = "产品Key")
+    private String productKey;
 
     @Schema(description = "设备ID")
     private Long deviceId;

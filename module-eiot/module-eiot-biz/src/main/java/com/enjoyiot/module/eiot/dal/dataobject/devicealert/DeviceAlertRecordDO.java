@@ -43,13 +43,15 @@ public class DeviceAlertRecordDO extends TenantBaseDO {
 
     private Long deviceId;
 
-    private Long productId;
+    private String productKey;
 
     private Long alertConfigId;
 
     private Long alertTime;
 
     private String alertState;
+
+    private Long recoverTime;
 
     private String level;
 

@@ -37,7 +37,7 @@ public class DeviceAlertConfig extends TenantModel {
 
     private String name;
 
-    private Long productId;
+    private String productKey;
 
     private Long deviceId;
 

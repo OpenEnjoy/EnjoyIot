@@ -13,12 +13,14 @@ import com.enjoyiot.module.eiot.dal.dataobject.devicealert.DeviceAlertRecordDO;
 import com.enjoyiot.module.eiot.dal.mysql.devicealert.DeviceAlertConfigMapper;
 import com.enjoyiot.module.eiot.dal.mysql.devicealert.DeviceAlertRecordMapper;
 import com.enjoyiot.module.eiot.service.device.DeviceManagerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.annotation.Resource;
 import java.util.List;
 
+@Slf4j
 @Service
 @Validated
 public class DeviceAlertConfigServiceImpl implements DeviceAlertConfigService {
@@ -60,12 +62,9 @@ public class DeviceAlertConfigServiceImpl implements DeviceAlertConfigService {
     @Override
     public PageResult<DeviceAlertConfig> getDeviceAlertConfigPage(DeviceAlertConfigPageReqVO pageReqVO) {
         PageResult<DeviceAlertConfigDO> pageResult = deviceAlertConfigMapper.selectPage(
-                pageReqVO.getProductId(),
-                pageReqVO.getDeviceId(),
-                pageReqVO.getName(),
-                pageReqVO.getStatus()
+                pageReqVO
         );
-        return BeanUtils.toPage(pageResult, DeviceAlertConfig.class);
+        return BeanUtils.toBean(pageResult, DeviceAlertConfig.class);
     }
 
     @Override
@@ -74,35 +73,37 @@ public class DeviceAlertConfigServiceImpl implements DeviceAlertConfigService {
     }
 
     @Override
-    public List<DeviceAlertConfig> getDeviceAlertConfigListByProductId(Long productId) {
-        return BeanUtils.toBean(deviceAlertConfigMapper.selectByProductId(productId), DeviceAlertConfig.class);
+    public List<DeviceAlertConfig> getDeviceAlertConfigListByProductKey(String productKey) {
+        return BeanUtils.toBean(deviceAlertConfigMapper.selectByProductKey(productKey), DeviceAlertConfig.class);
     }
 
     @Override
     public PageResult<DeviceAlertRecord> getDeviceAlertRecordPage(DeviceAlertRecordPageReqVO pageReqVO) {
         PageResult<DeviceAlertRecordDO> pageResult = deviceAlertRecordMapper.selectPage(
-                pageReqVO.getDeviceId(),
-                pageReqVO.getProductId(),
-                pageReqVO.getAlertState(),
-                pageReqVO.getStartTime(),
-                pageReqVO.getEndTime()
+                pageReqVO
         );
-        return BeanUtils.toPage(pageResult, DeviceAlertRecord.class);
+        return BeanUtils.toBean(pageResult, DeviceAlertRecord.class);
     }
 
     @Override
     public void addDeviceAlertRecord(DeviceAlertRecord record) {
-        DeviceAlertRecordDO recordDO = BeanUtils.toBean(record, DeviceAlertRecordDO.class);
-        if (record.getId() == null) {
-            deviceAlertRecordMapper.insert(recordDO);
-        } else {
-            deviceAlertRecordMapper.updateById(recordDO);
+        DeviceAlertRecordDO existActiveAlert = deviceAlertRecordMapper.selectActiveAlert(record.getDeviceId(), record.getName());
+        if (existActiveAlert != null) {
+            log.info("active alert already exists, deviceId: {}, alertName: {}", record.getDeviceId(), record.getName());
+            return;
         }
+        DeviceAlertRecordDO recordDO = BeanUtils.toBean(record, DeviceAlertRecordDO.class);
+        deviceAlertRecordMapper.insert(recordDO);
     }
 
     @Override
-    public DeviceInfo getDeviceInfoFromCache(Long deviceId) {
-        return deviceManagerService.getDeviceInfo(deviceId);
+    public void recoverDeviceAlertRecord(Long deviceId, String alertName) {
+        DeviceAlertRecordDO activeAlert = deviceAlertRecordMapper.selectActiveAlert(deviceId, alertName);
+        if (activeAlert != null) {
+            activeAlert.setAlertState("recover");
+            activeAlert.setRecoverTime(System.currentTimeMillis());
+            deviceAlertRecordMapper.updateById(activeAlert);
+        }
     }
 
     private void validateDeviceAlertConfigExists(Long id) {

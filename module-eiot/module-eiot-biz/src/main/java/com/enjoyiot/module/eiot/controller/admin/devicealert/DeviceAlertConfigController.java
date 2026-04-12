@@ -62,10 +62,10 @@ public class DeviceAlertConfigController {
         return CommonResult.success(deviceAlertConfigService.getDeviceAlertConfigListByDeviceId(deviceId));
     }
 
-    @Operation(summary = "获得设备告警配置列表（根据产品ID）")
+    @Operation(summary = "获得设备告警配置列表（根据产品Key）")
     @GetMapping("/config/list-by-product")
-    public CommonResult<List<DeviceAlertConfig>> getDeviceAlertConfigListByProductId(@RequestParam("productId") Long productId) {
-        return CommonResult.success(deviceAlertConfigService.getDeviceAlertConfigListByProductId(productId));
+    public CommonResult<List<DeviceAlertConfig>> getDeviceAlertConfigListByProductKey(@RequestParam("productKey") String productKey) {
+        return CommonResult.success(deviceAlertConfigService.getDeviceAlertConfigListByProductKey(productKey));
     }
 
     @Operation(summary = "获得设备告警记录分页")

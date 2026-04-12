@@ -26,6 +26,8 @@ package com.enjoyiot.module.eiot.api.device;
 import com.enjoyiot.eiot.common.thing.ThingService;
 import com.enjoyiot.framework.common.pojo.CommonResult;
 import com.enjoyiot.module.eiot.api.device.dto.*;
+import com.enjoyiot.module.eiot.api.devicealert.dto.DeviceAlertConfig;
+import com.enjoyiot.module.eiot.api.devicealert.dto.DeviceAlertRecord;
 
 import java.util.List;
 import java.util.Map;
@@ -64,4 +66,12 @@ public interface DeviceApi {
     List<DeviceInfo> getSubDevicesByProductKeAndDeviceName(String pk, String dn);
 
     Boolean deregisterSubDevice(String pk, String dn, String model, String subPkDeregister, String subDnDeregister);
+
+    void addDeviceAlertRecord(DeviceAlertRecord record);
+
+    void recoverDeviceAlertRecord(Long deviceId, String alertName);
+
+    List<DeviceAlertConfig> getDeviceAlertConfigListByDeviceId(Long deviceId);
+
+    List<DeviceAlertConfig> getDeviceAlertConfigListByProductKey(String productKey);
 }

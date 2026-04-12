@@ -25,19 +25,36 @@ package com.enjoyiot.module.eiot.dal.mysql.devicealert;
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.framework.mybatis.core.mapper.BaseMapperX;
 import com.enjoyiot.framework.mybatis.core.query.LambdaQueryWrapperX;
+import com.enjoyiot.module.eiot.controller.admin.devicealert.vo.DeviceAlertRecordPageReqVO;
 import com.enjoyiot.module.eiot.dal.dataobject.devicealert.DeviceAlertRecordDO;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface DeviceAlertRecordMapper extends BaseMapperX<DeviceAlertRecordDO> {
 
-    default PageResult<DeviceAlertRecordDO> selectPage(Long deviceId, Long productId, String alertState, Long startTime, Long endTime) {
-        return selectPage(new LambdaQueryWrapperX<DeviceAlertRecordDO>()
+    default PageResult<DeviceAlertRecordDO> selectPage(DeviceAlertRecordPageReqVO pageReqVO) {
+
+        Long deviceId = pageReqVO.getDeviceId();
+        String productKey = pageReqVO.getProductKey();
+        String alertState = pageReqVO.getAlertState();
+        Long startTime = pageReqVO.getStartTime();
+        Long endTime = pageReqVO.getEndTime();
+
+        return selectPage(pageReqVO,new LambdaQueryWrapperX<DeviceAlertRecordDO>()
                 .eqIfPresent(DeviceAlertRecordDO::getDeviceId, deviceId)
-                .eqIfPresent(DeviceAlertRecordDO::getProductId, productId)
+                .eqIfPresent(DeviceAlertRecordDO::getProductKey, productKey)
                 .eqIfPresent(DeviceAlertRecordDO::getAlertState, alertState)
                 .geIfPresent(DeviceAlertRecordDO::getAlertTime, startTime)
                 .leIfPresent(DeviceAlertRecordDO::getAlertTime, endTime)
                 .orderByDesc(DeviceAlertRecordDO::getId));
+    }
+
+    default DeviceAlertRecordDO selectActiveAlert(Long deviceId, String alertName) {
+        return selectOne(new LambdaQueryWrapperX<DeviceAlertRecordDO>()
+                .eq(DeviceAlertRecordDO::getDeviceId, deviceId)
+                .eq(DeviceAlertRecordDO::getName, alertName)
+                .eq(DeviceAlertRecordDO::getAlertState, "alert")
+                .orderByDesc(DeviceAlertRecordDO::getAlertTime)
+                .last("LIMIT 1"));
     }
 }

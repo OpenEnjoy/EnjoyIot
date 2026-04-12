@@ -2,8 +2,8 @@ package com.enjoyiot.eiot.ruleengine.devicealert;
 
 import com.enjoyiot.eiot.common.thing.ThingModelMessage;
 import com.enjoyiot.eiot.ruleengine.handler.DeviceMessageHandler;
+import com.enjoyiot.module.eiot.api.device.DeviceApi;
 import com.enjoyiot.module.eiot.api.devicealert.dto.DeviceAlertConfig;
-import com.enjoyiot.module.eiot.service.devicealert.DeviceAlertConfigService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DeviceAlertChecker implements DeviceMessageHandler {
 
-    private final DeviceAlertConfigService deviceAlertConfigService;
+    private final DeviceApi deviceApi;
     private final DeviceAlertAction deviceAlertAction;
     private final ConditionEvaluator conditionEvaluator;
 
@@ -26,13 +26,13 @@ public class DeviceAlertChecker implements DeviceMessageHandler {
             return;
         }
 
-        Long productId = getProductId(deviceId);
-        if (productId == null) {
+        String productKey = message.getProductKey();
+        if (productKey == null) {
             return;
         }
 
-        List<DeviceAlertConfig> configs = deviceAlertConfigService.getDeviceAlertConfigListByDeviceId(deviceId);
-        List<DeviceAlertConfig> productConfigs = deviceAlertConfigService.getDeviceAlertConfigListByProductId(productId);
+        List<DeviceAlertConfig> configs = deviceApi.getDeviceAlertConfigListByDeviceId(deviceId);
+        List<DeviceAlertConfig> productConfigs = deviceApi.getDeviceAlertConfigListByProductKey(productKey);
 
         for (DeviceAlertConfig config : configs) {
             if (!config.isEnable()) {
@@ -62,14 +62,5 @@ public class DeviceAlertChecker implements DeviceMessageHandler {
         }
 
         deviceAlertAction.doAlert(config, message);
-    }
-
-    private Long getProductId(Long deviceId) {
-        try {
-            return deviceAlertAction.getProductIdByDeviceId(deviceId);
-        } catch (Exception e) {
-            log.warn("get productId failed, deviceId: {}", deviceId, e);
-            return null;
-        }
     }
 }

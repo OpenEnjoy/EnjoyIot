@@ -23,11 +23,12 @@ public interface DeviceAlertConfigService {
 
     List<DeviceAlertConfig> getDeviceAlertConfigListByDeviceId(Long deviceId);
 
-    List<DeviceAlertConfig> getDeviceAlertConfigListByProductId(Long productId);
+    List<DeviceAlertConfig> getDeviceAlertConfigListByProductKey(String productKey);
 
     PageResult<DeviceAlertRecord> getDeviceAlertRecordPage(DeviceAlertRecordPageReqVO pageReqVO);
 
     void addDeviceAlertRecord(DeviceAlertRecord record);
 
-    DeviceInfo getDeviceInfoFromCache(Long deviceId);
+    void recoverDeviceAlertRecord(Long deviceId, String alertName);
+
 }

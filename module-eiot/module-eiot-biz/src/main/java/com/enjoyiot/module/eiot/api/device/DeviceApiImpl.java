@@ -30,11 +30,14 @@ import com.enjoyiot.framework.common.pojo.CommonResult;
 import com.enjoyiot.framework.tenant.core.aop.TenantIgnore;
 import com.enjoyiot.framework.tenant.core.util.TenantUtils;
 import com.enjoyiot.module.eiot.api.device.dto.*;
+import com.enjoyiot.module.eiot.api.devicealert.dto.DeviceAlertConfig;
+import com.enjoyiot.module.eiot.api.devicealert.dto.DeviceAlertRecord;
 import com.enjoyiot.module.eiot.api.product.ProductApi;
 import com.enjoyiot.module.eiot.api.product.dto.Product;
 import com.enjoyiot.module.eiot.service.device.DeviceConfigService;
 import com.enjoyiot.module.eiot.service.device.DeviceCtrlService;
 import com.enjoyiot.module.eiot.service.device.DeviceInfoService;
+import com.enjoyiot.module.eiot.service.devicealert.DeviceAlertConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
@@ -63,6 +66,9 @@ public class DeviceApiImpl implements DeviceApi {
 
     @Resource
     private ProductApi productApi;
+
+    @Resource
+    private DeviceAlertConfigService deviceAlertConfigService;
 
     @Override
     public DeviceInfo getDeviceByPkDnByCache(String pk, String dn) {
@@ -183,5 +189,25 @@ public class DeviceApiImpl implements DeviceApi {
     @Override
     public Boolean deregisterSubDevice(String pk, String dn, String model, String subPkDeregister, String subDnDeregister) {
         return TenantUtils.executeIgnoreResult(() -> deviceInfoService.subDeRegisterDevice(pk, dn, subPkDeregister,subDnDeregister));
+    }
+
+    @Override
+    public void addDeviceAlertRecord(DeviceAlertRecord record) {
+        TenantUtils.executeIgnore(() -> deviceAlertConfigService.addDeviceAlertRecord(record));
+    }
+
+    @Override
+    public void recoverDeviceAlertRecord(Long deviceId, String alertName) {
+        TenantUtils.executeIgnore(() -> deviceAlertConfigService.recoverDeviceAlertRecord(deviceId, alertName));
+    }
+
+    @Override
+    public List<DeviceAlertConfig> getDeviceAlertConfigListByDeviceId(Long deviceId) {
+        return TenantUtils.executeIgnoreResult(() -> deviceAlertConfigService.getDeviceAlertConfigListByDeviceId(deviceId));
+    }
+
+    @Override
+    public List<DeviceAlertConfig> getDeviceAlertConfigListByProductKey(String productKey) {
+        return TenantUtils.executeIgnoreResult(() -> deviceAlertConfigService.getDeviceAlertConfigListByProductKey(productKey));
     }
 }

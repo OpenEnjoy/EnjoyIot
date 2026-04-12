@@ -39,14 +39,14 @@ import org.springframework.core.annotation.Order;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 @Slf4j
 public class RuleDeviceConsumer implements ConsumerHandler<ThingModelMessage>, ApplicationContextAware {
 
     private final List<DeviceMessageHandler> handlers = new ArrayList<>();
-    private ScheduledThreadPoolExecutor messageHandlerPool;
+    private ExecutorService messageHandlerPool;
 
     @SneakyThrows
     public RuleDeviceConsumer(MqConsumer<ThingModelMessage> consumer) {
@@ -56,7 +56,7 @@ public class RuleDeviceConsumer implements ConsumerHandler<ThingModelMessage>, A
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         Map<String, DeviceMessageHandler> handlerMap = applicationContext.getBeansOfType(DeviceMessageHandler.class);
-        messageHandlerPool = ThreadUtil.newScheduled(handlerMap.size() * 2, "messageHandler");
+        messageHandlerPool = ThreadUtil.newVirtual("messageHandler");
         //this.handlers.addAll(handlerMap.values());
         List<DeviceMessageHandler> handlerList = Lists.newArrayList(handlerMap.values());
         handlerList = handlerList.stream().sorted(Comparator.comparingInt(a -> {

@@ -17,8 +17,8 @@ public class DeviceAlertConfigSaveReqVO {
     @NotEmpty(message = "告警名称不能为空")
     private String name;
 
-    @Schema(description = "产品ID（产品级配置时必填）")
-    private Long productId;
+    @Schema(description = "产品Key（产品级配置时必填）")
+    private String productKey;
 
     @Schema(description = "设备ID（设备级配置时必填）")
     private Long deviceId;

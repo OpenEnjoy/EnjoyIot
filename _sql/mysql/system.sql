@@ -204,7 +204,7 @@ DROP TABLE IF EXISTS `eiot_device_alert_config`;
 CREATE TABLE `eiot_device_alert_config` (
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '设备告警配置id',
     `name` varchar(100) NOT NULL COMMENT '告警名称',
-    `product_id` bigint NULL COMMENT '产品ID（产品级配置时必填）',
+    `product_key` varchar(100) NULL COMMENT '产品Key（产品级配置时必填）',
     `device_id` bigint NULL COMMENT '设备ID（设备级配置时必填）',
     `level` varchar(10) DEFAULT '1' COMMENT '告警等级 1-5',
     `conditions` json NOT NULL COMMENT '告警条件配置',
@@ -227,7 +227,7 @@ DROP TABLE IF EXISTS `eiot_device_alert_record`;
 CREATE TABLE `eiot_device_alert_record` (
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '设备告警记录id',
     `device_id` bigint NOT NULL COMMENT '设备ID',
-    `product_id` bigint NULL COMMENT '产品ID',
+    `product_key` varchar(100) NULL COMMENT '产品Key',
     `alert_config_id` bigint NOT NULL COMMENT '告警配置ID',
     `alert_time` bigint NOT NULL COMMENT '告警时间',
     `alert_state` varchar(20) NOT NULL COMMENT '告警状态 alert-触发 recover-恢复',
@@ -235,6 +235,7 @@ CREATE TABLE `eiot_device_alert_record` (
     `name` varchar(100) NULL COMMENT '告警名称',
     `details` varchar(500) NULL COMMENT '告警详情',
     `read_flg` bit(1) DEFAULT b'0' COMMENT '是否已读',
+    `recover_time` bigint NULL COMMENT '告警恢复时间',
     `creator` varchar(64) NULL DEFAULT '' COMMENT '创建者',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updater` varchar(64) NULL DEFAULT '' COMMENT '更新者',

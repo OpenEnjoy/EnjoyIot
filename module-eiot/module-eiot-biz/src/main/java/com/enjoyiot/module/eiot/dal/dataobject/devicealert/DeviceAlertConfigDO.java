@@ -45,7 +45,7 @@ public class DeviceAlertConfigDO extends TenantBaseDO {
 
     private String name;
 
-    private Long productId;
+    private String productKey;
 
     private Long deviceId;
 

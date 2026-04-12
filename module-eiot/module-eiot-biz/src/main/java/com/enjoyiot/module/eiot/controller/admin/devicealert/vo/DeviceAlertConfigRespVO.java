@@ -14,8 +14,8 @@ public class DeviceAlertConfigRespVO {
     @Schema(description = "告警名称")
     private String name;
 
-    @Schema(description = "产品ID")
-    private Long productId;
+    @Schema(description = "产品Key")
+    private String productKey;
 
     @Schema(description = "设备ID")
     private Long deviceId;

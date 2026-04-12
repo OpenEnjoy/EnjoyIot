@@ -1,10 +1,9 @@
 package com.enjoyiot.eiot.ruleengine.devicealert;
 
 import com.enjoyiot.eiot.common.thing.ThingModelMessage;
+import com.enjoyiot.module.eiot.api.device.DeviceApi;
 import com.enjoyiot.module.eiot.api.devicealert.dto.DeviceAlertConfig;
 import com.enjoyiot.module.eiot.api.devicealert.dto.DeviceAlertRecord;
-import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
-import com.enjoyiot.module.eiot.service.devicealert.DeviceAlertConfigService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,12 +13,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DeviceAlertAction {
 
-    private final DeviceAlertConfigService deviceAlertConfigService;
+    private final DeviceApi deviceApi;
 
     public void doAlert(DeviceAlertConfig config, ThingModelMessage message) {
         DeviceAlertRecord record = DeviceAlertRecord.builder()
                 .deviceId(message.getDeviceId())
-                .productId(config.getProductId() != null ? config.getProductId() : getProductIdByDeviceId(message.getDeviceId()))
+                .productKey(message.getProductKey() != null ? message.getProductKey() : getProductKeyByDeviceId(message.getDeviceId()))
                 .alertConfigId(config.getId())
                 .alertTime(System.currentTimeMillis())
                 .alertState("alert")
@@ -28,31 +27,20 @@ public class DeviceAlertAction {
                 .details(buildDetails(config, message))
                 .readFlg(false)
                 .build();
-        deviceAlertConfigService.addDeviceAlertRecord(record);
+        deviceApi.addDeviceAlertRecord(record);
         log.info("device alert triggered, configId: {}, deviceId: {}", config.getId(), message.getDeviceId());
     }
 
     public void doRecover(DeviceAlertConfig config, ThingModelMessage message) {
-        DeviceAlertRecord record = DeviceAlertRecord.builder()
-                .deviceId(message.getDeviceId())
-                .productId(config.getProductId() != null ? config.getProductId() : getProductIdByDeviceId(message.getDeviceId()))
-                .alertConfigId(config.getId())
-                .alertTime(System.currentTimeMillis())
-                .alertState("recover")
-                .level(config.getLevel())
-                .name(config.getName())
-                .details("Condition not satisfied, alert recovered")
-                .readFlg(false)
-                .build();
-        deviceAlertConfigService.addDeviceAlertRecord(record);
+        deviceApi.recoverDeviceAlertRecord(message.getDeviceId(), config.getName());
         log.info("device alert recovered, configId: {}, deviceId: {}", config.getId(), message.getDeviceId());
     }
 
-    public Long getProductIdByDeviceId(Long deviceId) {
+    public String getProductKeyByDeviceId(Long deviceId) {
         try {
-            return deviceAlertConfigService.getDeviceInfoFromCache(deviceId).getProductId();
+            return deviceApi.getDeviceInfoFromCache(deviceId).getProductKey();
         } catch (Exception e) {
-            log.warn("get productId failed, deviceId: {}", deviceId, e);
+            log.warn("get productKey failed, deviceId: {}", deviceId, e);
             return null;
         }
     }
