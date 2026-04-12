@@ -14,6 +14,7 @@
 
     <modules>
         <module>iot-temporal-service</module>
+        <module>iot-temporal-serviceimpl-rdb</module>
         <module>iot-temporal-serviceimpl-td</module>
 <!--        <module>iot-temporal-serviceimpl-es</module>-->
         <module>iot-temporal-serviceimpl-iotdb</module>

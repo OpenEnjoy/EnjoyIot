@@ -106,9 +106,16 @@
         <!--        </dependency>-->
 
         <!--打开注释 启用td数据库, 同时注意yml配置-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.enjoy-iot</groupId>-->
+        <!--            <artifactId>iot-temporal-serviceimpl-td</artifactId>-->
+        <!--            <version>${revision}</version>-->
+        <!--        </dependency>-->
+
+        <!--打开注释 启用关系型数据库(MySQL/PostgreSQL), 同时注意yml配置-->
         <dependency>
             <groupId>com.enjoy-iot</groupId>
-            <artifactId>iot-temporal-serviceimpl-td</artifactId>
+            <artifactId>iot-temporal-serviceimpl-rdb</artifactId>
             <version>${revision}</version>
         </dependency>
 
