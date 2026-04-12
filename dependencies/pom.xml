@@ -13,7 +13,7 @@
     <description>基础 bom 文件，管理整个项目的依赖版本</description>
 
     <properties>
-        <revision>0.2.0-xiaozhi</revision>
+        <revision>1.0.0-jdk21</revision>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
         <!-- 统一依赖管理 -->
         <spring.framework.version>6.2.1</spring.framework.version>
