@@ -51,7 +51,7 @@ import org.springframework.stereotype.Component;
 import jakarta.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
@@ -93,7 +93,7 @@ public class EmqxVerticle extends AbstractVerticle implements Runnable {
 
     public static final Map<String, Set<String>> CLIENT_DEVICE_MAP = new HashMap<>();
 
-    private ScheduledThreadPoolExecutor emqxConnectTask = ThreadUtil.newScheduled(1, "emqx_connect");
+    private ScheduledExecutorService emqxConnectTask = ThreadUtil.newScheduledPlatform("emqx_connect");
 
 
     public void startServer(MqttConfig mqttConfig) {
