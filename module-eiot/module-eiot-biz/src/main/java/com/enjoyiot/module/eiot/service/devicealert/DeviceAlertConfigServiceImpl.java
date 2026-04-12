@@ -2,6 +2,7 @@ package com.enjoyiot.module.eiot.service.devicealert;
 
 import com.enjoyiot.framework.common.exception.util.ServiceExceptionUtil;
 import com.enjoyiot.framework.common.pojo.PageResult;
+import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.framework.common.util.object.BeanUtils;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
 import com.enjoyiot.module.eiot.api.devicealert.dto.DeviceAlertConfig;
@@ -13,6 +14,7 @@ import com.enjoyiot.module.eiot.dal.dataobject.devicealert.DeviceAlertRecordDO;
 import com.enjoyiot.module.eiot.dal.mysql.devicealert.DeviceAlertConfigMapper;
 import com.enjoyiot.module.eiot.dal.mysql.devicealert.DeviceAlertRecordMapper;
 import com.enjoyiot.module.eiot.service.device.DeviceManagerService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -56,7 +58,7 @@ public class DeviceAlertConfigServiceImpl implements DeviceAlertConfigService {
 
     @Override
     public DeviceAlertConfig getDeviceAlertConfig(Long id) {
-        return BeanUtils.toBean(deviceAlertConfigMapper.selectById(id), DeviceAlertConfig.class);
+        return convertToDeviceAlertConfig(deviceAlertConfigMapper.selectById(id));
     }
 
     @Override
@@ -64,17 +66,26 @@ public class DeviceAlertConfigServiceImpl implements DeviceAlertConfigService {
         PageResult<DeviceAlertConfigDO> pageResult = deviceAlertConfigMapper.selectPage(
                 pageReqVO
         );
-        return BeanUtils.toBean(pageResult, DeviceAlertConfig.class);
+        return new PageResult<>(
+                pageResult.getList().stream()
+                        .map(this::convertToDeviceAlertConfig)
+                        .toList(),
+                pageResult.getTotal()
+        );
     }
 
     @Override
     public List<DeviceAlertConfig> getDeviceAlertConfigListByDeviceId(Long deviceId) {
-        return BeanUtils.toBean(deviceAlertConfigMapper.selectByDeviceId(deviceId), DeviceAlertConfig.class);
+        return deviceAlertConfigMapper.selectByDeviceId(deviceId).stream()
+                .map(this::convertToDeviceAlertConfig)
+                .toList();
     }
 
     @Override
     public List<DeviceAlertConfig> getDeviceAlertConfigListByProductKey(String productKey) {
-        return BeanUtils.toBean(deviceAlertConfigMapper.selectByProductKey(productKey), DeviceAlertConfig.class);
+        return deviceAlertConfigMapper.selectByProductKey(productKey).stream()
+                .map(this::convertToDeviceAlertConfig)
+                .toList();
     }
 
     @Override
@@ -83,6 +94,12 @@ public class DeviceAlertConfigServiceImpl implements DeviceAlertConfigService {
                 pageReqVO
         );
         return BeanUtils.toBean(pageResult, DeviceAlertRecord.class);
+    }
+
+    @Override
+    public List<DeviceAlertRecord> getDeviceAlertRecordListByDeviceId(Long deviceId) {
+        List<DeviceAlertRecordDO> list = deviceAlertRecordMapper.selectListByDeviceId(deviceId);
+        return BeanUtils.toBean(list, DeviceAlertRecord.class);
     }
 
     @Override
@@ -104,6 +121,46 @@ public class DeviceAlertConfigServiceImpl implements DeviceAlertConfigService {
             activeAlert.setRecoverTime(System.currentTimeMillis());
             deviceAlertRecordMapper.updateById(activeAlert);
         }
+    }
+
+    private DeviceAlertConfig convertToDeviceAlertConfig(DeviceAlertConfigDO configDO) {
+        if (configDO == null) {
+            return null;
+        }
+        DeviceAlertConfig config = new DeviceAlertConfig();
+        config.setId(configDO.getId());
+        config.setName(configDO.getName());
+        config.setProductKey(configDO.getProductKey());
+        config.setDeviceId(configDO.getDeviceId());
+        config.setLevel(configDO.getLevel());
+        config.setStatus(configDO.getStatus());
+        config.setRemark(configDO.getRemark());
+
+        if (configDO.getConditions() != null && !configDO.getConditions().isEmpty()) {
+            try {
+                List<DeviceAlertConfig.AlertCondition> conditions = JsonUtils.parseObject(
+                        configDO.getConditions(),
+                        new TypeReference<List<DeviceAlertConfig.AlertCondition>>() {}
+                );
+                config.setConditions(conditions);
+            } catch (Exception e) {
+                log.error("Failed to parse conditions JSON: {}", configDO.getConditions(), e);
+            }
+        }
+
+        if (configDO.getTriggerOptions() != null && !configDO.getTriggerOptions().isEmpty()) {
+            try {
+                DeviceAlertConfig.TriggerOptions triggerOptions = JsonUtils.parseObject(
+                        configDO.getTriggerOptions(),
+                        DeviceAlertConfig.TriggerOptions.class
+                );
+                config.setTriggerOptions(triggerOptions);
+            } catch (Exception e) {
+                log.error("Failed to parse triggerOptions JSON: {}", configDO.getTriggerOptions(), e);
+            }
+        }
+
+        return config;
     }
 
     private void validateDeviceAlertConfigExists(Long id) {

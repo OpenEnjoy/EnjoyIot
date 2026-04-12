@@ -28,8 +28,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.enjoyiot.framework.tenant.core.db.TenantBaseDO;
 import lombok.*;
 
-import java.util.List;
-
 @TableName("eiot_device_alert_config")
 @KeySequence("eiot_device_alert_config_seq")
 @Data
@@ -51,32 +49,11 @@ public class DeviceAlertConfigDO extends TenantBaseDO {
 
     private String level;
 
-    private List<AlertCondition> conditions;
+    private String conditions;
 
-    private TriggerOptions triggerOptions;
+    private String triggerOptions;
 
     private Integer status;
 
     private String remark;
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class AlertCondition {
-        private String type;
-        private String key;
-        private String operator;
-        private String value;
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class TriggerOptions {
-        private Integer durationSec;
-        private Integer silentSec;
-        private Boolean enableRecover;
-    }
 }

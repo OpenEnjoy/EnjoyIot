@@ -73,4 +73,10 @@ public class DeviceAlertConfigController {
     public CommonResult<PageResult<DeviceAlertRecord>> getDeviceAlertRecordPage(@Valid DeviceAlertRecordPageReqVO pageReqVO) {
         return CommonResult.success(deviceAlertConfigService.getDeviceAlertRecordPage(pageReqVO));
     }
+
+    @Operation(summary = "获得设备告警记录列表（根据设备ID）")
+    @GetMapping("/record/list-by-device")
+    public CommonResult<List<DeviceAlertRecord>> getDeviceAlertRecordListByDeviceId(@RequestParam("deviceId") Long deviceId) {
+        return CommonResult.success(deviceAlertConfigService.getDeviceAlertRecordListByDeviceId(deviceId));
+    }
 }

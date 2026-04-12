@@ -29,8 +29,16 @@ import com.enjoyiot.module.eiot.controller.admin.devicealert.vo.DeviceAlertRecor
 import com.enjoyiot.module.eiot.dal.dataobject.devicealert.DeviceAlertRecordDO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface DeviceAlertRecordMapper extends BaseMapperX<DeviceAlertRecordDO> {
+
+    default List<DeviceAlertRecordDO> selectListByDeviceId(Long deviceId) {
+        return selectList(new LambdaQueryWrapperX<DeviceAlertRecordDO>()
+                .eq(DeviceAlertRecordDO::getDeviceId, deviceId)
+                .orderByDesc(DeviceAlertRecordDO::getAlertTime));
+    }
 
     default PageResult<DeviceAlertRecordDO> selectPage(DeviceAlertRecordPageReqVO pageReqVO) {
 

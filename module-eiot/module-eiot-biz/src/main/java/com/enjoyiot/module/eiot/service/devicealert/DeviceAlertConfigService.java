@@ -27,6 +27,8 @@ public interface DeviceAlertConfigService {
 
     PageResult<DeviceAlertRecord> getDeviceAlertRecordPage(DeviceAlertRecordPageReqVO pageReqVO);
 
+    List<DeviceAlertRecord> getDeviceAlertRecordListByDeviceId(Long deviceId);
+
     void addDeviceAlertRecord(DeviceAlertRecord record);
 
     void recoverDeviceAlertRecord(Long deviceId, String alertName);
