@@ -169,4 +169,13 @@ public class DeviceShortInfo extends BaseModel {
 
     private String serialNo;
 
+
+    /**
+     * 经纬度
+     */
+    private Double lat;
+    /**
+     * 经纬度
+     */
+    private Double lon;
 }
