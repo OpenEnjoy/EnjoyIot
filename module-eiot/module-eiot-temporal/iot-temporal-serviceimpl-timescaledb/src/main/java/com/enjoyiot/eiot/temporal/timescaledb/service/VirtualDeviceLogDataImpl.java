@@ -31,10 +31,10 @@ import com.enjoyiot.framework.common.pojo.PageParam;
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.framework.common.util.object.BeanUtils;
 import com.enjoyiot.module.eiot.api.virtualdevice.dto.VirtualDeviceLog;
-import org.postgresql.util.PGTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,7 +64,7 @@ public class VirtualDeviceLogDataImpl implements IVirtualDeviceLogData {
     @Override
     public void add(VirtualDeviceLog log) {
         PgVirtualDeviceLog deviceLog = BeanUtils.toBean(log, PgVirtualDeviceLog.class);
-        deviceLog.setTime(new PGTimestamp(System.currentTimeMillis()));
+        deviceLog.setTime(new Timestamp(System.currentTimeMillis()));
         virtualDeviceLogMapper.insert(deviceLog);
     }
 }

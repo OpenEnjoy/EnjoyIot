@@ -22,69 +22,90 @@
  */
 package com.enjoyiot.eiot.temporal.timescaledb.dm;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class TableManager {
 
     /**
-     * 创建超级表（含存在判断）
-     * 注意：WITH语法创建超级表不支持 TimescaleDB v2.19.3 及更低版本
+     * 创建表（含存在判断）
      */
-    private static final String CREATE_STABLE_INE_TPL = "CREATE TABLE IF NOT EXISTS %s (%s) WITH (tsdb.hypertable, tsdb.partition_column='time', tsdb.segmentby = '%s');";
+    private static final String CREATE_TABLE_IF_NOT_EXISTS_TPL = "CREATE TABLE IF NOT EXISTS %s (%s);";
+
+    private static final String CREATE_HYPERTABLE_TPL = "SELECT create_hypertable('%s','time', if_not_exists => TRUE);";
 
     /**
-     * 删除超级表
+     * 删除表
      */
-    private static final String DROP_STABLE_TPL = "DROP TABLE IF EXISTS %s;";
+    private static final String DROP_TABLE_TPL = "DROP TABLE IF EXISTS %s;";
 
     /**
      * 获取表的结构信息
      */
-    private static final String DESC_TB_TPL = "SELECT column_name, data_type, character_maximum_length AS length FROM information_schema.columns WHERE table_name = '%s' ORDER BY ordinal_position;";
+    private static final String DESC_TB_SQL = "SELECT column_name, data_type, character_maximum_length AS length FROM information_schema.columns WHERE table_schema = current_schema() AND table_name = ? ORDER BY ordinal_position;";
 
     /**
-     * 超级表增加列
+     * 表增加列
      */
-    private static final String ALTER_STABLE_ADD_COL_TPL = "ALTER TABLE %s ADD COLUMN %s;";
+    private static final String ALTER_TABLE_ADD_COL_TPL = "ALTER TABLE %s ADD COLUMN %s;";
 
     /**
-     * 超级表修改列
+     * 表修改列类型
      */
-    private static final String ALTER_STABLE_MODIFY_COL_TPL = "ALTER TABLE %s MODIFY COLUMN %s;";
+    private static final String ALTER_TABLE_ALTER_COL_TYPE_TPL = "ALTER TABLE %s ALTER COLUMN %s TYPE %s;";
 
     /**
-     * 超级表删除列
+     * 表删除列
      */
-    private static final String ALTER_STABLE_DROP_COL_TPL = "ALTER TABLE %s DROP COLUMN %s;";
+    private static final String ALTER_TABLE_DROP_COL_TPL = "ALTER TABLE %s DROP COLUMN %s;";
+
+    private static final Pattern SAFE_IDENTIFIER = Pattern.compile("[a-z0-9_]+");
+
+    public static String safeIdentifier(String raw) {
+        Objects.requireNonNull(raw, "identifier must not be null");
+        String normalized = raw.toLowerCase(Locale.ROOT)
+                .replace("-", "_")
+                .replaceAll("[^a-z0-9_]", "_")
+                .replaceAll("_+", "_")
+                .replaceAll("^_+|_+$", "");
+        if (normalized.isEmpty() || !SAFE_IDENTIFIER.matcher(normalized).matches()) {
+            throw new IllegalArgumentException("illegal identifier: " + raw);
+        }
+        return normalized;
+    }
+
+    public static String quoteIdent(String identifier) {
+        return "\"" + safeIdentifier(identifier) + "\"";
+    }
 
     /**
      * 获取创建表sql
      */
-    public static String getCreateSTableSql(String tbName, List<PgField> fields, PgField... tags) {
+    public static List<String> getCreateSTableSql(String tbName, List<PgField> fields, PgField... tags) {
         if (fields.isEmpty()) {
             return null;
         }
 
-        //生成字段片段
-        StringBuilder sbField = new StringBuilder("time TIMESTAMPTZ,");
+        String safeTbName = safeIdentifier(tbName);
+        String quotedTbName = "\"" + safeTbName + "\"";
 
+        StringBuilder sbField = new StringBuilder("\"time\" TIMESTAMPTZ,");
         for (PgField field : fields) {
-            sbField.append(FieldParser.getFieldDefine(field));
-            sbField.append(",");
+            sbField.append(getFieldDefine(field)).append(",");
         }
 
-        //生成tag
-        StringBuilder sbIndex = new StringBuilder();
         for (PgField tag : tags) {
-            sbField.append(FieldParser.getFieldDefine(tag))
-                    .append(",");
-            sbIndex.append(tag.getName()).append(",");
+            sbField.append(getFieldDefine(tag)).append(",");
         }
         sbField.deleteCharAt(sbField.length() - 1);
-        sbIndex.deleteCharAt(sbIndex.length() - 1);
 
-        return String.format(CREATE_STABLE_INE_TPL, tbName, sbField, sbIndex);
-
+        List<String> sqlList = new ArrayList<>();
+        sqlList.add(String.format(CREATE_TABLE_IF_NOT_EXISTS_TPL, quotedTbName, sbField));
+        sqlList.add(String.format(CREATE_HYPERTABLE_TPL, safeTbName));
+        return sqlList;
     }
 
     /**
@@ -93,56 +114,63 @@ public class TableManager {
      * @param name 表象
      */
     public static String rightTbName(String name) {
-        return name.toLowerCase().replace("-", "_");
+        return safeIdentifier(name);
     }
 
     /**
      * 获取表详情的sql
      */
-    public static String getDescTableSql(String tbName) {
-        return String.format(DESC_TB_TPL, tbName);
+    public static String getDescTableSql() {
+        return DESC_TB_SQL;
     }
 
     /**
      * 获取添加字段sql
      */
-    public static String getAddSTableColumnSql(String tbName, List<PgField> fields) {
-        StringBuilder sbAdd = new StringBuilder();
+    public static List<String> getAddSTableColumnSql(String tbName, List<PgField> fields) {
+        String quotedTbName = "\"" + safeIdentifier(tbName) + "\"";
+        List<String> sqlList = new ArrayList<>();
         for (PgField field : fields) {
-            sbAdd.append(String.format(ALTER_STABLE_ADD_COL_TPL,
-                    tbName,
-                    FieldParser.getFieldDefine(field)
-            ));
+            sqlList.add(String.format(ALTER_TABLE_ADD_COL_TPL, quotedTbName, getFieldDefine(field)));
         }
-        return sbAdd.toString();
+        return sqlList;
     }
 
     /**
      * 获取修改字段sql
      */
-    public static String getModifySTableColumnSql(String tbName, List<PgField> fields) {
-        StringBuilder sbModify = new StringBuilder();
+    public static List<String> getModifySTableColumnSql(String tbName, List<PgField> fields) {
+        String quotedTbName = "\"" + safeIdentifier(tbName) + "\"";
+        List<String> sqlList = new ArrayList<>();
         for (PgField field : fields) {
-            sbModify.append(String.format(ALTER_STABLE_MODIFY_COL_TPL,
-                    tbName,
-                    FieldParser.getFieldDefine(field)
+            sqlList.add(String.format(ALTER_TABLE_ALTER_COL_TYPE_TPL,
+                    quotedTbName,
+                    "\"" + safeIdentifier(field.getName()) + "\"",
+                    getTypeDefine(field)
             ));
         }
-        return sbModify.toString();
+        return sqlList;
     }
 
     /**
      * 获取删除字段sql
      */
-    public static String getDropSTableColumnSql(String tbName, List<PgField> fields) {
-        StringBuilder sbDrop = new StringBuilder();
+    public static List<String> getDropSTableColumnSql(String tbName, List<PgField> fields) {
+        String quotedTbName = "\"" + safeIdentifier(tbName) + "\"";
+        List<String> sqlList = new ArrayList<>();
         for (PgField field : fields) {
-            sbDrop.append(String.format(ALTER_STABLE_DROP_COL_TPL,
-                    tbName,
-                    field.getName()
-            ));
+            sqlList.add(String.format(ALTER_TABLE_DROP_COL_TPL, quotedTbName, "\"" + safeIdentifier(field.getName()) + "\""));
         }
-        return sbDrop.toString();
+        return sqlList;
     }
 
+    private static String getFieldDefine(PgField field) {
+        return "\"" + safeIdentifier(field.getName()) + "\" " + getTypeDefine(field);
+    }
+
+    private static String getTypeDefine(PgField field) {
+        return field.getLength() > 0
+                ? String.format("%s(%d)", field.getType(), field.getLength())
+                : field.getType();
+    }
 }

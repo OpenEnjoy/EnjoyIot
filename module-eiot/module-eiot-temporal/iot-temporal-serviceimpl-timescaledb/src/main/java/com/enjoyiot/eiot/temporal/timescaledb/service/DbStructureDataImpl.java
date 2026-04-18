@@ -55,16 +55,21 @@ public class DbStructureDataImpl implements IDbStructureData {
         List<PgField> fields = FieldParser.parse(thingModel);
         String tbName = Constants.getProductPropertySTableName(thingModel.getProductKey());
         //生成sql
-        String sql = TableManager.getCreateSTableSql(tbName,
+        List<String> sqlList = TableManager.getCreateSTableSql(tbName,
                 fields,
                 new PgField("device_id", "BIGINT", -1));
-        if (sql == null) {
+        if (sqlList == null) {
             return;
         }
-        log.info("executing sql:{}", sql);
-
-        //执行sql
-        pgTemplate.update(sql);
+        for (String sql : sqlList) {
+            log.info("executing sql:{}", sql);
+            // create_hypertable 是 SELECT 语句，需要用 execute 而不是 update
+            if (sql.trim().toUpperCase().startsWith("SELECT")) {
+                pgTemplate.execute(sql);
+            } else {
+                pgTemplate.update(sql);
+            }
+        }
     }
 
     /**
@@ -75,16 +80,24 @@ public class DbStructureDataImpl implements IDbStructureData {
         try {
             //获取旧字段信息
             String tbName = Constants.getProductPropertySTableName(thingModel.getProductKey());
-            String sql = TableManager.getDescTableSql(tbName);
+            String sql = TableManager.getDescTableSql();
             List<PgField> oldFields = pgTemplate.query(sql, (rs, rowNum) ->{
-                String name = rs.getString("column_name");
-                String type = rs.getString("data_type").toUpperCase();
+                String name = rs.getString("column_name").toLowerCase();
+                String dataType = rs.getString("data_type");
+                String type;
+                if ("character varying".equalsIgnoreCase(dataType)) {
+                    type = "VARCHAR";
+                } else if ("double precision".equalsIgnoreCase(dataType)) {
+                    type = "DOUBLE PRECISION";
+                } else {
+                    type = dataType.toUpperCase();
+                }
                 int length = rs.getInt("length");
                 if (rs.wasNull()) {
                     length = -1; // 处理 NULL 值
                 }
                 return new PgField(name, type, length);
-            });
+            }, tbName);
             List<PgField> newFields = FieldParser.parse(thingModel);
             //对比差异
 
@@ -93,8 +106,10 @@ public class DbStructureDataImpl implements IDbStructureData {
                             .noneMatch(old -> old.getName().equals(f.getName())))
                     .collect(Collectors.toList());
             if (!addFields.isEmpty()) {
-                sql = TableManager.getAddSTableColumnSql(tbName, addFields);
-                pgTemplate.update(sql);
+                List<String> addSqlList = TableManager.getAddSTableColumnSql(tbName, addFields);
+                for (String addSql : addSqlList) {
+                    pgTemplate.update(addSql);
+                }
             }
 
             //找出修改的字段
@@ -107,8 +122,10 @@ public class DbStructureDataImpl implements IDbStructureData {
                     .collect(Collectors.toList());
 
             if (!modifyFields.isEmpty()) {
-                sql = TableManager.getModifySTableColumnSql(tbName, modifyFields);
-                pgTemplate.update(sql);
+                List<String> modifySqlList = TableManager.getModifySTableColumnSql(tbName, modifyFields);
+                for (String modifySql : modifySqlList) {
+                    pgTemplate.update(modifySql);
+                }
             }
 
             //找出删除的字段
@@ -119,8 +136,10 @@ public class DbStructureDataImpl implements IDbStructureData {
                                     .noneMatch(n -> n.getName().equals(f.getName())))
                     .collect(Collectors.toList());
             if (!dropFields.isEmpty()) {
-                sql = TableManager.getDropSTableColumnSql(tbName, dropFields);
-                pgTemplate.update(sql);
+                List<String> dropSqlList = TableManager.getDropSTableColumnSql(tbName, dropFields);
+                for (String dropSql : dropSqlList) {
+                    pgTemplate.update(dropSql);
+                }
             }
         } catch (Throwable e) {
             throw e;
@@ -135,24 +154,38 @@ public class DbStructureDataImpl implements IDbStructureData {
     public void initDbStructure() {
         log.info("timescaledb init db structure start");
         //创建规则日志超级表
-        String sql = TableManager.getCreateSTableSql("rule_log", Arrays.asList(
+        List<String> sqlList = TableManager.getCreateSTableSql("rule_log", Arrays.asList(
                 new PgField("state1", "VARCHAR", 32),
                 new PgField("content", "VARCHAR", 1024),
                 new PgField("success", "BOOLEAN", -1)
         ), new PgField("rule_id", "BIGINT", -1));
-        pgTemplate.update(sql);
+        for (String sql : sqlList) {
+            // create_hypertable 是 SELECT 语句，需要用 execute 而不是 update
+            if (sql.trim().toUpperCase().startsWith("SELECT")) {
+                pgTemplate.execute(sql);
+            } else {
+                pgTemplate.update(sql);
+            }
+        }
 
 
         //创建规则日志超级表
-        sql = TableManager.getCreateSTableSql("task_log", Arrays.asList(
+        sqlList = TableManager.getCreateSTableSql("task_log", Arrays.asList(
                 new PgField("content", "VARCHAR", 1024),
                 new PgField("success", "BOOLEAN", -1)
         ), new PgField("task_id", "BIGINT", -1));
-        pgTemplate.update(sql);
+        for (String sql : sqlList) {
+            // create_hypertable 是 SELECT 语句，需要用 execute 而不是 update
+            if (sql.trim().toUpperCase().startsWith("SELECT")) {
+                pgTemplate.execute(sql);
+            } else {
+                pgTemplate.update(sql);
+            }
+        }
 
 
         //创建物模型消息超级表
-        sql = TableManager.getCreateSTableSql("thing_model_message", Arrays.asList(
+        sqlList = TableManager.getCreateSTableSql("thing_model_message", Arrays.asList(
                 new PgField("mid", "VARCHAR", 50),
                 new PgField("product_key", "VARCHAR", 50),
                 new PgField("device_name", "VARCHAR", 50),
@@ -163,15 +196,29 @@ public class DbStructureDataImpl implements IDbStructureData {
                 new PgField("data", "VARCHAR", 1024),
                 new PgField("report_time", "BIGINT", -1)
         ), new PgField("device_id", "BIGINT", -1));
-        pgTemplate.update(sql);
+        for (String sql : sqlList) {
+            // create_hypertable 是 SELECT 语句，需要用 execute 而不是 update
+            if (sql.trim().toUpperCase().startsWith("SELECT")) {
+                pgTemplate.execute(sql);
+            } else {
+                pgTemplate.update(sql);
+            }
+        }
 
         //创建虚拟设备日志超级表
-        sql = TableManager.getCreateSTableSql("virtual_device_log", Arrays.asList(
+        sqlList = TableManager.getCreateSTableSql("virtual_device_log", Arrays.asList(
                 new PgField("virtual_device_name", "VARCHAR", 50),
                 new PgField("device_total", "INTEGER", -1),
                 new PgField("result", "VARCHAR", 1024)
         ), new PgField("virtual_device_id", "BIGINT", -1));
-        pgTemplate.update(sql);
+        for (String sql : sqlList) {
+            // create_hypertable 是 SELECT 语句，需要用 execute 而不是 update
+            if (sql.trim().toUpperCase().startsWith("SELECT")) {
+                pgTemplate.execute(sql);
+            } else {
+                pgTemplate.update(sql);
+            }
+        }
         log.info("timescaledb init db structure end");
 
     }

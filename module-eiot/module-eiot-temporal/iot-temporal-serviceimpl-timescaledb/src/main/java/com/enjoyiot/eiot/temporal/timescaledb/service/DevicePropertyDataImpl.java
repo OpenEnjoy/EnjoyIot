@@ -29,6 +29,7 @@ import com.enjoyiot.eiot.temporal.timescaledb.config.Constants;
 import com.enjoyiot.eiot.temporal.timescaledb.dao.PgTemplate;
 import com.enjoyiot.eiot.temporal.timescaledb.dm.FieldParser;
 import com.enjoyiot.eiot.temporal.timescaledb.dm.PgField;
+import com.enjoyiot.eiot.temporal.timescaledb.dm.TableManager;
 import com.enjoyiot.eiot.temporal.timescaledb.model.PgDeviceProperty;
 import com.enjoyiot.module.eiot.api.device.DeviceApi;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
@@ -37,13 +38,14 @@ import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
 import com.enjoyiot.module.eiot.api.thingmodel.ThingModelApi;
 import com.enjoyiot.module.eiot.api.thingmodel.dto.ThingModel;
 import lombok.extern.slf4j.Slf4j;
-import org.postgresql.util.PGTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -68,13 +70,24 @@ public class DevicePropertyDataImpl implements IDevicePropertyData {
             return new ArrayList<>();
         }
 
+        ThingModel thingModel = thingModelApi.getThingModelByProductKeyFromCache(device.getProductKey());
+        if (thingModel == null) {
+            return new ArrayList<>();
+        }
+        Map<String, String> fieldMap = FieldParser.parse(thingModel).stream()
+                .collect(Collectors.toMap(PgField::getName, PgField::getType));
+        String safeColumn = TableManager.safeIdentifier(name);
+        if (!fieldMap.containsKey(safeColumn)) {
+            return new ArrayList<>();
+        }
+
         String tbName = Constants.getProductPropertySTableName(device.getProductKey());
-        List<PgDeviceProperty> deviceProperties = pgTemplate.query(String.format(
-                        "SELECT time,%s as value,device_id FROM %s WHERE device_id=? AND time>=? AND time<=? " +
-                                "ORDER BY time ASC LIMIT %d OFFSET 0",
-                        name.toLowerCase(), tbName, size),
+        String sql = String.format(
+                "SELECT time,%s AS value,device_id FROM %s WHERE device_id=? AND time>=? AND time<=? ORDER BY time ASC LIMIT ? OFFSET 0",
+                TableManager.quoteIdent(safeColumn), TableManager.quoteIdent(tbName));
+        List<PgDeviceProperty> deviceProperties = pgTemplate.query(sql,
                 new BeanPropertyRowMapper<>(PgDeviceProperty.class),
-                deviceId, new PGTimestamp(start), new PGTimestamp(end)
+                deviceId, new Timestamp(start), new Timestamp(end), size
         );
         return deviceProperties.stream().map(p -> new DeviceProperty(
                         p.getTime().toString(),
@@ -93,25 +106,35 @@ public class DevicePropertyDataImpl implements IDevicePropertyData {
             return;
         }
         ThingModel thingModel = thingModelApi.getThingModelByProductKeyFromCache(device.getProductKey());
+        if (thingModel == null) {
+            return;
+        }
         List<PgField> fieldList = FieldParser.parse(thingModel);
-        Map<String, String> fidldMap = fieldList.stream().collect(Collectors.toMap(PgField::getName, PgField::getType));
-        //获取设备旧属性
+        Map<String, String> fieldMap = fieldList.stream()
+                .collect(Collectors.toMap(PgField::getName, PgField::getType));
+
         Map<String, DevicePropertyCache> oldProperties = deviceApi.getPropertiesFromCache(deviceId);
-        //用新属性覆盖
-        oldProperties.putAll(properties);
+        Map<String, DevicePropertyCache> merged = new HashMap<>(oldProperties == null ? Map.of() : oldProperties);
+        if (properties != null) {
+            merged.putAll(properties);
+        }
 
         StringBuilder sbFieldNames = new StringBuilder();
         StringBuilder sbFieldPlaces = new StringBuilder();
         List<Object> args = new ArrayList<>();
-        args.add(new PGTimestamp(time));
+        args.add(new Timestamp(time));
 
         //组织sql
-        oldProperties.forEach((key, val) -> {
-            sbFieldNames.append(key)
-                    .append(",");
+        merged.forEach((key, val) -> {
+            String safeKey = TableManager.safeIdentifier(key);
+            String fieldType = fieldMap.get(safeKey);
+            if (fieldType == null) {
+                return;
+            }
+            sbFieldNames.append(TableManager.quoteIdent(safeKey)).append(",");
             sbFieldPlaces.append("?,");
             // PostgreSQL 对类型要求很严格，所以这里需要转换
-            switch (fidldMap.get(key)) {
+            switch (fieldType) {
                 case "INTEGER":
                     args.add(Convert.toInt(val.getValue()));
                     break;
@@ -135,11 +158,18 @@ public class DevicePropertyDataImpl implements IDevicePropertyData {
         });
         args.add(deviceId);
 
+        String tbName = Constants.getProductPropertySTableName(device.getProductKey());
+        if (sbFieldNames.isEmpty()) {
+            String sql = String.format("INSERT INTO %s (time,device_id) VALUES (?,?);", TableManager.quoteIdent(tbName));
+            pgTemplate.update(sql, args.toArray());
+            return;
+        }
+
         sbFieldNames.deleteCharAt(sbFieldNames.length() - 1);
         sbFieldPlaces.deleteCharAt(sbFieldPlaces.length() - 1);
 
         String sql = String.format("INSERT INTO %s (time,%s,device_id) VALUES (?,%s,?);",
-                Constants.getProductPropertySTableName(device.getProductKey()),
+                TableManager.quoteIdent(tbName),
                 sbFieldNames,
                 sbFieldPlaces);
 

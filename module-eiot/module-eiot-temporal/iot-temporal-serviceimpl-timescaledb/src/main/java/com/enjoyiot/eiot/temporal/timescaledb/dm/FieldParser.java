@@ -40,12 +40,13 @@ public class FieldParser {
      * 物模型到td数据类型映射
      */
     private static final Map<String, String> TYPE_MAPPING = Collections.unmodifiableMap(new HashMap<String, String>() {{
+        put("int", "INTEGER");
         put("int32", "INTEGER");
         put("float", "DOUBLE PRECISION");
         put("double", "DOUBLE PRECISION");
         put("bool", "BOOLEAN");
         put("enum", "SMALLINT");
-        put("text", "VARCHAR");
+        put("text", "TEXT");
         put("date", "VARCHAR");
         put("position", "VARCHAR");
     }});
@@ -54,12 +55,15 @@ public class FieldParser {
      * 将物模型字段转换为td字段
      */
     public static PgField parse(ThingModel.Property property) {
-        String filedName = property.getIdentifier().toLowerCase();
+        String filedName = TableManager.safeIdentifier(property.getIdentifier());
         ThingModel.DataType dataType = property.getDataType();
         String type = dataType.getType();
 
         //将物模型字段类型映射为td字段类型
         String fType = TYPE_MAPPING.get(type);
+        if (fType == null) {
+            throw exception(FILED_DEFINE, filedName + " 类型错误");
+        }
         Object specs = dataType.getSpecs();
         int len = -1;
         if (specs instanceof Map) {
@@ -72,7 +76,7 @@ public class FieldParser {
                 }
             }
             if ("VARCHAR".equals(fType) && len < 1) {
-                throw exception(FILED_DEFINE, filedName + " 长度错误");
+                len = 255;
             }
         }
 
@@ -84,14 +88,5 @@ public class FieldParser {
      */
     public static List<PgField> parse(ThingModel thingModel) {
         return thingModel.getModel().getProperties().stream().map(FieldParser::parse).collect(Collectors.toList());
-    }
-
-    /**
-     * 获取字段字义
-     */
-    public static String getFieldDefine(PgField field) {
-        return field.getName() + " " + (field.getLength() > 0 ?
-                String.format("%s(%d)", field.getType(), field.getLength())
-                : field.getType());
     }
 }

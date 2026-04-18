@@ -36,11 +36,11 @@ import com.enjoyiot.framework.common.pojo.PageParam;
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.framework.common.util.json.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.postgresql.util.PGTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +91,7 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
         PageResult<PgThingModelMessage> result = thingModelMessageMapper.selectPage(pageParam,
                 Wrappers.lambdaQuery(PgThingModelMessage.class)
                         .eq(PgThingModelMessage::getType, type)
-                        .in(!deviceIds.isEmpty(), PgThingModelMessage::getDeviceId, deviceIds)
+                        .in(deviceIds != null && !deviceIds.isEmpty(), PgThingModelMessage::getDeviceId, deviceIds)
                         .eq(StringUtils.isNotBlank(identifier), PgThingModelMessage::getIdentifier, identifier)
                         .orderByDesc(PgThingModelMessage::getTime)
         );
@@ -108,13 +108,13 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
     @Override
     public List<TimeData> getDeviceMessageStatsWithUid(String uid, long start, long end) {
         String sql = "SELECT time,COUNT(*) AS data FROM(" +
-                "SELECT TIMETRUNCATE(time,'1h') AS time FROM thing_model_message " +
-                "WHERE time>=? AND time<=? " + (uid != null ? "AND uid=?" : "") +
+                "SELECT date_trunc('hour', time) AS time FROM thing_model_message " +
+                "WHERE time>=? AND time<=? " + (uid != null ? "AND uid=? " : "") +
                 ") a GROUP BY time ORDER BY time ASC";
 
         List<Object> args = new ArrayList<>();
-        args.add(start);
-        args.add(end);
+        args.add(new Timestamp(start));
+        args.add(new Timestamp(end));
         if (uid != null) {
             args.add(uid);
         }
@@ -125,8 +125,8 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
     @Override
     public List<TimeData> getDeviceUpMessageStatsWithUid(String uid, Long start, Long end) {
         String sql = "SELECT time,COUNT(*) AS data FROM(" +
-                "SELECT TIMETRUNCATE(time,'1h') AS time FROM thing_model_message " +
-                "WHERE (type='property' AND identifier='report') OR type='event' ";
+                "SELECT date_trunc('hour', time) AS time FROM thing_model_message " +
+                "WHERE ((type='property' AND identifier='report') OR type='event') ";
         StringBuilder sqlBuffer = new StringBuilder();
         sqlBuffer.append(sql);
 
@@ -138,8 +138,8 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
 
         if (ObjectUtil.isNotEmpty(start) && ObjectUtil.isNotEmpty(end)) {
             sqlBuffer.append(" AND time>=? AND time<=?");
-            args.add(start);
-            args.add(end);
+            args.add(new Timestamp(start));
+            args.add(new Timestamp(end));
         }
 
         sqlBuffer.append(") a GROUP BY time ORDER BY time ASC");
@@ -150,8 +150,8 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
     @Override
     public List<TimeData> getDeviceDownMessageStatsWithUid(String uid, Long start, Long end) {
         String sql = "SELECT time,COUNT(*) AS data FROM(" +
-                "SELECT TIMETRUNCATE(time,1h) AS time FROM thing_model_message " +
-                "WHERE (type='property' AND identifier='report') OR type='service' OR type= 'config' ";
+                "SELECT date_trunc('hour', time) AS time FROM thing_model_message " +
+                "WHERE ((type='property' AND identifier='report') OR type='service' OR type='config') ";
         StringBuilder sqlBuffer = new StringBuilder();
         sqlBuffer.append(sql);
 
@@ -163,8 +163,8 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
 
         if (ObjectUtil.isNotEmpty(start) && ObjectUtil.isNotEmpty(end)) {
             sqlBuffer.append(" AND time>=? AND time<=?");
-            args.add(start);
-            args.add(end);
+            args.add(new Timestamp(start));
+            args.add(new Timestamp(end));
         }
 
         sqlBuffer.append(") a GROUP BY time ORDER BY time ASC");
@@ -177,7 +177,7 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
         PgThingModelMessage message = BeanUtil.copyProperties(msg, PgThingModelMessage.class, "time", "data", "reportTime", "deviceName");
         message.setData(msg.getData() == null ? "{}" : JsonUtils.toJsonString(msg.getData()));
         message.setDeviceName(msg.getDn());
-        message.setTime(new PGTimestamp(msg.getOccurred()));
+        message.setTime(new Timestamp(msg.getOccurred()));
         message.setReportTime(msg.getTime());
         thingModelMessageMapper.insert(message);
     }

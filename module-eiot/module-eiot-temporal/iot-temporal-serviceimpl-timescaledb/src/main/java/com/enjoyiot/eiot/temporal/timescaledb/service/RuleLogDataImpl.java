@@ -30,10 +30,10 @@ import com.enjoyiot.framework.common.pojo.PageParam;
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.framework.common.util.object.BeanUtils;
 import com.enjoyiot.module.eiot.api.rule.dto.RuleLog;
-import org.postgresql.util.PGTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,7 +65,7 @@ public class RuleLogDataImpl implements IRuleLogData {
     public void add(RuleLog log) {
         PgRuleLog ruleLog = BeanUtils.toBean(log, PgRuleLog.class);
         ruleLog.setState1(log.getState());
-        ruleLog.setTime(new PGTimestamp(System.currentTimeMillis()));
+        ruleLog.setTime(new Timestamp(System.currentTimeMillis()));
         ruleLogMapper.insert(ruleLog);
     }
 }

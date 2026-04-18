@@ -241,6 +241,10 @@ platform:
       - tmp_report_data_1
       - tmp_report_data_income
       - eiot_component
+      - thing_model_message
+      - task_log
+      - rule_log
+      - virtual_device_log
     ignore-caches:
       - user_role_ids
       - permission_menu_ids
