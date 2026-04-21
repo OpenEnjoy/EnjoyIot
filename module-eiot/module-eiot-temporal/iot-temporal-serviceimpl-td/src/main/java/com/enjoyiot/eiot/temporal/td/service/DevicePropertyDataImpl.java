@@ -22,11 +22,11 @@
  */
 package com.enjoyiot.eiot.temporal.td.service;
 
-
 import com.enjoyiot.eiot.IDevicePropertyData;
 import com.enjoyiot.eiot.temporal.td.config.Constants;
 import com.enjoyiot.eiot.temporal.td.dao.TdTemplate;
 import com.enjoyiot.eiot.temporal.td.model.TbDeviceProperty;
+import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.module.eiot.api.device.DeviceApi;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceProperty;
@@ -59,65 +59,63 @@ public class DevicePropertyDataImpl implements IDevicePropertyData {
             return new ArrayList<>();
         }
 
-        String tbName = Constants.getProductPropertySTableName(device.getProductKey());
-        String filedName = name;
-        if (name.contains(".")) {
-            filedName = "`" + name + "`";
-        }
+        String tableName = Constants.getProductPropertySTableName(device.getProductKey());
+        String fieldName = name.contains(".") ? "`" + name + "`" : name;
         List<TbDeviceProperty> deviceProperties = tdTemplate.query(String.format(
-                        "select time,%s as `value`,device_id from %s where device_id=? and time>=? and time<=? " +
-                                "order by time asc limit 0," + size,
-                        filedName.toLowerCase(), tbName),
+                        "select time,%s as `value`,device_id from %s where device_id=? and time>=? and time<=? order by time asc limit 0,%d",
+                        fieldName.toLowerCase(), tableName, size),
                 new BeanPropertyRowMapper<>(TbDeviceProperty.class),
-                deviceId, start, end
-        );
-        return deviceProperties.stream().map(p -> new DeviceProperty(
-                        p.getTime().toString(),
-                        p.getDeviceId(),
+                deviceId, start, end);
+        return deviceProperties.stream().map(property -> new DeviceProperty(
+                        property.getTime().toString(),
+                        property.getDeviceId(),
                         name,
-                        p.getValue(),
-                        p.getTime()))
+                        property.getValue(),
+                        property.getTime()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public void addProperties(Long deviceId, Map<String, DevicePropertyCache> properties, long time) {
         DeviceInfo device = deviceApi.getDeviceInfoFromCache(deviceId);
-
         if (device == null) {
             return;
         }
-        //获取设备旧属性
+
         Map<String, DevicePropertyCache> oldProperties = deviceApi.getPropertiesFromCache(deviceId);
-        //用新属性覆盖
         oldProperties.putAll(properties);
 
-        StringBuilder sbFieldNames = new StringBuilder();
-        StringBuilder sbFieldPlaces = new StringBuilder();
+        StringBuilder fieldNames = new StringBuilder();
+        StringBuilder fieldPlaceholders = new StringBuilder();
         List<Object> args = new ArrayList<>();
         args.add(time);
 
-        //组织sql
-        oldProperties.forEach((key, val) -> {
-            if (key.contains(".")) {
-                key = "`" + key + "`";
-            }
-            sbFieldNames.append(key)
-                    .append(",");
-            sbFieldPlaces.append("?,");
-            args.add(val.getValue());
+        oldProperties.forEach((key, value) -> {
+            String fieldName = key.contains(".") ? "`" + key + "`" : key;
+            fieldNames.append(fieldName).append(",");
+            fieldPlaceholders.append("?,");
+            args.add(stringifyValue(value.getValue()));
         });
-        sbFieldNames.deleteCharAt(sbFieldNames.length() - 1);
-        sbFieldPlaces.deleteCharAt(sbFieldPlaces.length() - 1);
+        fieldNames.deleteCharAt(fieldNames.length() - 1);
+        fieldPlaceholders.deleteCharAt(fieldPlaceholders.length() - 1);
 
         String sql = String.format("INSERT INTO %s (time,%s) USING %s TAGS ('%s') VALUES (?,%s);",
                 Constants.getDevicePropertyTableName(deviceId),
-                sbFieldNames,
+                fieldNames,
                 Constants.getProductPropertySTableName(device.getProductKey()),
                 deviceId,
-                sbFieldPlaces);
+                fieldPlaceholders);
 
         tdTemplate.update(sql, args.toArray());
     }
 
+    private Object stringifyValue(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof Map || value instanceof List || value.getClass().isArray()) {
+            return JsonUtils.toJsonString(value);
+        }
+        return value;
+    }
 }

@@ -36,6 +36,7 @@ import com.enjoyiot.eiot.common.utils.UniqueIdUtil;
 import com.enjoyiot.eiot.message.core.MqProducer;
 import com.enjoyiot.framework.common.exception.ServiceException;
 import com.enjoyiot.framework.common.pojo.PageResult;
+import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.framework.common.util.object.BeanUtils;
 import com.enjoyiot.framework.common.util.validation.ValidationUtils;
 import com.enjoyiot.framework.mybatis.core.query.LambdaQueryWrapperX;
@@ -252,7 +253,12 @@ public class DeviceManagerServiceImpl implements DeviceManagerService {
                     DevicePropertyCache propertyCache = propertiesFromCache.get(openPropertyVo.getIdentifier());
                     if (ObjectUtil.isNotNull(propertyCache)) {
                         openPropertyVo.setTime(String.valueOf(propertyCache.getOccurred()));
-                        openPropertyVo.setValue(String.valueOf(propertyCache.getValue()));
+                        Object rawValue = propertyCache.getValue();
+                        if (rawValue != null && (rawValue instanceof Map || rawValue instanceof List || rawValue.getClass().isArray())) {
+                            openPropertyVo.setValue(JsonUtils.toJsonString(rawValue));
+                        } else {
+                            openPropertyVo.setValue(String.valueOf(rawValue));
+                        }
                     }
                 }
 

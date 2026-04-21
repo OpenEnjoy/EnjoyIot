@@ -23,6 +23,7 @@
 package com.enjoyiot.eiot.ruleengine.listener;
 
 import com.enjoyiot.eiot.ruleengine.expression.Expression;
+import com.enjoyiot.framework.common.util.json.JsonUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -80,6 +81,9 @@ public class DeviceCondition {
             Object left = parameter.get(identifier);
             if (left == null) {
                 return false;
+            }
+            if (left instanceof Map || left instanceof List || left.getClass().isArray()) {
+                return Expression.eval(comparator, JsonUtils.toJsonString(left), value);
             }
             return Expression.eval(comparator, String.valueOf(left), value);
         }

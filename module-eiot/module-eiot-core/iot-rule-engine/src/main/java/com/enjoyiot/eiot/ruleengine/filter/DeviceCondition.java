@@ -24,6 +24,7 @@ package com.enjoyiot.eiot.ruleengine.filter;
 
 
 import com.enjoyiot.eiot.ruleengine.expression.Expression;
+import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.module.eiot.api.device.DeviceApi;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
 import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
@@ -92,6 +93,9 @@ public class DeviceCondition {
                     left = tag.getValue();
                 }
             }
+        }
+        if (left != null && (left instanceof Map || left instanceof java.util.List || left.getClass().isArray())) {
+            return Expression.eval(comparator, JsonUtils.toJsonString(left), value);
         }
         return Expression.eval(comparator, String.valueOf(left), value);
     }
