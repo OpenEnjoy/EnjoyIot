@@ -29,6 +29,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.enjoyiot.eiot.common.thing.ThingModelMessage;
 import com.enjoyiot.eiot.virtualdevice.VirtualManager;
+import com.enjoyiot.framework.common.exception.ServiceException;
 import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceConfig;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
@@ -134,6 +135,9 @@ public class DeviceCtrlServiceImpl implements DeviceCtrlService {
     public void sendConfig(Long deviceId, boolean checkOwner) {
         DeviceInfo device = getAndCheckDevice(deviceId, checkOwner);
         DeviceConfig config = deviceConfigService.findByDeviceId(deviceId);
+        if (config == null || StrUtil.isBlank(config.getConfig())) {
+            throw new ServiceException(400, "device config is empty, cannot send");
+        }
         Map data = JsonUtils.parseObject(config.getConfig(), Map.class);
         send(deviceId, device.getProductKey(), device.getDn(), data,
                 ThingModelMessage.TYPE_CONFIG, ThingModelMessage.ID_CONFIG_SET);

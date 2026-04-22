@@ -57,6 +57,7 @@ import com.enjoyiot.module.eiot.dal.mysql.EiotIotDeviceGroupMapper;
 import com.enjoyiot.module.eiot.dal.mysql.EiotIotGroupMapper;
 import com.enjoyiot.module.eiot.service.product.ThingModelService;
 import com.enjoyiot.module.eiot.service.device.DeviceConfigService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +72,7 @@ import java.util.*;
  * @Description: 设备管理实现类
  */
 @Service
+@Slf4j
 public class DeviceManagerServiceImpl implements DeviceManagerService {
 
     @Resource
@@ -100,7 +102,13 @@ public class DeviceManagerServiceImpl implements DeviceManagerService {
 
     @Override
     public PageResult<ThingModelMessage> logs(DeviceLogPageReqVo req) {
-        return thingModelMessageData.findByTypeAndIdentifier(req.getDeviceId(), req.getType(), req.getIdentifier(), req.getPageNo(), req.getPageSize());
+        try {
+            return thingModelMessageData.findByTypeAndIdentifier(req.getDeviceId(), req.getType(), req.getIdentifier(), req.getPageNo(), req.getPageSize());
+        } catch (Exception ex) {
+            log.error("query device logs failed, deviceId={}, type={}, identifier={}",
+                    req.getDeviceId(), req.getType(), req.getIdentifier(), ex);
+            return new PageResult<>(Collections.emptyList(), 0L);
+        }
 
     }
 

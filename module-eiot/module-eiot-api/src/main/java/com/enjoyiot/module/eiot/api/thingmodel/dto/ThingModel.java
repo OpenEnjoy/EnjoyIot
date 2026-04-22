@@ -23,6 +23,7 @@
 package com.enjoyiot.module.eiot.api.thingmodel.dto;
 
 import com.enjoyiot.framework.common.util.json.JsonUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.enjoyiot.module.eiot.api.TenantModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -116,6 +117,7 @@ public class ThingModel extends TenantModel {
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class DataType {
         public static final String TYPE_BOOL = "bool";
         public static final String TYPE_ENUM = "enum";
@@ -172,6 +174,7 @@ public class ThingModel extends TenantModel {
             return this.type;
         }
 
+        @JsonIgnore
         public Map<String, Object> getSpecMap() {
             if (specs instanceof Map) {
                 return new LinkedHashMap<>((Map<String, Object>) specs);
@@ -184,6 +187,7 @@ public class ThingModel extends TenantModel {
             return parsed == null ? new LinkedHashMap<>() : parsed;
         }
 
+        @JsonIgnore
         public List<Parameter> getPropertySpecs() {
             Map<String, Object> specMap = getSpecMap();
             Object raw = specMap.get("properties");
@@ -198,6 +202,7 @@ public class ThingModel extends TenantModel {
             return parsed == null ? new ArrayList<>() : parsed;
         }
 
+        @JsonIgnore
         public DataType getItemTypeSpec() {
             Map<String, Object> specMap = getSpecMap();
             Object raw = specMap.get("itemType");
@@ -353,7 +358,6 @@ public class ThingModel extends TenantModel {
                 case TYPE_INT32:
                     return TYPE_INT32;
                 case "long":
-                case "int64":
                 case TYPE_INT64:
                     return TYPE_INT64;
                 case TYPE_FLOAT:
