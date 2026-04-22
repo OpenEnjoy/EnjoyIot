@@ -95,6 +95,7 @@ public class EiotRuleInfoServiceImpl implements EiotRuleInfoService {
 
             ruleInfo.setId(newId);
             ruleManager.add(ruleInfo);
+            return newId;
         } else {
             validateRuleInfoExists(id);
 
@@ -105,9 +106,9 @@ public class EiotRuleInfoServiceImpl implements EiotRuleInfoService {
             ruleInfoMapper.updateById(obj);
             // 更新规则后，同步更新缓存（即使规则是停止状态，也要更新缓存）
             ruleManager.add(ruleInfo);
+            return id;
         }
         // 返回
-        return id;
     }
 
     @Override

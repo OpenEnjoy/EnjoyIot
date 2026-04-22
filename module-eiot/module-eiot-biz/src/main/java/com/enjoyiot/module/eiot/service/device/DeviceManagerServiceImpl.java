@@ -262,6 +262,14 @@ public class DeviceManagerServiceImpl implements DeviceManagerService {
                     if (ObjectUtil.isNotNull(propertyCache)) {
                         openPropertyVo.setTime(String.valueOf(propertyCache.getOccurred()));
                         Object rawValue = propertyCache.getValue();
+                        ThingModel.DataType dataType = property.getDataType();
+                        Object normalizedValue = dataType == null ? rawValue : dataType.parse(rawValue);
+                        if (normalizedValue != null) {
+                            rawValue = normalizedValue;
+                        }
+                        if (rawValue instanceof Boolean) {
+                            rawValue = (Boolean) rawValue ? 1 : 0;
+                        }
                         if (rawValue != null && (rawValue instanceof Map || rawValue instanceof List || rawValue.getClass().isArray())) {
                             openPropertyVo.setValue(JsonUtils.toJsonString(rawValue));
                         } else {

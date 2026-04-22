@@ -223,12 +223,12 @@ public class ThingModel extends TenantModel {
             return text == null ? null : text.trim();
         }
 
-        private Boolean parseBoolean(Object value) {
+        private Integer parseBoolean(Object value) {
             if (value instanceof Boolean) {
-                return (Boolean) value;
+                return (Boolean) value ? 1 : 0;
             }
             if (value instanceof Number) {
-                return ((Number) value).intValue() != 0;
+                return ((Number) value).intValue() != 0 ? 1 : 0;
             }
             String text = stringifyScalar(value);
             if (text == null) {
@@ -239,12 +239,12 @@ public class ThingModel extends TenantModel {
                 case "true":
                 case "yes":
                 case "on":
-                    return Boolean.TRUE;
+                    return 1;
                 case "0":
                 case "false":
                 case "no":
                 case "off":
-                    return Boolean.FALSE;
+                    return 0;
                 default:
                     return null;
             }

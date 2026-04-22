@@ -24,12 +24,16 @@ package com.enjoyiot.eiot.ruleengine.filter;
 
 
 import com.enjoyiot.eiot.ruleengine.expression.Expression;
+import com.enjoyiot.eiot.ruleengine.util.PathValueResolver;
 import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.module.eiot.api.device.DeviceApi;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
 import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -72,17 +76,29 @@ public class DeviceCondition {
         if (deviceInfo == null) {
             return false;
         }
-        Object left = null;
+        List<Object> leftValues = Collections.emptyList();
         if ("property".equals(type)) {
             Map<String, ?> properties = deviceApi.getPropertiesFromCache(deviceInfo.getId());
-            DevicePropertyCache propertyCache = (DevicePropertyCache) properties.get(identifier);
+            if (properties == null || StringUtils.isBlank(identifier)) {
+                return false;
+            }
+            String rootKey = identifier.split("[.\\[]", 2)[0];
+            DevicePropertyCache propertyCache = (DevicePropertyCache) properties.get(rootKey);
             if (propertyCache == null) {
                 return false;
             }
-            left = propertyCache.getValue();
+            Object rootValue = propertyCache.getValue();
+            if (rootValue == null) {
+                return false;
+            }
+            if (identifier.equals(rootKey)) {
+                leftValues = Collections.singletonList(rootValue);
+            } else {
+                leftValues = PathValueResolver.resolveValues(Collections.singletonMap(rootKey, rootValue), identifier);
+            }
         } else if ("state".equals(type)) {
 
-            left = deviceInfo.isOnline();
+            leftValues = Collections.singletonList(deviceInfo.isOnline());
         } else if ("tag".equals(type)) {
             //取设备标签判断
             Map<String, DeviceInfo.Tag> tags = deviceInfo.getTag();
@@ -90,13 +106,27 @@ public class DeviceCondition {
                 DeviceInfo.Tag tag = tags.get(identifier);
                 if (tag != null) {
                     //设备标签值
-                    left = tag.getValue();
+                    leftValues = Collections.singletonList(tag.getValue());
                 }
             }
         }
-        if (left != null && (left instanceof Map || left instanceof java.util.List || left.getClass().isArray())) {
-            return Expression.eval(comparator, JsonUtils.toJsonString(left), value);
+        if (leftValues == null || leftValues.isEmpty()) {
+            return false;
         }
-        return Expression.eval(comparator, String.valueOf(left), value);
+        for (Object left : leftValues) {
+            if (left == null) {
+                continue;
+            }
+            if (left instanceof Map || left instanceof java.util.List || left.getClass().isArray()) {
+                if (Expression.eval(comparator, JsonUtils.toJsonString(left), value)) {
+                    return true;
+                }
+                continue;
+            }
+            if (Expression.eval(comparator, String.valueOf(left), value)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
