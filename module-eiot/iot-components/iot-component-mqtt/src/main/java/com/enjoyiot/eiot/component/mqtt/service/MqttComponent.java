@@ -396,7 +396,7 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
                     return;
                 }
                 method = method.toLowerCase();
-                JsonObject params = resolveParams(payload, method);
+                JsonObject params = resolveParams(payload);
                 switch (method) {
                     case "thing.lifetime.register":
                         //子设备注册
@@ -500,7 +500,7 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
         }).publishReleaseHandler(endpoint::publishComplete);
     }
 
-    private JsonObject resolveParams(JsonObject payload, String method) {
+    private JsonObject resolveParams(JsonObject payload) {
         JsonObject params = payload.getJsonObject("params");
         if (params != null) {
             return params;
@@ -508,13 +508,6 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
         JsonObject data = payload.getJsonObject("data");
         if (data == null) {
             return JsonObject.mapFrom(new HashMap<>(0));
-        }
-        // Compatibility: service reply payloads may use {"data":{"result":{...}}}
-        if (method.startsWith("thing.service.") && method.endsWith("_reply")) {
-            JsonObject result = data.getJsonObject("result");
-            if (result != null) {
-                return result;
-            }
         }
         return data;
     }
