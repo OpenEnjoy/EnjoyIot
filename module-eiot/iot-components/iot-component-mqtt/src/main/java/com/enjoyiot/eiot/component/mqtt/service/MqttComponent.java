@@ -63,6 +63,8 @@ import java.util.*;
 @Component
 public class MqttComponent extends ThingComponent implements Handler<MqttEndpoint> {
 
+    private static final String ENDPOINT_KEY_SEPARATOR = "||";
+
     private final Map<String, MqttEndpoint> endpointMap = new HashMap<>();
 
     private final MqttVerticle mqttVerticle;
@@ -213,14 +215,22 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
         if (endpoint == null) {
             throw new ServiceException(500, "mqtt endpoint not found,pk:" + pk + ",dn:" + dn);
         }
-        Future<Integer> result = endpoint.publish(topic, Buffer.buffer(msg),
-                MqttQoS.AT_LEAST_ONCE, false, false);
-        result.onFailure(e -> log.error("public topic failed", e));
-        result.onSuccess(integer -> log.info("publish success,topic:{},payload:{}", topic, msg));
+        try {
+            Future<Integer> result = endpoint.publish(topic, Buffer.buffer(msg),
+                    MqttQoS.AT_LEAST_ONCE, false, false);
+            result.onFailure(e -> {
+                log.error("public topic failed", e);
+                removeEndpoint(pk, dn);
+            });
+            result.onSuccess(integer -> log.info("publish success,topic:{},payload:{}", topic, msg));
+        } catch (IllegalStateException e) {
+            removeEndpoint(pk, dn);
+            throw new ServiceException(500, "mqtt endpoint disconnected,pk:" + pk + ",dn:" + dn);
+        }
     }
 
     private String getEndpointKey(String pk, String dn) {
-        return String.format("%s_%s", pk, dn);
+        return pk + ENDPOINT_KEY_SEPARATOR + dn;
     }
 
     public void addEndpoint(String pk, String dn, MqttEndpoint endpoint) {
@@ -253,8 +263,8 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
          * mqttPassword: md5(产品密钥mqttClientId)
          */
         String clientId = endpoint.clientIdentifier();
-        String[] split = clientId.split("_");
-        if (split.length != 3) {
+        String[] split = parseClientId(clientId);
+        if (split == null) {
             log.error("设备认证失败,clientId格式不正确,需要有三个_");
             endpoint.reject(MqttConnectReturnCode.CONNECTION_REFUSED_CLIENT_IDENTIFIER_NOT_VALID);
             return;
@@ -497,9 +507,11 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
      */
     public void offlineAll() {
         for (String pkDn : endpointMap.keySet()) {
-            String[] parts = pkDn.split("_");
+            String[] parts = pkDn.split("\\Q" + ENDPOINT_KEY_SEPARATOR + "\\E", 2);
             //下线
-            offline(parts[0], parts[1]);
+            if (parts.length == 2) {
+                offline(parts[0], parts[1]);
+            }
         }
     }
 
@@ -529,6 +541,23 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
                 .deviceName(deviceName)
                 .state(DeviceState.OFFLINE)
                 .build());
+    }
+
+    private String[] parseClientId(String clientId) {
+        if (StringUtils.isBlank(clientId)) {
+            return null;
+        }
+        String[] rawParts = clientId.split("_");
+        if (rawParts.length < 3) {
+            return null;
+        }
+        String model = rawParts[rawParts.length - 1];
+        String deviceName = rawParts[rawParts.length - 2];
+        String productKey = String.join("_", Arrays.copyOf(rawParts, rawParts.length - 2));
+        if (StringUtils.isAnyBlank(productKey, deviceName, model)) {
+            return null;
+        }
+        return new String[]{productKey, deviceName, model};
     }
 
 

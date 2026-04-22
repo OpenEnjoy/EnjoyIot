@@ -113,6 +113,18 @@ public class DevicePropertyDataImpl implements IDevicePropertyData {
         if (value == null) {
             return null;
         }
+        if (value instanceof Boolean boolValue) {
+            // TDengine TINYINT expects numeric values for bool columns.
+            return boolValue ? 1 : 0;
+        }
+        if (value instanceof String stringValue) {
+            if ("true".equalsIgnoreCase(stringValue)) {
+                return 1;
+            }
+            if ("false".equalsIgnoreCase(stringValue)) {
+                return 0;
+            }
+        }
         if (value instanceof Map || value instanceof List || value.getClass().isArray()) {
             return JsonUtils.toJsonString(value);
         }
