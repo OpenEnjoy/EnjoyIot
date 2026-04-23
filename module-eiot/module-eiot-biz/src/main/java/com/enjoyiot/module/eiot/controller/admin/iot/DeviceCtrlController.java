@@ -42,7 +42,7 @@ import static com.enjoyiot.framework.common.pojo.CommonResult.success;
 @Tag(name = "管理后台-设备控制接口")
 @Slf4j
 @RestController
-@RequestMapping("/eiot/device")
+@RequestMapping({"/eiot/device", "/eiot/device-ctrl"})
 public class DeviceCtrlController {
 
 

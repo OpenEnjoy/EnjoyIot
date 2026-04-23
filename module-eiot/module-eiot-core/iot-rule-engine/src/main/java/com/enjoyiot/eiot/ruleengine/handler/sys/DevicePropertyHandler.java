@@ -97,8 +97,20 @@ public class DevicePropertyHandler implements DeviceMessageHandler {
         Long finalOccurred = occurred;
         properties.forEach((key, val) -> {
             if (thingModelProperties.containsKey(key)) {
+                ThingModel.DataType dataType = thingModelProperties.get(key);
+                Object normalizedVal = dataType == null ? val : dataType.parse(val);
+                if (normalizedVal instanceof Boolean) {
+                    normalizedVal = (Boolean) normalizedVal ? 1 : 0;
+                }
+                if (normalizedVal == null && val instanceof Boolean) {
+                    normalizedVal = (Boolean) val ? 1 : 0;
+                }
+                if (normalizedVal == null) {
+                    return;
+                }
+                properties.replace(key, normalizedVal);
                 DevicePropertyCache propertyCache = new DevicePropertyCache();
-                propertyCache.setValue(val);
+                propertyCache.setValue(normalizedVal);
                 propertyCache.setOccurred(finalOccurred);
                 addProperties.put(key, propertyCache);
 //                handleLocate(deviceInfo, val, thingModelProperties.get(key));

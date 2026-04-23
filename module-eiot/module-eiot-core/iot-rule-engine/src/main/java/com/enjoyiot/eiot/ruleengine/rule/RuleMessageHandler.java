@@ -53,7 +53,10 @@ public class RuleMessageHandler implements DeviceMessageHandler {
                 String device = ((DeviceCondition) condition).getDevice();
                 deviceRuleMap.putIfAbsent(device, new ArrayList<>());
                 List<Rule> rules = deviceRuleMap.get(device);
-                rules.add(rule);
+                boolean exists = rules.stream().anyMatch(r -> r != null && r.getId().equals(rule.getId()));
+                if (!exists) {
+                    rules.add(rule);
+                }
             }
         }
     }
@@ -78,15 +81,24 @@ public class RuleMessageHandler implements DeviceMessageHandler {
         String pk = message.getProductKey();
         String dn = message.getDn();
         List<Rule> rules = new ArrayList<>();
+        Set<Long> addedRuleIds = new HashSet<>();
         //仅用PK匹配
         List<Rule> foundRules = deviceRuleMap.get(pk + "/#");
         if (foundRules != null) {
-            rules.addAll(foundRules);
+            foundRules.forEach(rule -> {
+                if (rule != null && addedRuleIds.add(rule.getId())) {
+                    rules.add(rule);
+                }
+            });
         }
         //用PK和DN匹配
         foundRules = deviceRuleMap.get(pk + "/" + dn);
         if (foundRules != null) {
-            rules.addAll(foundRules);
+            foundRules.forEach(rule -> {
+                if (rule != null && addedRuleIds.add(rule.getId())) {
+                    rules.add(rule);
+                }
+            });
         }
         //执行规则
         for (Rule rule : rules) {

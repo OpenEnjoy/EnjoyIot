@@ -99,21 +99,42 @@ public class VirtualManager {
     @SneakyThrows
     public void send(ThingModelMessage message) {
         DeviceInfo deviceInfo = deviceApi.getDeviceByPkDnByCache(message.getProductKey(), message.getDn());
+        if (deviceInfo == null) {
+            log.warn("virtual send skipped, device not found by pk/dn, pk={}, dn={}", message.getProductKey(), message.getDn());
+            return;
+        }
         Long deviceId = deviceInfo.getId();
 
         //根据设备Id取虚拟设备列表
         Set<Long> virtualIds = deviceIdToVirtualId.get(deviceId);
+        if (virtualIds == null || virtualIds.isEmpty()) {
+            log.warn("virtual send skipped, no virtual mapping, deviceId={}", deviceId);
+            return;
+        }
         for (Long virtualId : virtualIds) {
             IScriptEngine scriptEngine = virtualScripts.get(virtualId);
-            //多条虚拟设备消息
-            List<ThingModelMessage> result = scriptEngine.invokeMethod(
-                    new TypeReference<List<ThingModelMessage>>() {
-                    },
-                    "receive", message);
-            for (ThingModelMessage msg : result) {
-                processReport(msg);
+            if (scriptEngine == null) {
+                log.warn("virtual send skipped, script engine missing, virtualId={}", virtualId);
+                continue;
             }
-            log.info("virtual device send result:{}", JSON.toJSONString(result));
+            //多条虚拟设备消息
+            try {
+                List<ThingModelMessage> result = scriptEngine.invokeMethod(
+                        new TypeReference<List<ThingModelMessage>>() {
+                        },
+                        "receive", message);
+                if (result == null || result.isEmpty()) {
+                    log.info("virtual device send result:[]");
+                    continue;
+                }
+                for (ThingModelMessage msg : result) {
+                    processReport(msg);
+                }
+                log.info("virtual device send result:{}", JSON.toJSONString(result));
+            } catch (Throwable ex) {
+                log.error("virtual send invoke failed, virtualId={}, deviceId={}, type={}, identifier={}",
+                        virtualId, deviceId, message.getType(), message.getIdentifier(), ex);
+            }
         }
     }
 
