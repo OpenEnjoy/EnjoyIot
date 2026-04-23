@@ -63,8 +63,6 @@ import java.util.*;
 @Component
 public class MqttComponent extends ThingComponent implements Handler<MqttEndpoint> {
 
-    private static final String ENDPOINT_KEY_SEPARATOR = "||";
-
     private final Map<String, MqttEndpoint> endpointMap = new HashMap<>();
 
     private final MqttVerticle mqttVerticle;
@@ -230,7 +228,7 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
     }
 
     private String getEndpointKey(String pk, String dn) {
-        return pk + ENDPOINT_KEY_SEPARATOR + dn;
+        return String.format("%s_%s", pk, dn);
     }
 
     public void addEndpoint(String pk, String dn, MqttEndpoint endpoint) {
@@ -263,8 +261,8 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
          * mqttPassword: md5(产品密钥mqttClientId)
          */
         String clientId = endpoint.clientIdentifier();
-        String[] split = parseClientId(clientId);
-        if (split == null) {
+        String[] split = clientId.split("_");
+        if (split.length != 3) {
             log.error("设备认证失败,clientId格式不正确,需要有三个_");
             endpoint.reject(MqttConnectReturnCode.CONNECTION_REFUSED_CLIENT_IDENTIFIER_NOT_VALID);
             return;
@@ -517,11 +515,9 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
      */
     public void offlineAll() {
         for (String pkDn : endpointMap.keySet()) {
-            String[] parts = pkDn.split("\\Q" + ENDPOINT_KEY_SEPARATOR + "\\E", 2);
+            String[] parts = pkDn.split("_");
             //下线
-            if (parts.length == 2) {
-                offline(parts[0], parts[1]);
-            }
+            offline(parts[0], parts[1]);
         }
     }
 
@@ -552,24 +548,6 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
                 .state(DeviceState.OFFLINE)
                 .build());
     }
-
-    private String[] parseClientId(String clientId) {
-        if (StringUtils.isBlank(clientId)) {
-            return null;
-        }
-        String[] rawParts = clientId.split("_");
-        if (rawParts.length < 3) {
-            return null;
-        }
-        String model = rawParts[rawParts.length - 1];
-        String deviceName = rawParts[rawParts.length - 2];
-        String productKey = String.join("_", Arrays.copyOf(rawParts, rawParts.length - 2));
-        if (StringUtils.isAnyBlank(productKey, deviceName, model)) {
-            return null;
-        }
-        return new String[]{productKey, deviceName, model};
-    }
-
 
     private String[] getSubDevice(String topic) {
         String[] topicParts = topic.split("/");
