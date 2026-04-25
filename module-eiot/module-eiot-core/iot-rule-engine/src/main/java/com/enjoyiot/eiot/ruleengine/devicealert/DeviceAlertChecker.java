@@ -1,5 +1,6 @@
 package com.enjoyiot.eiot.ruleengine.devicealert;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.enjoyiot.eiot.common.thing.ThingModelMessage;
 import com.enjoyiot.eiot.ruleengine.handler.DeviceMessageHandler;
 import com.enjoyiot.module.eiot.api.device.DeviceApi;
@@ -33,6 +34,9 @@ public class DeviceAlertChecker implements DeviceMessageHandler {
 
         List<DeviceAlertConfig> configs = deviceApi.getDeviceAlertConfigListByDeviceId(deviceId);
         List<DeviceAlertConfig> productConfigs = deviceApi.getDeviceAlertConfigListByProductKey(productKey);
+        if(CollectionUtil.isEmpty(configs) && CollectionUtil.isEmpty(productConfigs)){
+            return;
+        }
 
         for (DeviceAlertConfig config : configs) {
             if (!config.isEnable()) {

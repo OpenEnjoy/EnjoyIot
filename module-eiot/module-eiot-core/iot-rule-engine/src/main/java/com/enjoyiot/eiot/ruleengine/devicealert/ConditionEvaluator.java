@@ -53,15 +53,15 @@ public class ConditionEvaluator {
         Object actualValue = null;
         if ("property".equals(type)) {
             actualValue = dataMap.get(key);
+            return compare(String.valueOf(actualValue), operator, value);
+
         } else if ("status".equals(type)) {
             actualValue = dataMap.get(key);
+            // TODO: 状态判断
+            return true;
         }
+        return true;
 
-        if (actualValue == null) {
-            return false;
-        }
-
-        return compare(String.valueOf(actualValue), operator, value);
     }
 
     private boolean compare(String actual, String operator, String expected) {
