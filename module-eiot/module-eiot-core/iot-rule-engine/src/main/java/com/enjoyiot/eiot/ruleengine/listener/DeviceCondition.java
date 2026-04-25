@@ -23,9 +23,12 @@
 package com.enjoyiot.eiot.ruleengine.listener;
 
 import com.enjoyiot.eiot.ruleengine.expression.Expression;
+import com.enjoyiot.eiot.ruleengine.util.PathValueResolver;
+import com.enjoyiot.framework.common.util.json.JsonUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -77,11 +80,27 @@ public class DeviceCondition {
                 return true;
             }
 
-            Object left = parameter.get(identifier);
-            if (left == null) {
+            List<Object> values = StringUtils.isBlank(identifier)
+                    ? Collections.emptyList()
+                    : PathValueResolver.resolveValues(parameter, identifier);
+            if (values.isEmpty()) {
                 return false;
             }
-            return Expression.eval(comparator, String.valueOf(left), value);
+            for (Object left : values) {
+                if (left == null) {
+                    continue;
+                }
+                if (left instanceof Map || left instanceof List || left.getClass().isArray()) {
+                    if (Expression.eval(comparator, JsonUtils.toJsonString(left), value)) {
+                        return true;
+                    }
+                    continue;
+                }
+                if (Expression.eval(comparator, String.valueOf(left), value)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

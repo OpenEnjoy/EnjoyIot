@@ -213,10 +213,18 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
         if (endpoint == null) {
             throw new ServiceException(500, "mqtt endpoint not found,pk:" + pk + ",dn:" + dn);
         }
-        Future<Integer> result = endpoint.publish(topic, Buffer.buffer(msg),
-                MqttQoS.AT_LEAST_ONCE, false, false);
-        result.onFailure(e -> log.error("public topic failed", e));
-        result.onSuccess(integer -> log.info("publish success,topic:{},payload:{}", topic, msg));
+        try {
+            Future<Integer> result = endpoint.publish(topic, Buffer.buffer(msg),
+                    MqttQoS.AT_LEAST_ONCE, false, false);
+            result.onFailure(e -> {
+                log.error("public topic failed", e);
+                removeEndpoint(pk, dn);
+            });
+            result.onSuccess(integer -> log.info("publish success,topic:{},payload:{}", topic, msg));
+        } catch (IllegalStateException e) {
+            removeEndpoint(pk, dn);
+            throw new ServiceException(500, "mqtt endpoint disconnected,pk:" + pk + ",dn:" + dn);
+        }
     }
 
     private String getEndpointKey(String pk, String dn) {
@@ -381,14 +389,12 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
             fixOnline(subPk, subDn, endpoint);
 
             try {
-                JsonObject defParams = JsonObject.mapFrom(new HashMap<>(0));
-
                 String method = payload.getString("method", "").toLowerCase();
                 if (StringUtils.isBlank(method)) {
                     return;
                 }
-                JsonObject params = payload.getJsonObject("params", defParams);
                 method = method.toLowerCase();
+                JsonObject params = resolveParams(payload);
                 switch (method) {
                     case "thing.lifetime.register":
                         //子设备注册
@@ -492,6 +498,18 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
         }).publishReleaseHandler(endpoint::publishComplete);
     }
 
+    private JsonObject resolveParams(JsonObject payload) {
+        JsonObject params = payload.getJsonObject("params");
+        if (params != null) {
+            return params;
+        }
+        JsonObject data = payload.getJsonObject("data");
+        if (data == null) {
+            return JsonObject.mapFrom(new HashMap<>(0));
+        }
+        return data;
+    }
+
     /**
      * 下线所有设备
      */
@@ -530,7 +548,6 @@ public class MqttComponent extends ThingComponent implements Handler<MqttEndpoin
                 .state(DeviceState.OFFLINE)
                 .build());
     }
-
 
     private String[] getSubDevice(String topic) {
         String[] topicParts = topic.split("/");

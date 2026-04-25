@@ -37,6 +37,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -82,7 +83,7 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
                         new ThingModelMessage(r.getTime().toString(), r.getMid(),
                                 deviceId, r.getProductKey(), r.getDeviceName(),
                                 r.getUid(), r.getType(), r.getIdentifier(), r.getCode(),
-                                JsonUtils.parseObject(r.getData(), Map.class),
+                                parseDataSafe(r.getData()),
                                 r.getTime(), r.getReportTime(), null))
                 .collect(Collectors.toList()), count);
     }
@@ -122,7 +123,7 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
                         new ThingModelMessage(r.getTime().toString(), r.getMid(),
                                 r.getDeviceId(), r.getProductKey(), r.getDeviceName(),
                                 r.getUid(), r.getType(), r.getIdentifier(), r.getCode(),
-                                JsonUtils.parseObject(r.getData(), Map.class),
+                                parseDataSafe(r.getData()),
                                 r.getTime(), r.getReportTime(), null))
                 .collect(Collectors.toList()), count);
     }
@@ -216,5 +217,24 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
     public long count() {
         List<Long> counts = tdTemplate.queryForList("select count(*) from thing_model_message", Long.class);
         return !counts.isEmpty() ? counts.get(0) : 0;
+    }
+
+    private Map<String, Object> parseDataSafe(String rawData) {
+        if (StringUtils.isBlank(rawData)) {
+            return new LinkedHashMap<>();
+        }
+        try {
+            if (!JsonUtils.isJson(rawData)) {
+                Map<String, Object> fallback = new LinkedHashMap<>();
+                fallback.put("_raw", rawData);
+                return fallback;
+            }
+            Map<String, Object> parsed = JsonUtils.parseObject(rawData, Map.class);
+            return parsed == null ? new LinkedHashMap<>() : parsed;
+        } catch (Exception ex) {
+            Map<String, Object> fallback = new LinkedHashMap<>();
+            fallback.put("_raw", rawData);
+            return fallback;
+        }
     }
 }

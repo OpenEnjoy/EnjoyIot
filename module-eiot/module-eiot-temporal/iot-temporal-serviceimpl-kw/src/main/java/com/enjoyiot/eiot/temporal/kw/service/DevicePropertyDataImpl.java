@@ -22,7 +22,6 @@
  */
 package com.enjoyiot.eiot.temporal.kw.service;
 
-
 import cn.hutool.core.convert.Convert;
 import com.enjoyiot.eiot.IDevicePropertyData;
 import com.enjoyiot.eiot.temporal.kw.config.Constants;
@@ -30,6 +29,7 @@ import com.enjoyiot.eiot.temporal.kw.dao.KwJdbcTemplate;
 import com.enjoyiot.eiot.temporal.kw.dm.FieldParser;
 import com.enjoyiot.eiot.temporal.kw.dm.KwField;
 import com.enjoyiot.eiot.temporal.kw.model.KwDeviceProperty;
+import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.module.eiot.api.device.DeviceApi;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceProperty;
@@ -68,82 +68,86 @@ public class DevicePropertyDataImpl implements IDevicePropertyData {
             return new ArrayList<>();
         }
 
-        String tbName = Constants.getProductPropertyTableName(device.getProductKey());
+        String tableName = Constants.getProductPropertyTableName(device.getProductKey());
         List<KwDeviceProperty> deviceProperties = kwJdbcTemplate.query(String.format(
-                        "SELECT time,%s as value,device_id FROM %s WHERE device_id=? AND time>=? AND time<=? " +
-                                "ORDER BY time ASC LIMIT %d OFFSET 0",
-                        name.toLowerCase(), tbName, size),
+                        "SELECT time,%s as value,device_id FROM %s WHERE device_id=? AND time>=? AND time<=? ORDER BY time ASC LIMIT %d OFFSET 0",
+                        name.toLowerCase(), tableName, size),
                 new BeanPropertyRowMapper<>(KwDeviceProperty.class),
-                deviceId, new KWTimestamp(start), new KWTimestamp(end)
-        );
-        return deviceProperties.stream().map(p -> new DeviceProperty(
-                        p.getTime().toString(),
-                        p.getDeviceId().toString(),
+                deviceId, new KWTimestamp(start), new KWTimestamp(end));
+        return deviceProperties.stream().map(property -> new DeviceProperty(
+                        property.getTime().toString(),
+                        property.getDeviceId().toString(),
                         name,
-                        p.getValue(),
-                        p.getTime().getTime()))
+                        property.getValue(),
+                        property.getTime().getTime()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public void addProperties(Long deviceId, Map<String, DevicePropertyCache> properties, long time) {
         DeviceInfo device = deviceApi.getDeviceInfoFromCache(deviceId);
-
         if (device == null) {
             return;
         }
+
         ThingModel thingModel = thingModelApi.getThingModelByProductKeyFromCache(device.getProductKey());
         List<KwField> fieldList = FieldParser.parse(thingModel);
-        Map<String, String> fidldMap = fieldList.stream().collect(Collectors.toMap(KwField::getName, KwField::getType));
-        //获取设备旧属性
+        Map<String, String> fieldTypeMap = fieldList.stream().collect(Collectors.toMap(KwField::getName, KwField::getType));
         Map<String, DevicePropertyCache> oldProperties = deviceApi.getPropertiesFromCache(deviceId);
-        //用新属性覆盖
         oldProperties.putAll(properties);
 
-        StringBuilder sbFieldNames = new StringBuilder();
-        StringBuilder sbFieldPlaces = new StringBuilder();
+        StringBuilder fieldNames = new StringBuilder();
+        StringBuilder fieldPlaceholders = new StringBuilder();
         List<Object> args = new ArrayList<>();
         args.add(new KWTimestamp(time));
 
-        //组织sql
-        oldProperties.forEach((key, val) -> {
-            sbFieldNames.append(key)
-                    .append(",");
-            sbFieldPlaces.append("?,");
-            // PostgreSQL 对类型要求很严格，所以这里需要转换
-            switch (fidldMap.get(key)) {
-                case "INTEGER":
-                    args.add(Convert.toInt(val.getValue()));
+        oldProperties.forEach((key, value) -> {
+            fieldNames.append(key).append(",");
+            fieldPlaceholders.append("?,");
+            switch (fieldTypeMap.get(key)) {
+                case "INT4":
+                    args.add(Convert.toInt(value.getValue()));
                     break;
-                case "SMALLINT":
-                    args.add(Convert.toShort(val.getValue()));
+                case "INT2":
+                    args.add(Convert.toShort(value.getValue()));
                     break;
-                case "DOUBLE PRECISION":
-                    args.add(Convert.toDouble(val.getValue()));
+                case "INT8":
+                    args.add(Convert.toLong(value.getValue()));
                     break;
-                case "BOOLEAN":
-                    args.add(Convert.toBool(val.getValue()));
+                case "FLOAT4":
+                case "FLOAT8":
+                    args.add(Convert.toDouble(value.getValue()));
                     break;
+                case "NCHAR":
                 case "VARCHAR":
-                    args.add(Convert.toStr(val.getValue()));
+                case "NVARCHAR":
+                    args.add(stringifyValue(value.getValue()));
                     break;
                 default:
-                    args.add(val.getValue());
+                    args.add(stringifyValue(value.getValue()));
                     break;
             }
-
         });
         args.add(deviceId);
 
-        sbFieldNames.deleteCharAt(sbFieldNames.length() - 1);
-        sbFieldPlaces.deleteCharAt(sbFieldPlaces.length() - 1);
+        fieldNames.deleteCharAt(fieldNames.length() - 1);
+        fieldPlaceholders.deleteCharAt(fieldPlaceholders.length() - 1);
 
         String sql = String.format("INSERT INTO %s (time,%s,device_id) VALUES (?,%s,?);",
                 Constants.getProductPropertyTableName(device.getProductKey()),
-                sbFieldNames,
-                sbFieldPlaces);
+                fieldNames,
+                fieldPlaceholders);
 
         kwJdbcTemplate.update(sql, args.toArray());
     }
 
+    private String stringifyValue(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof Map || value instanceof List || value.getClass().isArray()) {
+            return JsonUtils.toJsonString(value);
+        }
+        return Convert.toStr(value);
+    }
 }

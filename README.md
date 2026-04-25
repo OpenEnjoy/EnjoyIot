@@ -6,6 +6,7 @@
 
 ## 平台简介
 
+【enjoy-iot】为乐飞智联旗下开源物联网平台，系列产品推荐：[乐飞无人机智巡平台](https://gitee.com/open-enjoy/uavs)
 
 > 有任何问题，或者想要的功能，可以在 _Issues_ 中提交。
 >
@@ -45,6 +46,11 @@
 <img alt="wx.png" src=".image/rule_action.png" width="600"/>
 <img alt="wx.png" src=".image/alarm_conf.png" width="600"/>
 
+
+### 无人机智巡平台
+![输入图片说明](.image/ScreenShot_2026-03-19_194559_346.png)
+
+
 ### 文档
 
 在线文档：[https://y5yrmmjjns.feishu.cn/wiki/M7Fgw1DX2iCbKNk5ucDcZ5mhnfd](https://y5yrmmjjns.feishu.cn/wiki/M7Fgw1DX2iCbKNk5ucDcZ5mhnfd)
@@ -52,8 +58,7 @@
 演示系统：见微信群公告
 
 ### 近期开发计划
-#### 1.添加esp32-xiaozhi后台支持
-小智后台管理功能
+#### 1. AI设备支持
 1. 智能体管理
 2. 模型配置
 
@@ -110,7 +115,12 @@ https://y5yrmmjjns.feishu.cn/wiki/FlxmwXzQJiEKCJkGuIhcLsyjnwh?fromScene=spaceOve
 
 ## :fa-chain-broken: 友情链接
 
+  :fa-star:  **乐飞无人机智巡平台** ([https://gitee.com/open-enjoy/uavs](https://gitee.com/open-enjoy/uavs))
+
   :fa-star:    **MyEMS能源管理系统** ([https://gitee.com/myems/myems](https://gitee.com/myems/myems))
 
   :+1:  **数据可视化**([https://gitee.com/xiaopujun/light-chaser](https://gitee.com/xiaopujun/light-chaser))  [官网](http://www.lcpdesigner.cn/home)
+
+  :fa-star:    **现代化文件管理网盘系统** ([https://gitee.com/xddcode/free-fs](https://gitee.com/xddcode/free-fs))
+
 

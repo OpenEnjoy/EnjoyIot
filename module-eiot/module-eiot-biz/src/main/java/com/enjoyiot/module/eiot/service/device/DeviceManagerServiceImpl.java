@@ -36,6 +36,7 @@ import com.enjoyiot.eiot.common.utils.UniqueIdUtil;
 import com.enjoyiot.eiot.message.core.MqProducer;
 import com.enjoyiot.framework.common.exception.ServiceException;
 import com.enjoyiot.framework.common.pojo.PageResult;
+import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.framework.common.util.object.BeanUtils;
 import com.enjoyiot.framework.common.util.validation.ValidationUtils;
 import com.enjoyiot.framework.mybatis.core.query.LambdaQueryWrapperX;
@@ -56,6 +57,7 @@ import com.enjoyiot.module.eiot.dal.mysql.EiotIotDeviceGroupMapper;
 import com.enjoyiot.module.eiot.dal.mysql.EiotIotGroupMapper;
 import com.enjoyiot.module.eiot.service.product.ThingModelService;
 import com.enjoyiot.module.eiot.service.device.DeviceConfigService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +72,7 @@ import java.util.*;
  * @Description: 设备管理实现类
  */
 @Service
+@Slf4j
 public class DeviceManagerServiceImpl implements DeviceManagerService {
 
     @Resource
@@ -99,7 +102,13 @@ public class DeviceManagerServiceImpl implements DeviceManagerService {
 
     @Override
     public PageResult<ThingModelMessage> logs(DeviceLogPageReqVo req) {
-        return thingModelMessageData.findByTypeAndIdentifier(req.getDeviceId(), req.getType(), req.getIdentifier(), req.getPageNo(), req.getPageSize());
+        try {
+            return thingModelMessageData.findByTypeAndIdentifier(req.getDeviceId(), req.getType(), req.getIdentifier(), req.getPageNo(), req.getPageSize());
+        } catch (Exception ex) {
+            log.error("query device logs failed, deviceId={}, type={}, identifier={}",
+                    req.getDeviceId(), req.getType(), req.getIdentifier(), ex);
+            return new PageResult<>(Collections.emptyList(), 0L);
+        }
 
     }
 
@@ -252,7 +261,20 @@ public class DeviceManagerServiceImpl implements DeviceManagerService {
                     DevicePropertyCache propertyCache = propertiesFromCache.get(openPropertyVo.getIdentifier());
                     if (ObjectUtil.isNotNull(propertyCache)) {
                         openPropertyVo.setTime(String.valueOf(propertyCache.getOccurred()));
-                        openPropertyVo.setValue(String.valueOf(propertyCache.getValue()));
+                        Object rawValue = propertyCache.getValue();
+                        ThingModel.DataType dataType = property.getDataType();
+                        Object normalizedValue = dataType == null ? rawValue : dataType.parse(rawValue);
+                        if (normalizedValue != null) {
+                            rawValue = normalizedValue;
+                        }
+                        if (rawValue instanceof Boolean) {
+                            rawValue = (Boolean) rawValue ? 1 : 0;
+                        }
+                        if (rawValue != null && (rawValue instanceof Map || rawValue instanceof List || rawValue.getClass().isArray())) {
+                            openPropertyVo.setValue(JsonUtils.toJsonString(rawValue));
+                        } else {
+                            openPropertyVo.setValue(String.valueOf(rawValue));
+                        }
                     }
                 }
 
