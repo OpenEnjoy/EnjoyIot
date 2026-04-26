@@ -18,10 +18,10 @@ import com.enjoyiot.module.eiot.convert.DeviceShadowConvert;
 import com.enjoyiot.module.eiot.dal.dataobject.shadow.DeviceShadowDO;
 import com.enjoyiot.module.eiot.service.component.ComponentManager;
 import com.enjoyiot.module.eiot.service.shadow.DeviceShadowService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

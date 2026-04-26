@@ -119,6 +119,10 @@
             <artifactId>dysmsapi20170525</artifactId>
             <version>4.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.enjoy-iot</groupId>
+            <artifactId>module-eiot-api</artifactId>
+        </dependency>
 
     </dependencies>
 

@@ -12,7 +12,6 @@ package com.enjoyiot.module.eiot.service.shadow;
 
 import com.enjoyiot.module.eiot.dal.dataobject.shadow.DeviceShadowDO;
 
-import javax.validation.Valid;
 import java.util.Map;
 
 /**

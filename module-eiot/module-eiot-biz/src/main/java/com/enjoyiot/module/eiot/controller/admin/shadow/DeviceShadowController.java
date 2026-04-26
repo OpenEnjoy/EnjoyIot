@@ -18,11 +18,11 @@ import com.enjoyiot.module.eiot.dal.dataobject.shadow.DeviceShadowDO;
 import com.enjoyiot.module.eiot.service.shadow.DeviceShadowService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import javax.annotation.Resource;
 import java.util.Map;
 
 import static com.enjoyiot.framework.common.pojo.CommonResult.success;
