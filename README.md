@@ -39,8 +39,9 @@
 [![乐联开源/enjoy-web](https://gitee.com/open-enjoy/enjoy-web/widgets/widget_card.svg?colors=393222,ebdfc1,fffae5,d8ca9f,393222,a28b40)](https://gitee.com/open-enjoy/enjoy-web)
 
 ### 界面展示
-
+<img alt="wx.png" src=".image/dashboard.png" width="600">
 <img alt="wx.png" src=".image/devices.png" width="600"/>
+<img alt="wx.png" src=".image/device_alert.png" width="600"/>
 <img alt="wx.png" src=".image/product.png" width="600"/>
 <img alt="wx.png" src=".image/rule.png" width="600"/>
 <img alt="wx.png" src=".image/rule_action.png" width="600"/>
@@ -71,7 +72,7 @@ https://y5yrmmjjns.feishu.cn/wiki/PsPEwXms0iJEayk88Wgc4xH1nob?fromScene=spaceOve
 <img alt="wx.png" src=".image/image.png" width="600"/>
 
 #### 提交pr
-请提交到dev分支
+请提交到dev-jdk21分支
 
 ####  git 提交规范
 示例: 
@@ -124,3 +125,11 @@ https://y5yrmmjjns.feishu.cn/wiki/FlxmwXzQJiEKCJkGuIhcLsyjnwh?fromScene=spaceOve
   :fa-star:    **现代化文件管理网盘系统** ([https://gitee.com/xddcode/free-fs](https://gitee.com/xddcode/free-fs))
 
 
+# 更新日志
+
+## v1.0.0
+|  功能 | 更新内容 | 开发者  | 时间         |
+|  ---- | ---- |------|------------|
+|  设备影子 | 添加设备影子功能 | 庞宏   | 2026-04-26 |
+|  设备告警 | 添加设备告警功能 | song | 2026-04-26 |
+|  首页 | 添加设备地图 | song | 2026-04-26 |
