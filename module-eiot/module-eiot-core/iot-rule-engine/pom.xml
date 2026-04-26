@@ -91,6 +91,10 @@
             <groupId>com.enjoy-iot</groupId>
             <artifactId>spring-boot-starter-biz-tenant</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.enjoy-iot</groupId>
+            <artifactId>module-eiot-api</artifactId>
+        </dependency>
 
     </dependencies>
 </project>
