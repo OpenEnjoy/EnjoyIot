@@ -147,6 +147,7 @@ public class DeviceAlertConfigServiceImpl implements DeviceAlertConfigService {
         config.setLevel(configDO.getLevel());
         config.setStatus(configDO.getStatus());
         config.setRemark(configDO.getRemark());
+        config.setLogic(configDO.getLogic());
 
         if (configDO.getConditions() != null && !configDO.getConditions().isEmpty()) {
             try {

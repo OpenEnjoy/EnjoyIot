@@ -45,6 +45,12 @@ public class DeviceAlertConfig extends TenantModel {
 
     private List<AlertCondition> conditions;
 
+    /**
+     * 条件逻辑: AND - 所有条件都满足, OR - 任一条件满足
+     * 默认 AND
+     */
+    private String logic;
+
     private TriggerOptions triggerOptions;
 
     private Integer status;

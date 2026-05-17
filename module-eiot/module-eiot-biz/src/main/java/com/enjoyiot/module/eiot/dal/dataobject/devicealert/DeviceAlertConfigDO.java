@@ -51,6 +51,11 @@ public class DeviceAlertConfigDO extends TenantBaseDO {
 
     private String conditions;
 
+    /**
+     * 条件逻辑: AND - 所有条件都满足, OR - 任一条件满足
+     */
+    private String logic;
+
     private String triggerOptions;
 
     private Integer status;

@@ -30,6 +30,9 @@ public class DeviceAlertConfigSaveReqVO {
     @NotNull(message = "告警条件不能为空")
     private List<ConditionVO> conditions;
 
+    @Schema(description = "条件逻辑: AND - 所有条件都满足, OR - 任一条件满足")
+    private String logic;
+
     @Schema(description = "触发选项")
     private TriggerOptionsVO triggerOptions;
 
