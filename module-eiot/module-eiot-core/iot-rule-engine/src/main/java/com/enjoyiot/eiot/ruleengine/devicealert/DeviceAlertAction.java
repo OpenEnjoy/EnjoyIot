@@ -38,7 +38,8 @@ public class DeviceAlertAction {
 
     public String getProductKeyByDeviceId(Long deviceId) {
         try {
-            return deviceApi.getDeviceInfoFromCache(deviceId).getProductKey();
+            var deviceInfo = deviceApi.getDeviceInfoFromCache(deviceId);
+            return deviceInfo != null ? deviceInfo.getProductKey() : null;
         } catch (Exception e) {
             log.warn("get productKey failed, deviceId: {}", deviceId, e);
             return null;

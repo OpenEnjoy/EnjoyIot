@@ -145,7 +145,7 @@ public class ConditionEvaluator {
                 return !actual.equals(expected);
             case "contains":
                 return actual.contains(expected);
-            case "not_contains":
+            case "notContains":
                 return !actual.contains(expected);
             default:
                 return false;
