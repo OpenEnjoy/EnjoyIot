@@ -99,9 +99,6 @@ revert: 回滚
 
 <img alt="wx.png" height="300" src=".image/wx.png" width="250"/>
 
-商务咨询
-
-<img alt="wx.png" height="300" src=".image/WechatIMG578.jpg" width="250"/>
 
 开源版：代码完全开源；
 > 如果您将此项目用于商业用途，请遵守 Apache2.0 协议并保留作者技术支持声明。
