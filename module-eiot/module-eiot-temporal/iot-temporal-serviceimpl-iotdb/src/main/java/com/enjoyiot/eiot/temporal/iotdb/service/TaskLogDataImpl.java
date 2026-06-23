@@ -7,6 +7,7 @@ import com.enjoyiot.eiot.temporal.iotdb.dao.IotdbBaseService;
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
 import com.enjoyiot.module.eiot.api.task.dto.TaskLog;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.iotdb.isession.SessionDataSet;
 import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class TaskLogDataImpl extends IotdbBaseService<TaskLog> implements ITaskLogData {
 
@@ -32,15 +34,15 @@ public class TaskLogDataImpl extends IotdbBaseService<TaskLog> implements ITaskL
         try {
             deleteTimeseries(timeserieName);
         } catch (StatementExecutionException e) {
-            e.printStackTrace();
+            log.error("deleteByTaskId failed: taskId={}", taskId, e);
         } catch (IoTDBConnectionException e) {
-            e.printStackTrace();
+            log.error("deleteByTaskId connection failed: taskId={}", taskId, e);
         }
     }
 
     @Override
     public PageResult<TaskLog> findByTaskId(Long taskId, int page, int size) {
-        int offset = Integer.min(0, (page - 1) * size);
+        int offset = Math.max(0, (page - 1) * size);
         String timeserieName = getTimeserieName(taskId);
 
         String countSql = String.format("select count(%s) from %s", "success", timeserieName);
@@ -50,29 +52,29 @@ public class TaskLogDataImpl extends IotdbBaseService<TaskLog> implements ITaskL
         try {
             return queryPage(countSql, sql, args);
         } catch (StatementExecutionException e) {
-            e.printStackTrace();
+            log.error("findByTaskId query failed: taskId={}", taskId, e);
         } catch (IoTDBConnectionException e) {
-            e.printStackTrace();
+            log.error("findByTaskId connection failed: taskId={}", taskId, e);
         }
         return new PageResult<>(new ArrayList<>(), 0L);
     }
 
     @Override
-    public void add(TaskLog log) {
+    public void add(TaskLog taskLog) {
 
-        String timeserieName = getTimeserieName(log.getTaskId());
+        String timeserieName = getTimeserieName(taskLog.getTaskId());
 
         long time = System.currentTimeMillis();
 
         Map<String, DevicePropertyCache> properties = new HashMap<>();
-        properties.put("content", new DevicePropertyCache(log.getContent(), time));
-        properties.put("success", new DevicePropertyCache(log.getSuccess(), time));
+        properties.put("content", new DevicePropertyCache(taskLog.getContent(), time));
+        properties.put("success", new DevicePropertyCache(taskLog.getSuccess(), time));
         try {
             insertRecord(timeserieName, properties);
         } catch (StatementExecutionException e) {
-            e.printStackTrace();
+            log.error("add task log failed: taskId={}", taskLog.getTaskId(), e);
         } catch (IoTDBConnectionException e) {
-            e.printStackTrace();
+            log.error("add task log connection failed: taskId={}", taskLog.getTaskId(), e);
         }
     }
 

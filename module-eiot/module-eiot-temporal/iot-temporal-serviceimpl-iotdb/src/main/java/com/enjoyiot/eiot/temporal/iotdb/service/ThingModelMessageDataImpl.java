@@ -13,6 +13,7 @@ import com.enjoyiot.framework.common.util.json.JsonUtils;
 import com.enjoyiot.module.eiot.api.device.DeviceApi;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
 import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.iotdb.isession.SessionDataSet;
 import org.apache.iotdb.isession.pool.SessionDataSetWrapper;
@@ -23,8 +24,10 @@ import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessage> implements IThingModelMessageData {
 
@@ -33,7 +36,7 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
     @Resource
     private IotdbDatasourceConfig config;
 
-    private Set<String> pathExistInTemplateSet = new HashSet<>();
+    private Set<String> pathExistInTemplateSet = ConcurrentHashMap.newKeySet();
 
     /**
      * 按消息类型和标识符取设备消息
@@ -50,15 +53,15 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
         if (device == null) {
             return new PageResult<>(new ArrayList<>(), 0L);
         }
-        int offset = Integer.min(0, (page - 1) * size);
-        String timeserieNames = config.getBaseDb()+"."+Constants.THING_MODEL_MESSAGE_PREFIX + ".d_" + device.getDn();;
+        int offset = Math.max(0, (page - 1) * size);
+        String timeserieNames = config.getBaseDb()+"."+Constants.THING_MODEL_MESSAGE_PREFIX + ".d_" + device.getDn();
         String whereSql = "";
         List<String> conditionList = new ArrayList<>();
         if (StringUtils.isNotBlank(type)) {
-            conditionList.add(" type = '" + type + "' ");
+            conditionList.add(" type = '" + escapeSql(type) + "' ");
         }
         if (StringUtils.isNotBlank(identifier)) {
-            conditionList.add(" identifier = '" + identifier + "' ");
+            conditionList.add(" identifier = '" + escapeSql(identifier) + "' ");
         }
         if (!conditionList.isEmpty()) {
             whereSql = "where " + String.join(" and ", conditionList);
@@ -70,9 +73,9 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
         try {
             return queryPage(countSql, sql, args);
         } catch (StatementExecutionException e) {
-            e.printStackTrace();
+            log.error("findByTypeAndIdentifier query failed: deviceId={}, type={}, identifier={}", deviceId, type, identifier, e);
         } catch (IoTDBConnectionException e) {
-            e.printStackTrace();
+            log.error("findByTypeAndIdentifier connection failed: deviceId={}, type={}, identifier={}", deviceId, type, identifier, e);
         }
         return new PageResult<>(new ArrayList<>(), 0L);
     }
@@ -130,14 +133,14 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
         Map<String, Long> deviceDnIdMap = new HashMap<>();
         for (Long deviceId : deviceIds) {
             DeviceInfo device = deviceApi.getDeviceInfoFromCache(deviceId);
-            if (device == null) {
+            if (device != null) {
                 deviceDnIdMap.put(device.getDn(), deviceId);
             }
         }
         if (deviceDnIdMap.isEmpty()) {
             return new PageResult<>(new ArrayList<>(), 0L);
         }
-        int offset = Integer.min(0, (page - 1) * size);
+        int offset = Math.max(0, (page - 1) * size);
         String dbName = config.getBaseDb();
         String timeserieNames = deviceDnIdMap.keySet().stream()
                 .map(dn -> dbName + "." + Constants.THING_MODEL_MESSAGE_PREFIX + ".d_" + dn)
@@ -146,10 +149,10 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
         String whereSql = "";
         List<String> conditionList = new ArrayList<>();
         if (StringUtils.isNotBlank(type)) {
-            conditionList.add(" type = '" + type + "' ");
+            conditionList.add(" type = '" + escapeSql(type) + "' ");
         }
         if (StringUtils.isNotBlank(identifier)) {
-            conditionList.add(" identifier = '" + identifier + "' ");
+            conditionList.add(" identifier = '" + escapeSql(identifier) + "' ");
         }
         if (!conditionList.isEmpty()) {
             whereSql = "where " + String.join(" and ", conditionList);
@@ -165,9 +168,9 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
             }
             return pageResult;
         } catch (StatementExecutionException e) {
-            e.printStackTrace();
+            log.error("findByTypeAndDeviceIds query failed: deviceIds={}, type={}, identifier={}", deviceIds, type, identifier, e);
         } catch (IoTDBConnectionException e) {
-            e.printStackTrace();
+            log.error("findByTypeAndDeviceIds connection failed: deviceIds={}, type={}, identifier={}", deviceIds, type, identifier, e);
         }
         return new PageResult<>(new ArrayList<>(), 0L);
     }
@@ -198,16 +201,16 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
             properties.put("report_time", new DevicePropertyCache(msg.getTime(), time));
             insertRecord(timeserieName, properties, msg.getOccurred());
         } catch (StatementExecutionException e) {
-            e.printStackTrace();
+            log.error("add thing model message failed: dn={}, mid={}", msg.getDn(), msg.getMid(), e);
         } catch (IoTDBConnectionException e) {
-            e.printStackTrace();
+            log.error("add thing model message connection failed: dn={}, mid={}", msg.getDn(), msg.getMid(), e);
         }
     }
 
     private boolean isPathExistInTemplate(String templateName, String path) throws StatementExecutionException, IoTDBConnectionException {
         if (!pathExistInTemplateSet.contains(path)) {
             List<String> nameList = sessionPool.showPathsTemplateUsingOn(templateName);
-            pathExistInTemplateSet = new HashSet<>(nameList);
+            pathExistInTemplateSet.addAll(nameList);
         }
         return pathExistInTemplateSet.contains(path);
     }
@@ -234,9 +237,9 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
             }
             return count;
         } catch (StatementExecutionException e) {
-            e.printStackTrace();
+            log.error("count query failed", e);
         } catch (IoTDBConnectionException e) {
-            e.printStackTrace();
+            log.error("count connection failed", e);
         }
         return 0L;
     }
@@ -279,5 +282,9 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
             result.add(one);
         }
         return result;
+    }
+
+    private String escapeSql(String value) {
+        return value.replace("'", "''");
     }
 }

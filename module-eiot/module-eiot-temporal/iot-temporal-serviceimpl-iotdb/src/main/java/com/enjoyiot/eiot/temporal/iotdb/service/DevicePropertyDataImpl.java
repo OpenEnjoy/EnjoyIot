@@ -8,6 +8,7 @@ import com.enjoyiot.module.eiot.api.device.DeviceApi;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
 import com.enjoyiot.module.eiot.api.device.dto.DeviceProperty;
 import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.iotdb.isession.SessionDataSet;
 import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class DevicePropertyDataImpl extends IotdbBaseService<DeviceProperty> implements IDevicePropertyData {
 
@@ -53,9 +55,9 @@ public class DevicePropertyDataImpl extends IotdbBaseService<DeviceProperty> imp
         try {
             return queryList(sql, args);
         } catch (StatementExecutionException e) {
-            e.printStackTrace();
+            log.error("findDevicePropertyHistory query failed: deviceId={}, name={}", deviceId, name, e);
         } catch (IoTDBConnectionException e) {
-            e.printStackTrace();
+            log.error("findDevicePropertyHistory connection failed: deviceId={}, name={}", deviceId, name, e);
         }
         return new ArrayList<>();
     }
@@ -73,16 +75,12 @@ public class DevicePropertyDataImpl extends IotdbBaseService<DeviceProperty> imp
         if (device == null) {
             return;
         }
-        //获取设备旧属性
-        Map<String, DevicePropertyCache> oldProperties = deviceApi.getPropertiesFromCache(deviceId);
-        //用新属性覆盖
-        oldProperties.putAll(properties);
 
         String timeserieName = getTimeserieName(device.getProductKey(), device.getDn());
         try {
-            insertRecord(timeserieName, oldProperties, time);
+            insertRecord(timeserieName, properties, time);
         } catch (StatementExecutionException | IoTDBConnectionException e) {
-            e.printStackTrace();
+            log.error("addProperties failed: deviceId={}", deviceId, e);
         }
     }
 
@@ -94,7 +92,7 @@ public class DevicePropertyDataImpl extends IotdbBaseService<DeviceProperty> imp
     public List<DeviceProperty> mapToEntity(SessionDataSet dataSet, DeviceProperty defaultEntity) throws StatementExecutionException, IoTDBConnectionException {
         List<DeviceProperty> result = new ArrayList<>();
         int index = dataSet.getColumnNames().indexOf("value");
-        if (index > 0) {
+        if (index >= 0) {
             index--;
             String deviceId = defaultEntity.getDeviceId();
             String valueName = defaultEntity.getName();

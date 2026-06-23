@@ -9,7 +9,6 @@ import org.apache.iotdb.rpc.StatementExecutionException;
 import org.apache.iotdb.session.pool.SessionPool;
 import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
 import org.apache.iotdb.tsfile.read.common.RowRecord;
-import org.apache.iotdb.tsfile.utils.Binary;
 
 import jakarta.annotation.Resource;
 import java.util.ArrayList;
@@ -83,50 +82,53 @@ public abstract class IotdbBaseService<T> {
             return TSDataType.INT32;
         } else if (value instanceof Boolean) {
             return TSDataType.BOOLEAN;
-        } else if (value instanceof Binary) {
-            return TSDataType.TEXT;
         } else {
             return TSDataType.TEXT;
         }
     }
 
-    public String tryGetStringValue(RowRecord rowRecord,String key , Map<String, Integer> columnIndexMap){
-        if (columnIndexMap.containsKey(key)){
+    private boolean hasField(RowRecord rowRecord, String key, Map<String, Integer> columnIndexMap) {
+        Integer index = columnIndexMap.get(key);
+        return index != null && rowRecord.getFields() != null && index < rowRecord.getFields().size();
+    }
+
+    public String tryGetStringValue(RowRecord rowRecord, String key, Map<String, Integer> columnIndexMap) {
+        if (hasField(rowRecord, key, columnIndexMap)) {
             return rowRecord.getFields().get(columnIndexMap.get(key)).getStringValue();
         }
         return null;
     }
 
-    public Boolean tryGetBoolV(RowRecord rowRecord,String key , Map<String, Integer> columnIndexMap){
-        if (columnIndexMap.containsKey(key)){
+    public Boolean tryGetBoolV(RowRecord rowRecord, String key, Map<String, Integer> columnIndexMap) {
+        if (hasField(rowRecord, key, columnIndexMap)) {
             return rowRecord.getFields().get(columnIndexMap.get(key)).getBoolV();
         }
         return null;
     }
 
-    public Double tryGetDoubleV(RowRecord rowRecord,String key , Map<String, Integer> columnIndexMap){
-        if (columnIndexMap.containsKey(key)){
+    public Double tryGetDoubleV(RowRecord rowRecord, String key, Map<String, Integer> columnIndexMap) {
+        if (hasField(rowRecord, key, columnIndexMap)) {
             return rowRecord.getFields().get(columnIndexMap.get(key)).getDoubleV();
         }
         return null;
     }
 
-    public Float tryGetFloatV(RowRecord rowRecord,String key , Map<String, Integer> columnIndexMap){
-        if (columnIndexMap.containsKey(key)){
+    public Float tryGetFloatV(RowRecord rowRecord, String key, Map<String, Integer> columnIndexMap) {
+        if (hasField(rowRecord, key, columnIndexMap)) {
             return rowRecord.getFields().get(columnIndexMap.get(key)).getFloatV();
         }
         return null;
     }
 
-    public Integer tryGetIntV(RowRecord rowRecord,String key , Map<String, Integer> columnIndexMap){
-        if (columnIndexMap.containsKey(key)){
+    public Integer tryGetIntV(RowRecord rowRecord, String key, Map<String, Integer> columnIndexMap) {
+        if (hasField(rowRecord, key, columnIndexMap)) {
             return rowRecord.getFields().get(columnIndexMap.get(key)).getIntV();
         }
         return null;
     }
 
-    public Long tryGetLongV(RowRecord rowRecord,String key , Map<String, Integer> columnIndexMap){
-        if (columnIndexMap.containsKey(key)){
+    public Long tryGetLongV(RowRecord rowRecord, String key, Map<String, Integer> columnIndexMap) {
+        if (hasField(rowRecord, key, columnIndexMap)) {
             return rowRecord.getFields().get(columnIndexMap.get(key)).getLongV();
         }
         return null;

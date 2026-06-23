@@ -8,6 +8,7 @@ import com.enjoyiot.eiot.temporal.iotdb.dao.IotdbBaseService;
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
 import com.enjoyiot.module.eiot.api.virtualdevice.dto.VirtualDeviceLog;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.iotdb.isession.SessionDataSet;
 import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class VirtualDeviceLogDataImpl extends IotdbBaseService<VirtualDeviceLog> implements IVirtualDeviceLogData {
 
@@ -37,7 +39,7 @@ public class VirtualDeviceLogDataImpl extends IotdbBaseService<VirtualDeviceLog>
      */
     @Override
     public PageResult<VirtualDeviceLog> findByVirtualDeviceId(Long virtualDeviceId, int page, int size) {
-        int offset = Integer.min(0, (page - 1) * size);
+        int offset = Math.max(0, (page - 1) * size);
         String timeserieName = getTimeserieName(virtualDeviceId);
 
         String countSql = String.format("select count(%s) from %s", "virtual_device_name", timeserieName);
@@ -47,9 +49,9 @@ public class VirtualDeviceLogDataImpl extends IotdbBaseService<VirtualDeviceLog>
         try {
             return queryPage(countSql, sql, args);
         } catch (StatementExecutionException e) {
-            e.printStackTrace();
+            log.error("findByVirtualDeviceId query failed: virtualDeviceId={}", virtualDeviceId, e);
         } catch (IoTDBConnectionException e) {
-            e.printStackTrace();
+            log.error("findByVirtualDeviceId connection failed: virtualDeviceId={}", virtualDeviceId, e);
         }
         return new PageResult<>(new ArrayList<>(), 0L);
     }
@@ -60,20 +62,20 @@ public class VirtualDeviceLogDataImpl extends IotdbBaseService<VirtualDeviceLog>
      * @param log
      */
     @Override
-    public void add(VirtualDeviceLog log) {
-        String timeserieName = getTimeserieName(log.getVirtualDeviceId());
+    public void add(VirtualDeviceLog virtualDeviceLog) {
+        String timeserieName = getTimeserieName(virtualDeviceLog.getVirtualDeviceId());
 
         long time = System.currentTimeMillis();
         Map<String, DevicePropertyCache> properties = new HashMap<>();
-        properties.put("virtual_device_name", new DevicePropertyCache(log.getVirtualDeviceName(), time));
-        properties.put("device_total", new DevicePropertyCache(log.getDeviceTotal(), time));
-        properties.put("result", new DevicePropertyCache(log.getResult(), time));
+        properties.put("virtual_device_name", new DevicePropertyCache(virtualDeviceLog.getVirtualDeviceName(), time));
+        properties.put("device_total", new DevicePropertyCache(virtualDeviceLog.getDeviceTotal(), time));
+        properties.put("result", new DevicePropertyCache(virtualDeviceLog.getResult(), time));
         try {
             insertRecord(timeserieName, properties);
         } catch (StatementExecutionException e) {
-            e.printStackTrace();
+            log.error("add virtual device log failed: virtualDeviceId={}", virtualDeviceLog.getVirtualDeviceId(), e);
         } catch (IoTDBConnectionException e) {
-            e.printStackTrace();
+            log.error("add virtual device log connection failed: virtualDeviceId={}", virtualDeviceLog.getVirtualDeviceId(), e);
         }
     }
 

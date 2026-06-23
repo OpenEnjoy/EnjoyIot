@@ -45,8 +45,8 @@ public class IotdbDatasourceConfig {
     @Value("${spring.iotdb-datasource.baseDb}")
     private String baseDb;
 
-    @Bean("iotdbTemplate")
-    public SessionPool iotdbTemplate() {
+    @Bean(value = "iotdbSessionPool", destroyMethod = "close")
+    public SessionPool iotdbSessionPool() {
         SessionPool sessionPool =
                 new SessionPool.Builder()
                         .nodeUrls(Collections.singletonList(url))
@@ -64,6 +64,11 @@ public class IotdbDatasourceConfig {
         dataSource.setUsername(username);
         dataSource.setPassword(password);
         dataSource.setDriverClassName("org.apache.iotdb.jdbc.IoTDBDriver");
+        dataSource.setMaximumPoolSize(10);
+        dataSource.setMinimumIdle(2);
+        dataSource.setConnectionTimeout(30000);
+        dataSource.setIdleTimeout(600000);
+        dataSource.setMaxLifetime(1800000);
         return new IotdbTemplate(dataSource);
     }
 

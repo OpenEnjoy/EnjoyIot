@@ -95,6 +95,40 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>flatten-maven-plugin</artifactId>
                 </plugin>
+                <!-- License header 插件，统一 Apache 2.0 头 -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>${license-maven-plugin.version}</version>
+                    <configuration>
+                        <header>${maven.multiModuleProjectDirectory}/src/etc/header.txt</header>
+                        <includes>
+                            <include>src/**/*.java</include>
+                            <include>src/**/*.xml</include>
+                            <include>src/**/*.yml</include>
+                            <include>src/**/*.yaml</include>
+                            <include>src/**/*.properties</include>
+                            <include>src/**/*.sql</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/target/**</exclude>
+                            <exclude>**/node_modules/**</exclude>
+                            <exclude>**/.idea/**</exclude>
+                            <exclude>**/.vscode/**</exclude>
+                            <exclude>**/.flattened-pom.xml</exclude>
+                            <exclude>**/*.md</exclude>
+                        </excludes>
+                        <mapping>
+                            <java>SLASHSTAR_STYLE</java>
+                            <xml>XML_STYLE</xml>
+                            <yml>SCRIPT_STYLE</yml>
+                            <yaml>SCRIPT_STYLE</yaml>
+                            <properties>SCRIPT_STYLE</properties>
+                            <sql>SCRIPT_STYLE</sql>
+                        </mapping>
+                        <strictCheck>true</strictCheck>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
 

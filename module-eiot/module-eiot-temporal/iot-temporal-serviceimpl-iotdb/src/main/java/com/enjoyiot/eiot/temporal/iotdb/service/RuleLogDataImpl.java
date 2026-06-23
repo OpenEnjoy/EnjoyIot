@@ -8,6 +8,7 @@ import com.enjoyiot.eiot.temporal.iotdb.dao.IotdbBaseService;
 import com.enjoyiot.framework.common.pojo.PageResult;
 import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
 import com.enjoyiot.module.eiot.api.rule.dto.RuleLog;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.iotdb.isession.SessionDataSet;
 import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class RuleLogDataImpl extends IotdbBaseService<RuleLog> implements IRuleLogData {
 
@@ -34,15 +36,15 @@ public class RuleLogDataImpl extends IotdbBaseService<RuleLog> implements IRuleL
         try {
             deleteTimeseries(timeserieName);
         } catch (StatementExecutionException e) {
-            e.printStackTrace();
+            log.error("deleteByRuleId failed: ruleId={}", ruleId, e);
         } catch (IoTDBConnectionException e) {
-            e.printStackTrace();
+            log.error("deleteByRuleId connection failed: ruleId={}", ruleId, e);
         }
     }
 
     @Override
     public PageResult<RuleLog> findByRuleId(Long ruleId, int page, int size) {
-        int offset = Integer.min(0, (page - 1) * size);
+        int offset = Math.max(0, (page - 1) * size);
         String timeserieName = getTimeserieName(ruleId);
 
         String countSql = String.format("select count(%s) from %s", "state1", timeserieName);
@@ -52,29 +54,29 @@ public class RuleLogDataImpl extends IotdbBaseService<RuleLog> implements IRuleL
         try {
             return queryPage(countSql, sql, args);
         } catch (StatementExecutionException e) {
-            e.printStackTrace();
+            log.error("findByRuleId query failed: ruleId={}", ruleId, e);
         } catch (IoTDBConnectionException e) {
-            e.printStackTrace();
+            log.error("findByRuleId connection failed: ruleId={}", ruleId, e);
         }
         return new PageResult<>(new ArrayList<>(), 0L);
     }
 
     @Override
-    public void add(RuleLog log) {
-        String timeserieName = getTimeserieName(log.getRuleId());
+    public void add(RuleLog ruleLog) {
+        String timeserieName = getTimeserieName(ruleLog.getRuleId());
 
         long time = System.currentTimeMillis();
 
         Map<String, DevicePropertyCache> properties = new HashMap<>();
-        properties.put("state1", new DevicePropertyCache(log.getState(), time));
-        properties.put("content", new DevicePropertyCache(log.getContent(), time));
-        properties.put("success", new DevicePropertyCache(log.getSuccess(), time));
+        properties.put("state1", new DevicePropertyCache(ruleLog.getState(), time));
+        properties.put("content", new DevicePropertyCache(ruleLog.getContent(), time));
+        properties.put("success", new DevicePropertyCache(ruleLog.getSuccess(), time));
         try {
             insertRecord(timeserieName, properties);
         } catch (StatementExecutionException e) {
-            e.printStackTrace();
+            log.error("add rule log failed: ruleId={}", ruleLog.getRuleId(), e);
         } catch (IoTDBConnectionException e) {
-            e.printStackTrace();
+            log.error("add rule log connection failed: ruleId={}", ruleLog.getRuleId(), e);
         }
     }
 

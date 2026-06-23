@@ -5,6 +5,7 @@ import com.enjoyiot.eiot.IDbStructureData;
 import com.enjoyiot.eiot.temporal.iotdb.config.Constants;
 import com.enjoyiot.eiot.temporal.iotdb.config.IotdbDatasourceConfig;
 import com.enjoyiot.module.eiot.api.thingmodel.dto.ThingModel;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.iotdb.isession.SessionDataSet;
 import org.apache.iotdb.isession.pool.SessionDataSetWrapper;
 import org.apache.iotdb.isession.template.Template;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+@Slf4j
 @Service
 public class DbStructureDataImpl implements IDbStructureData {
 
@@ -89,11 +91,11 @@ public class DbStructureDataImpl implements IDbStructureData {
 
 
         } catch (StatementExecutionException e) {
-            e.printStackTrace();
+            log.error("initDbStructure statement execution failed", e);
         } catch (IoTDBConnectionException e) {
-            e.printStackTrace();
+            log.error("initDbStructure connection failed", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("initDbStructure IO failed", e);
         }
     }
 }
