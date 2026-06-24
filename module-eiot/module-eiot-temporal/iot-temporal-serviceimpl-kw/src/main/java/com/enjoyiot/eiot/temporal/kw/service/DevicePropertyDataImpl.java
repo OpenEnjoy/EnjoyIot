@@ -44,13 +44,17 @@ import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class DevicePropertyDataImpl implements IDevicePropertyData {
+
+    private static final Pattern IDENTIFIER_PATTERN = Pattern.compile("[a-zA-Z_][a-zA-Z0-9_]*");
 
     @Autowired
     private KwJdbcTemplate kwJdbcTemplate;
@@ -65,6 +69,10 @@ public class DevicePropertyDataImpl implements IDevicePropertyData {
     public List<DeviceProperty> findDevicePropertyHistory(Long deviceId, String name, long start, long end, int size) {
         DeviceInfo device = deviceApi.getDeviceInfoFromCache(deviceId);
         if (device == null) {
+            return new ArrayList<>();
+        }
+        if (name == null || !IDENTIFIER_PATTERN.matcher(name).matches()) {
+            log.warn("invalid property name for query: {}", name);
             return new ArrayList<>();
         }
 
@@ -94,14 +102,15 @@ public class DevicePropertyDataImpl implements IDevicePropertyData {
         List<KwField> fieldList = FieldParser.parse(thingModel);
         Map<String, String> fieldTypeMap = fieldList.stream().collect(Collectors.toMap(KwField::getName, KwField::getType));
         Map<String, DevicePropertyCache> oldProperties = deviceApi.getPropertiesFromCache(deviceId);
-        oldProperties.putAll(properties);
+        Map<String, DevicePropertyCache> mergedProperties = new HashMap<>(oldProperties);
+        mergedProperties.putAll(properties);
 
         StringBuilder fieldNames = new StringBuilder();
         StringBuilder fieldPlaceholders = new StringBuilder();
         List<Object> args = new ArrayList<>();
         args.add(new KWTimestamp(time));
 
-        oldProperties.forEach((key, value) -> {
+        mergedProperties.forEach((key, value) -> {
             fieldNames.append(key).append(",");
             fieldPlaceholders.append("?,");
             switch (fieldTypeMap.get(key)) {

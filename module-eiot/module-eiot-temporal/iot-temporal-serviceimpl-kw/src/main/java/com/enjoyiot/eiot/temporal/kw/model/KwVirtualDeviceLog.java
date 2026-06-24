@@ -41,7 +41,7 @@ public class KwVirtualDeviceLog {
 
     private String virtualDeviceName;
 
-    private int deviceTotal;
+    private Integer deviceTotal;
 
     private String result;
 

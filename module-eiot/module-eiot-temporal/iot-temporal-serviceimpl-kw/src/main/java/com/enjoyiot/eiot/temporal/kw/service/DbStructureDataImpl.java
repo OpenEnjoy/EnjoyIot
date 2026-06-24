@@ -54,6 +54,14 @@ public class DbStructureDataImpl implements IDbStructureData {
         //获取物模型中的属性定义
         List<KwField> fields = FieldParser.parse(thingModel);
         String tbName = Constants.getProductPropertyTableName(thingModel.getProductKey());
+        //检查表是否已存在
+        try {
+            kwJdbcTemplate.queryForList(TableManager.getDescTableSql(tbName));
+            log.info("table {} already exists, skip creation", tbName);
+            return;
+        } catch (Throwable ignored) {
+            // 表不存在，继续创建
+        }
         //生成sql
         String sql = TableManager.getCreateTableSql(tbName,
                 fields,
@@ -62,7 +70,6 @@ public class DbStructureDataImpl implements IDbStructureData {
             return;
         }
         log.info("executing sql:{}", sql);
-
         //执行sql
         kwJdbcTemplate.update(sql);
     }
@@ -72,63 +79,59 @@ public class DbStructureDataImpl implements IDbStructureData {
      */
     @Override
     public void updateThingModel(ThingModel thingModel) {
-        try {
-            //获取旧字段信息
-            String tbName = Constants.getProductPropertyTableName(thingModel.getProductKey());
-            String sql = TableManager.getDescTableSql(tbName);
-            List<KwField> oldFields = kwJdbcTemplate.query(sql, (rs, rowNum) -> {
-                String name = rs.getString("column_name");
-                String type = rs.getString("data_type").toUpperCase();
-                int length = 0;
-                try {
-                    length = rs.getInt("length");
-                } catch (Exception e) {
+        //获取旧字段信息
+        String tbName = Constants.getProductPropertyTableName(thingModel.getProductKey());
+        String sql = TableManager.getDescTableSql(tbName);
+        List<KwField> oldFields = kwJdbcTemplate.query(sql, (rs, rowNum) -> {
+            String name = rs.getString("column_name");
+            String type = rs.getString("data_type").toUpperCase();
+            int length = 0;
+            try {
+                length = rs.getInt("length");
+            } catch (Exception e) {
 
-                }
-                if (rs.wasNull()) {
-                    length = -1; // 处理 NULL 值
-                }
-                return new KwField(name, type, length);
-            });
-            List<KwField> newFields = FieldParser.parse(thingModel);
-            //对比差异
-
-            //找出新增的字段
-            List<KwField> addFields = newFields.stream().filter((f) -> oldFields.stream()
-                            .noneMatch(old -> old.getName().equals(f.getName())))
-                    .collect(Collectors.toList());
-            if (!addFields.isEmpty()) {
-                sql = TableManager.getAddTableColumnSql(tbName, addFields);
-                kwJdbcTemplate.update(sql);
             }
-
-            //找出修改的字段
-            List<KwField> modifyFields = newFields.stream().filter((f) -> oldFields.stream()
-                            .anyMatch(old ->
-                                    old.getName().equals(f.getName()) //字段名相同
-                                            //字段类型或长度不同
-                                            && (!old.getType().equals(f.getType()) || old.getLength() != f.getLength())
-                            ))
-                    .collect(Collectors.toList());
-
-            if (!modifyFields.isEmpty()) {
-                sql = TableManager.getModifyTableColumnSql(tbName, modifyFields);
-                kwJdbcTemplate.update(sql);
+            if (rs.wasNull()) {
+                length = -1; // 处理 NULL 值
             }
+            return new KwField(name, type, length);
+        });
+        List<KwField> newFields = FieldParser.parse(thingModel);
+        //对比差异
 
-            //找出删除的字段
-            List<KwField> dropFields = oldFields.stream().filter((f) ->
-                            !"time".equals(f.getName()) &&
-                                    !"device_id".equals(f.getName()) && newFields.stream()
-                                    //字段名不是time且没有相同字段名的
-                                    .noneMatch(n -> n.getName().equals(f.getName())))
-                    .collect(Collectors.toList());
-            if (!dropFields.isEmpty()) {
-                sql = TableManager.getDropTableColumnSql(tbName, dropFields);
-                kwJdbcTemplate.update(sql);
-            }
-        } catch (Throwable e) {
-            throw e;
+        //找出新增的字段
+        List<KwField> addFields = newFields.stream().filter((f) -> oldFields.stream()
+                        .noneMatch(old -> old.getName().equals(f.getName())))
+                .collect(Collectors.toList());
+        if (!addFields.isEmpty()) {
+            sql = TableManager.getAddTableColumnSql(tbName, addFields);
+            kwJdbcTemplate.update(sql);
+        }
+
+        //找出修改的字段
+        List<KwField> modifyFields = newFields.stream().filter((f) -> oldFields.stream()
+                        .anyMatch(old ->
+                                old.getName().equals(f.getName()) //字段名相同
+                                        //字段类型或长度不同
+                                        && (!old.getType().equals(f.getType()) || old.getLength() != f.getLength())
+                        ))
+                .collect(Collectors.toList());
+
+        if (!modifyFields.isEmpty()) {
+            sql = TableManager.getModifyTableColumnSql(tbName, modifyFields);
+            kwJdbcTemplate.update(sql);
+        }
+
+        //找出删除的字段
+        List<KwField> dropFields = oldFields.stream().filter((f) ->
+                        !"time".equals(f.getName()) &&
+                                !"device_id".equals(f.getName()) && newFields.stream()
+                                //字段名不是time且没有相同字段名的
+                                .noneMatch(n -> n.getName().equals(f.getName())))
+                .collect(Collectors.toList());
+        if (!dropFields.isEmpty()) {
+            sql = TableManager.getDropTableColumnSql(tbName, dropFields);
+            kwJdbcTemplate.update(sql);
         }
     }
 
@@ -143,6 +146,7 @@ public class DbStructureDataImpl implements IDbStructureData {
         try {
             kwJdbcTemplate.queryForList(TableManager.getDescTableSql("rule_log"));
         } catch (Throwable e) {
+            log.error("create rule_log super table failed, attempting to create", e);
             String sql = TableManager.getCreateTableSql("rule_log", Arrays.asList(
                     new KwField("state1", "VARCHAR", 32),
                     new KwField("content", "VARCHAR", 1024),
@@ -151,10 +155,11 @@ public class DbStructureDataImpl implements IDbStructureData {
             kwJdbcTemplate.update(sql);
         }
 
-        //创建规则日志超级表
+        //创建任务日志超级表
         try {
             kwJdbcTemplate.queryForList(TableManager.getDescTableSql("task_log"));
         } catch (Throwable e) {
+            log.error("create task_log super table failed, attempting to create", e);
             String sql = TableManager.getCreateTableSql("task_log", Arrays.asList(
                     new KwField("content", "VARCHAR", 1024),
                     new KwField("success", "BOOL", -1)
@@ -166,6 +171,7 @@ public class DbStructureDataImpl implements IDbStructureData {
         try {
             kwJdbcTemplate.queryForList(TableManager.getDescTableSql("thing_model_message"));
         } catch (Throwable e) {
+            log.error("create thing_model_message super table failed, attempting to create", e);
             String sql = TableManager.getCreateTableSql("thing_model_message", Arrays.asList(
                     new KwField("mid", "VARCHAR", 50),
                     new KwField("product_key", "VARCHAR", 50),
@@ -185,6 +191,7 @@ public class DbStructureDataImpl implements IDbStructureData {
         try {
             kwJdbcTemplate.queryForList(TableManager.getDescTableSql("virtual_device_log"));
         } catch (Throwable e) {
+            log.error("create virtual_device_log super table failed, attempting to create", e);
             String sql = TableManager.getCreateTableSql("virtual_device_log", Arrays.asList(
                     new KwField("virtual_device_name", "VARCHAR", 50),
                     new KwField("device_total", "INT4", -1),

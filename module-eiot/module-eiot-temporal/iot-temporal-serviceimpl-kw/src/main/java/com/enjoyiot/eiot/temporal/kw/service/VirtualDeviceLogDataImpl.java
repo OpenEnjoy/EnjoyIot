@@ -57,7 +57,7 @@ public class VirtualDeviceLogDataImpl implements IVirtualDeviceLogData {
         return new PageResult<>(result.getList().stream().map(r ->
                         new VirtualDeviceLog(r.getTime().getTime(), virtualDeviceId,
                                 r.getVirtualDeviceName(),
-                                r.getDeviceTotal(), r.getResult(), r.getTime().getTime()))
+                                r.getDeviceTotal() == null ? 0 : r.getDeviceTotal(), r.getResult(), r.getTime().getTime()))
                 .collect(Collectors.toList()), result.getTotal());
     }
 

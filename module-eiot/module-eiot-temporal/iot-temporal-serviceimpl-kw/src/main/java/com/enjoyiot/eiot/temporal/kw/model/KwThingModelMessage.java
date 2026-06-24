@@ -51,7 +51,7 @@ public class KwThingModelMessage {
 
     private String identifier;
 
-    private int code;
+    private Integer code;
 
     private String data;
 

@@ -75,7 +75,7 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
         return new PageResult<>(result.getList().stream().map(r ->
                         new ThingModelMessage(r.getTime().toString(), r.getMid(),
                                 deviceId, r.getProductKey(), r.getDeviceName(),
-                                r.getUid(), r.getType(), r.getIdentifier(), r.getCode(),
+                                r.getUid(), r.getType(), r.getIdentifier(), r.getCode() == null ? 0 : r.getCode(),
                                 parseDataSafe(r.getData()),
                                 r.getTime().getTime(), r.getReportTime(), null))
                 .collect(Collectors.toList()), result.getTotal());
@@ -100,7 +100,7 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
         return new PageResult<>(result.getList().stream().map(r ->
                         new ThingModelMessage(r.getTime().toString(), r.getMid(),
                                 r.getDeviceId(), r.getProductKey(), r.getDeviceName(),
-                                r.getUid(), r.getType(), r.getIdentifier(), r.getCode(),
+                                r.getUid(), r.getType(), r.getIdentifier(), r.getCode() == null ? 0 : r.getCode(),
                                 parseDataSafe(r.getData()),
                                 r.getTime().getTime(), r.getReportTime(), null))
                 .collect(Collectors.toList()), result.getTotal());
@@ -151,7 +151,7 @@ public class ThingModelMessageDataImpl implements IThingModelMessageData {
     @Override
     public List<TimeData> getDeviceDownMessageStatsWithUid(String uid, Long start, Long end) {
         String sql = "SELECT time,COUNT(*) AS data FROM(" +
-                "SELECT TIMETRUNCATE(time,1h) AS time FROM thing_model_message " +
+                "SELECT TIMETRUNCATE(time,'1h') AS time FROM thing_model_message " +
                 "WHERE (type='property' AND identifier='report') OR type='service' OR type= 'config' ";
         StringBuilder sqlBuffer = new StringBuilder();
         sqlBuffer.append(sql);

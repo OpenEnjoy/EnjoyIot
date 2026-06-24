@@ -34,7 +34,7 @@ public class FieldParser {
 
     private static final Map<String, String> TYPE_MAPPING = Collections.unmodifiableMap(new HashMap<String, String>() {{
         put("int", "INT4");
-        put("int32", "INT8");
+        put("int32", "INT4");
         put("long", "INT8");
         put("int64", "INT8");
         put("float", "FLOAT8");
@@ -51,8 +51,14 @@ public class FieldParser {
     }});
 
     public static KwField parse(ThingModel.Property property) {
+        if (property.getIdentifier() == null || property.getDataType() == null) {
+            return null;
+        }
         String fieldName = property.getIdentifier().toLowerCase();
         String fieldType = TYPE_MAPPING.get(property.getDataType().normalizedType());
+        if (fieldType == null) {
+            return null;
+        }
         int length = -1;
         Object rawLength = property.getDataType().getSpecMap().get("length");
         if (rawLength != null) {
@@ -65,12 +71,16 @@ public class FieldParser {
     }
 
     public static List<KwField> parse(ThingModel thingModel) {
-        return thingModel.getModel().getProperties().stream().map(FieldParser::parse).collect(Collectors.toList());
+        return thingModel.getModel().getProperties().stream()
+                .map(FieldParser::parse)
+                .filter(java.util.Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
+    @SuppressWarnings("unchecked")
     public static List<KwField> parse(List rows) {
         return (List<KwField>) rows.stream().map((rowValue) -> {
-            List row = (List) rowValue;
+            List<Object> row = (List<Object>) rowValue;
             String type = row.get(1).toString().toUpperCase();
             return new KwField(
                     row.get(0).toString(),

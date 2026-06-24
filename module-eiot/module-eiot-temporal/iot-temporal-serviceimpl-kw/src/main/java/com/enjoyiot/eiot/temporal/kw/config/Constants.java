@@ -25,16 +25,19 @@ package com.enjoyiot.eiot.temporal.kw.config;
 public interface Constants {
 
     /**
-     * 根据产品key获取产品属性超级表名
+     * 根据产品key获取产品属性超级表�?
      */
     static String getProductPropertyTableName(String productKey) {
         return String.format("product_property_%s", productKey.toLowerCase());
     }
 
     /**
-     * 根据deviceId获取设备属性表名
+     * 根据deviceId获取设备属性表�?
      */
     static String getDevicePropertyTableName(Long deviceId) {
+        if (deviceId == null) {
+            throw new IllegalArgumentException("deviceId must not be null");
+        }
         return String.format("device_property_%s", deviceId);
     }
 

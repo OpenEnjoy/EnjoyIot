@@ -50,7 +50,7 @@ public class KwDatasourceConfig {
     }
 
     @Bean(name = "kwJdbcTemplate")
-    public KwJdbcTemplate tsJdbcTemplate(@Qualifier("kwDataSource") DataSourceProperty dataSourceProperty) {
+    public KwJdbcTemplate kwJdbcTemplate(@Qualifier("kwDataSource") DataSourceProperty dataSourceProperty) {
         DynamicRoutingDataSource ds = (DynamicRoutingDataSource) dataSource;
         DataSource dataSource = dataSourceCreator.createDataSource(dataSourceProperty);
         ds.addDataSource("kwDataSource", dataSource);
