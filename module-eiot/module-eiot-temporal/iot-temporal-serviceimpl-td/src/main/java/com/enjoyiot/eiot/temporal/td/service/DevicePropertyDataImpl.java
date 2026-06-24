@@ -62,7 +62,7 @@ public class DevicePropertyDataImpl implements IDevicePropertyData {
         String tableName = Constants.getProductPropertySTableName(device.getProductKey());
         String fieldName = name.contains(".") ? "`" + name + "`" : name;
         List<TbDeviceProperty> deviceProperties = tdTemplate.query(String.format(
-                        "select time,%s as `value`,device_id from %s where device_id=? and time>=? and time<=? order by time asc limit 0,%d",
+                        "select time,%s as `value`,device_id from %s where device_id=? and time>=? and time<=? order by time desc limit 0,%d",
                         fieldName.toLowerCase(), tableName, size),
                 new BeanPropertyRowMapper<>(TbDeviceProperty.class),
                 deviceId, start, end);
