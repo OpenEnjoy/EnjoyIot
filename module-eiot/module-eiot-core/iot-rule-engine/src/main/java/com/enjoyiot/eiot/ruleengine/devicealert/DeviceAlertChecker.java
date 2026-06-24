@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.enjoyiot.eiot.common.thing.ThingModelMessage;
 import com.enjoyiot.eiot.ruleengine.handler.DeviceMessageHandler;
 import com.enjoyiot.module.eiot.api.device.DeviceApi;
-import com.enjoyiot.module.eiot.api.device.DeviceInfo;
+import com.enjoyiot.module.eiot.api.device.dto.DeviceInfo;
 import com.enjoyiot.module.eiot.api.device.dto.DevicePropertyCache;
 import com.enjoyiot.module.eiot.api.devicealert.dto.DeviceAlertConfig;
 import lombok.RequiredArgsConstructor;
