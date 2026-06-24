@@ -9,6 +9,8 @@ import org.apache.iotdb.rpc.StatementExecutionException;
 import org.apache.iotdb.session.pool.SessionPool;
 import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
 import org.apache.iotdb.tsfile.read.common.RowRecord;
+import org.apache.iotdb.tsfile.read.common.Field;
+import org.apache.iotdb.tsfile.utils.Binary;
 
 import jakarta.annotation.Resource;
 import java.util.ArrayList;
@@ -40,7 +42,7 @@ public abstract class IotdbBaseService<T> {
     }
 
     public void deleteTimeseries(String timeseriesName) throws StatementExecutionException, IoTDBConnectionException {
-        sessionPool.executeNonQueryStatement("delete timeseries   "+ timeseriesName+".*");
+        sessionPool.executeNonQueryStatement("delete timeseries " + timeseriesName + ".*");
     }
 
     public List<T> queryList(String sql, T defaultEntity) throws StatementExecutionException, IoTDBConnectionException {
@@ -134,4 +136,16 @@ public abstract class IotdbBaseService<T> {
         return null;
     }
 
+
+    public Object tryGetObjectValue(RowRecord rowRecord, String key, Map<String, Integer> columnIndexMap) {
+        if (hasField(rowRecord, key, columnIndexMap)) {
+            Field field = rowRecord.getFields().get(columnIndexMap.get(key));
+            Object value = field.getObjectValue(field.getDataType());
+            if (value instanceof Binary) {
+                return field.getStringValue();
+            }
+            return value;
+        }
+        return null;
+    }
 }

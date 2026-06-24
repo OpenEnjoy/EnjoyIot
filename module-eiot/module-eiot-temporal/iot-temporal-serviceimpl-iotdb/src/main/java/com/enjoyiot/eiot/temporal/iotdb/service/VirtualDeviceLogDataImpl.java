@@ -97,7 +97,7 @@ public class VirtualDeviceLogDataImpl extends IotdbBaseService<VirtualDeviceLog>
             String virtualDeviceName = tryGetStringValue(rowRecord,"virtual_device_name",columnIndexMap);
             Integer deviceTotal = tryGetIntV(rowRecord,"device_total",columnIndexMap);
             String result = tryGetStringValue(rowRecord,"result",columnIndexMap);
-            VirtualDeviceLog one = new VirtualDeviceLog(timestamp, virtualDeviceId, virtualDeviceName, deviceTotal, result, timestamp);
+            VirtualDeviceLog one = new VirtualDeviceLog(timestamp, virtualDeviceId, virtualDeviceName, deviceTotal == null ? 0 : deviceTotal, result, timestamp);
             list.add(one);
         }
         return list;

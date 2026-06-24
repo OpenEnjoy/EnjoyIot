@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -91,22 +92,19 @@ public class DevicePropertyDataImpl extends IotdbBaseService<DeviceProperty> imp
     @Override
     public List<DeviceProperty> mapToEntity(SessionDataSet dataSet, DeviceProperty defaultEntity) throws StatementExecutionException, IoTDBConnectionException {
         List<DeviceProperty> result = new ArrayList<>();
-        int index = dataSet.getColumnNames().indexOf("value");
-        if (index >= 0) {
-            index--;
-            String deviceId = defaultEntity.getDeviceId();
-            String valueName = defaultEntity.getName();
-            while (dataSet.hasNext()) {
-                RowRecord rowRecord = dataSet.next();
-                long timestamp = rowRecord.getTimestamp();
-                Field valueField = rowRecord.getFields().get(index);
-                Object value = valueField.getObjectValue(valueField.getDataType());
-                if (value instanceof Binary) {
-                    value = value.toString();
-                }
-                DeviceProperty one = new DeviceProperty(String.valueOf(timestamp), deviceId, valueName, value, timestamp);
-                result.add(one);
-            }
+        Map<String, Integer> columnIndexMap = new HashMap<>();
+        for (int i = 0; i < dataSet.getColumnNames().size(); i++) {
+            String columnName = dataSet.getColumnNames().get(i);
+            columnIndexMap.put(columnName, i - 1);
+        }
+        String deviceId = defaultEntity.getDeviceId();
+        String valueName = defaultEntity.getName();
+        while (dataSet.hasNext()) {
+            RowRecord rowRecord = dataSet.next();
+            long timestamp = rowRecord.getTimestamp();
+            Object value = tryGetObjectValue(rowRecord, "value", columnIndexMap);
+            DeviceProperty one = new DeviceProperty(String.valueOf(timestamp), deviceId, valueName, value, timestamp);
+            result.add(one);
         }
         return result;
     }

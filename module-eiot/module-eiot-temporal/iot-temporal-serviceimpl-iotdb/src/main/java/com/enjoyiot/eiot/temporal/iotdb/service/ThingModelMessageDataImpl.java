@@ -219,7 +219,7 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
     public long count() {
         String dbName = config.getBaseDb();
         String timeserieName = dbName + "." + Constants.THING_MODEL_MESSAGE_PREFIX + ".*";
-        String sql = String.format("select count(status) as `count` from %s   align by device", timeserieName);
+        String sql = String.format("select count(report_time) as `count` from %s align by device", timeserieName);
         try (SessionDataSetWrapper wrapper = sessionPool.executeQueryStatement(sql);
              SessionDataSet dataSet = wrapper.getSessionDataSet()) {
             Map<String, Integer> columnIndexMap = new HashMap<>();
@@ -262,7 +262,7 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
             String uid = tryGetStringValue(rowRecord, "uid", columnIndexMap);
             String type = tryGetStringValue(rowRecord, "type", columnIndexMap);
             String identifier = tryGetStringValue(rowRecord, "identifier", columnIndexMap);
-            int code = tryGetIntV(rowRecord, "code", columnIndexMap);
+            Integer code = tryGetIntV(rowRecord, "code", columnIndexMap);
             String data = tryGetStringValue(rowRecord, "data", columnIndexMap);
             Long report_time = tryGetLongV(rowRecord, "report_time", columnIndexMap);
             ThingModelMessage one = new ThingModelMessage();
@@ -274,7 +274,7 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
             one.setUid(uid);
             one.setType(type);
             one.setIdentifier(identifier);
-            one.setCode(code);
+            one.setCode(code == null ? 0 : code);
             one.setData(data == null?null:JSON.parseObject(data, Map.class));
             one.setOccurred(timestamp);
             one.setTime(report_time);
