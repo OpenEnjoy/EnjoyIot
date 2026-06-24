@@ -22,7 +22,6 @@
  */
 package com.enjoyiot.eiot.temporal.iotdb.config;
 
-import com.zaxxer.hikari.HikariDataSource;
 import org.apache.iotdb.session.pool.SessionPool;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -55,21 +54,6 @@ public class IotdbDatasourceConfig {
                         .maxSize(3)
                         .build();
         return sessionPool;
-    }
-
-    @Bean("iotdbJdbcTemplate")
-    public IotdbTemplate iotdbJdbcTemplate() {
-        HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl("jdbc:iotdb://" + getUrl());
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        dataSource.setDriverClassName("org.apache.iotdb.jdbc.IoTDBDriver");
-        dataSource.setMaximumPoolSize(10);
-        dataSource.setMinimumIdle(2);
-        dataSource.setConnectionTimeout(30000);
-        dataSource.setIdleTimeout(600000);
-        dataSource.setMaxLifetime(1800000);
-        return new IotdbTemplate(dataSource);
     }
 
     public String getThingModelMessageTemplateName(){

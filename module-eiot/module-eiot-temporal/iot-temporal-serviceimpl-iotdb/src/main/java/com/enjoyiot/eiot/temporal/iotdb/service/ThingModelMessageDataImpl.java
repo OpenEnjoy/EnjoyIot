@@ -23,7 +23,12 @@ import org.apache.iotdb.tsfile.read.common.RowRecord;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -90,7 +95,7 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
     @Override
     public List<TimeData> getDeviceMessageStatsWithUid(String uid, long start, long end) {
         //todo 未使用 暂不实现
-        return null;
+        return Collections.emptyList();
     }
 
     /**
@@ -103,7 +108,7 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
     @Override
     public List<TimeData> getDeviceUpMessageStatsWithUid(String uid, Long start, Long end) {
         //todo 未使用 暂不实现
-        return null;
+        return Collections.emptyList();
     }
 
     /**
@@ -116,7 +121,7 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
     @Override
     public List<TimeData> getDeviceDownMessageStatsWithUid(String uid, Long start, Long end) {
         //todo 未使用 暂不实现
-        return null;
+        return Collections.emptyList();
     }
 
     /**
@@ -228,7 +233,7 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
                 columnIndexMap.put(columnName, i - 1);
             }
             long count = 0L;
-            if (dataSet.hasNext()) {
+            while (dataSet.hasNext()) {
                 RowRecord rowRecord = dataSet.next();
                 Long one = tryGetLongV(rowRecord, "count", columnIndexMap);
                 if (one != null) {
@@ -285,6 +290,11 @@ public class ThingModelMessageDataImpl extends IotdbBaseService<ThingModelMessag
     }
 
     private String escapeSql(String value) {
-        return value.replace("'", "''");
+        if (value == null) {
+            return null;
+        }
+        return value.replace("\\", "\\\\")
+                .replace("'", "''")
+                .replace("\"", "\\\"");
     }
 }

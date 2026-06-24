@@ -47,7 +47,7 @@ public class RuleLogDataImpl extends IotdbBaseService<RuleLog> implements IRuleL
         int offset = Math.max(0, (page - 1) * size);
         String timeserieName = getTimeserieName(ruleId);
 
-        String countSql = String.format("select count(%s) from %s", "state1", timeserieName);
+        String countSql = String.format("select count(*) from %s", timeserieName);
         String sql = String.format("select state1 as state1,content as content,success as success from %s limit %d offset  %d ", timeserieName, size, offset);
         RuleLog args = new RuleLog();
         args.setRuleId(ruleId);

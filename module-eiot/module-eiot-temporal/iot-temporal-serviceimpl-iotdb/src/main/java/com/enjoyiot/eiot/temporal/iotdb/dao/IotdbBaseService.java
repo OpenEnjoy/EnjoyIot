@@ -80,7 +80,7 @@ public abstract class IotdbBaseService<T> {
             return TSDataType.FLOAT;
         } else if (value instanceof Long) {
             return TSDataType.INT64;
-        } else if (value instanceof Integer) {
+        } else if (value instanceof Integer || value instanceof Short || value instanceof Byte) {
             return TSDataType.INT32;
         } else if (value instanceof Boolean) {
             return TSDataType.BOOLEAN;

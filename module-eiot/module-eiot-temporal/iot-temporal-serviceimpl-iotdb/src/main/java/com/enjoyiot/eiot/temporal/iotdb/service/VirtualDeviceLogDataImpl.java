@@ -42,7 +42,7 @@ public class VirtualDeviceLogDataImpl extends IotdbBaseService<VirtualDeviceLog>
         int offset = Math.max(0, (page - 1) * size);
         String timeserieName = getTimeserieName(virtualDeviceId);
 
-        String countSql = String.format("select count(%s) from %s", "virtual_device_name", timeserieName);
+        String countSql = String.format("select count(*) from %s", timeserieName);
         String sql = String.format("select virtual_device_name as virtual_device_name,device_total as device_total,result as result from %s limit %d offset  %d ", timeserieName, size, offset);
         VirtualDeviceLog args = new VirtualDeviceLog();
         args.setVirtualDeviceId(virtualDeviceId);

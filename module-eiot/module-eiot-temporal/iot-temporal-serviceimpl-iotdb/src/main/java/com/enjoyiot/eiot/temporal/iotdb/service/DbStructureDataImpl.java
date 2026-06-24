@@ -39,7 +39,7 @@ public class DbStructureDataImpl implements IDbStructureData {
      */
     @Override
     public void defineThingModel(ThingModel thingModel) {
-        //todo iotdb不支持模版更新 不设置模板也可使用 暂不实现
+        // IoTDB 写入时自动创建测点，无需预先定义 schema，不设置模板也可使用
     }
 
     /**
@@ -47,7 +47,7 @@ public class DbStructureDataImpl implements IDbStructureData {
      */
     @Override
     public void updateThingModel(ThingModel thingModel) {
-        //todo iotdb不支持模版更新 不设置模板也可使用 暂不实现
+        // IoTDB 写入时自动创建测点，不支持模板更新，不设置模板也可使用
     }
 
     /**

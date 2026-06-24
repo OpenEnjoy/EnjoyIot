@@ -45,7 +45,7 @@ public class TaskLogDataImpl extends IotdbBaseService<TaskLog> implements ITaskL
         int offset = Math.max(0, (page - 1) * size);
         String timeserieName = getTimeserieName(taskId);
 
-        String countSql = String.format("select count(%s) from %s", "success", timeserieName);
+        String countSql = String.format("select count(*) from %s", timeserieName);
         String sql = String.format("select content as content,success as success from %s limit %d offset  %d ", timeserieName, size, offset);
         TaskLog args = new TaskLog();
         args.setTaskId(taskId);
