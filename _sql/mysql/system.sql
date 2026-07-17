@@ -219,6 +219,8 @@ CREATE TABLE `eiot_device_alert_config` (
     `tenant_id` bigint DEFAULT 1 COMMENT '租户编号',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COMMENT = '设备告警配置';
+alter table eiot_device_alert_config
+    add logic varchar(32) null comment '条件逻辑: AND - 所有条件都满足, OR - 任一条件满足';
 
 -- ----------------------------
 -- Table structure for eiot_device_alert_record
